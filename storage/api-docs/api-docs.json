@@ -1,0 +1,1805 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Forever Medspa",
+        "description": "All API Related to Giftcards",
+        "termsOfService": "test",
+        "contact": {
+            "name": "Forever Medspa",
+            "url": "https://forevermedspanj.com",
+            "email": "info@forevermedspanj.com"
+        },
+        "license": {
+            "name": "License",
+            "url": "https://forevermedspanj.com/license"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/coupon-validate": {
+            "post": {
+                "tags": [
+                    "Coupon Code"
+                ],
+                "summary": "Validate coupon",
+                "operationId": "1681e502457f7ce097c77c6101c0d014",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "coupon_code": {
+                                        "type": "string",
+                                        "example": "SAKRAT30"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    },
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": "50"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-for-other": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "Gift Send For  Someone else",
+                "operationId": "0df57bb9d00c2652f7191c80970dab9c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": "20"
+                                    },
+                                    "gift_send_for": {
+                                        "type": "string",
+                                        "example": "someone"
+                                    },
+                                    "qty": {
+                                        "type": "integer",
+                                        "example": "20"
+                                    },
+                                    "your_name": {
+                                        "type": "string",
+                                        "example": "Deepak Prasad"
+                                    },
+                                    "recipient_name": {
+                                        "type": "string",
+                                        "example": "Vishal"
+                                    },
+                                    "recipient_email": {
+                                        "type": "string",
+                                        "example": "Vishal"
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "This is Testing"
+                                    },
+                                    "gift_card_send_type": {
+                                        "type": "string",
+                                        "example": "Email"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    },
+                                    "in_future": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "12-05-2025"
+                                    },
+                                    "coupon_code": {
+                                        "type": "string",
+                                        "example": "CCODE12"
+                                    },
+                                    "event_id": {
+                                        "type": "integer",
+                                        "example": "5"
+                                    },
+                                    "patient_login_id": {
+                                        "type": "string",
+                                        "example": "xyz@123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-for-self": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "Gift Send For Self",
+                "operationId": "214962a6994994e26bf47bc8c61233d5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": "20"
+                                    },
+                                    "gift_send_for": {
+                                        "type": "string",
+                                        "example": "Self"
+                                    },
+                                    "qty": {
+                                        "type": "integer",
+                                        "example": "20"
+                                    },
+                                    "your_name": {
+                                        "type": "string",
+                                        "example": "Deepak Prasad"
+                                    },
+                                    "gift_send_to": {
+                                        "type": "email",
+                                        "example": "deepak@thetemz.com"
+                                    },
+                                    "gift_card_send_type": {
+                                        "type": "string",
+                                        "example": "Email"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    },
+                                    "coupon_code": {
+                                        "type": "string",
+                                        "example": "CCODE12"
+                                    },
+                                    "patient_login_id": {
+                                        "type": "string",
+                                        "example": "xyz@123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-list": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "For Sended Gift List ",
+                "operationId": "2abf3ac3afa9619409ace16ace99d4d2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/giftcard-balance-check": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "For Know Your Giftcard Balance ",
+                "operationId": "747bd07620f52b9d028c8c74d2a7fbc0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "gift_card_number": {
+                                        "type": "string",
+                                        "example": "FEMS-2024-6387"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/auth-login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "For Authentication ",
+                "operationId": "47ab96678b651731401137ca3f8f9e4c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "email",
+                                        "example": "deepak@thetemz.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "12345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/auth-registration": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "For Authentication ",
+                "operationId": "ed61cdb56f25df66ebf40da5bd1e0162",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Deepak Prasad"
+                                    },
+                                    "email": {
+                                        "type": "email",
+                                        "example": "deepak@thetemz.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "12345678"
+                                    },
+                                    "user_type": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/auth-forgetpassword": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "For Forget Password ",
+                "operationId": "e1edc5dfb75136d4072aaa6cef934650",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "email",
+                                        "example": "deepak@thetemz.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/cardview": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "View Card Number Transaction Wise ",
+                "operationId": "2da8043453440dbcd139e18101e45107",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "tid": {
+                                        "type": "string",
+                                        "example": "card_1Oko6lHXhy3bfGAtquteqkgE"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-card-search": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "For Gift Card Search ",
+                "operationId": "f564bb64af6316d798713e0e5e499a63",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Deepak Kumar"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "deepak@thetemz.com"
+                                    },
+                                    "giftcardnumber": {
+                                        "type": "string",
+                                        "example": "FEMS-2024-8147"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-card-validate": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "For Gift Card Search ",
+                "operationId": "3dabbc437a258f5884f06d84d55f3273",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "giftcardnumber": {
+                                        "type": "string",
+                                        "example": "FEMS-2024-8147"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-card-amount-calculation": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "For Gift Card Search ",
+                "operationId": "859427f42afdd4655940c89663cac202",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "giftcardnumber": {
+                                        "type": "string",
+                                        "example": "FEMS-2024-8147"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-card-redeem": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "For Gift Redeem ",
+                "operationId": "304f2772ec0a80c086b9be040d994acf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "gift_card_number": {
+                                        "type": "string",
+                                        "example": "FEMS-2024-8147"
+                                    },
+                                    "comments": {
+                                        "type": "string",
+                                        "example": "I Want To Redeem My Giftcard"
+                                    },
+                                    "amount": {
+                                        "type": "flout",
+                                        "example": "20"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": "6"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-card-statment": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "For Gift Statment ",
+                "operationId": "9d8be5a676709f7c74114ca540eade02",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "gift_card_number": {
+                                        "type": "string",
+                                        "example": "FEMS-2024-4953"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gift-purchase-from-store": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "Gift card Purchase from store",
+                "operationId": "a1b28fb3912ddbaeb7fdfc54514504fd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": "20"
+                                    },
+                                    "gift_send_for": {
+                                        "type": "string",
+                                        "example": "Self"
+                                    },
+                                    "qty": {
+                                        "type": "integer",
+                                        "example": "20"
+                                    },
+                                    "your_name": {
+                                        "type": "string",
+                                        "example": "Deepak Prasad"
+                                    },
+                                    "gift_send_to": {
+                                        "type": "email",
+                                        "example": "deepak@thetemz.com"
+                                    },
+                                    "gift_card_send_type": {
+                                        "type": "string",
+                                        "example": "Email"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    },
+                                    "coupon_code": {
+                                        "type": "string",
+                                        "example": "CCODE12"
+                                    },
+                                    "payment_mode": {
+                                        "type": "string",
+                                        "example": "Cash"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/payment_confirmation": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "If you are take payment without payment getway, This API use for Payment Received Confirmation(Related Information get from API: /gift-purchase-from-store)",
+                "operationId": "1acc3219173abd041477e650783c0e7d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": "62"
+                                    },
+                                    "your_name": {
+                                        "type": "string",
+                                        "example": "Deepak Prasad"
+                                    },
+                                    "gift_send_to": {
+                                        "type": "integer",
+                                        "example": "deepakprasad224@gmail.com"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    },
+                                    "payment_mode": {
+                                        "type": "string",
+                                        "example": "PayPal"
+                                    },
+                                    "transaction_id": {
+                                        "type": "string",
+                                        "example": "TEST-18-03-2024"
+                                    },
+                                    "transaction_amount": {
+                                        "type": "string",
+                                        "example": "100"
+                                    },
+                                    "payment_status": {
+                                        "type": "string",
+                                        "example": "succeeded,processing,payment_failed"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/payment_status_update": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "If Payment status is Pending or Processing plese use this API for Changing Payment Status",
+                "operationId": "39119006fd91b1ad32780543da60b1ed",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "transaction_id": {
+                                        "type": "string",
+                                        "example": "TEST-18-03-2024"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    },
+                                    "payment_status": {
+                                        "type": "string",
+                                        "example": "succeeded"
+                                    },
+                                    "comments": {
+                                        "type": "string",
+                                        "example": "Pending status updated against transaction number..xxxx-xxx"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/category-list": {
+            "post": {
+                "tags": [
+                    "Category Management"
+                ],
+                "summary": "View Category List",
+                "description": "View the list of product categories.",
+                "operationId": "8b83a78d66f8fee186dae4aec101941e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Product categories found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product categories found"
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "get": {
+                "tags": [
+                    "Category Management"
+                ],
+                "summary": "View Category Id Wise",
+                "description": "View the list of product categories.",
+                "operationId": "3d326ac6f476a643ab8099f802390db3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Product category found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product category found"
+                    }
+                }
+            }
+        },
+        "/category-update/{id}": {
+            "post": {
+                "tags": [
+                    "Category Management"
+                ],
+                "summary": "Update Category",
+                "description": "View the list of product categories.",
+                "operationId": "9602e5f62ec1684dd6106950cd2a8b9a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "cat_name": {
+                                        "type": "string",
+                                        "example": "Category Name"
+                                    },
+                                    "cat_description": {
+                                        "type": "string",
+                                        "example": "About Category"
+                                    },
+                                    "cat_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "cat_order_by": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "meta_title": {
+                                        "type": "string",
+                                        "example": "Add Meta Title"
+                                    },
+                                    "meta_description": {
+                                        "type": "string",
+                                        "example": "Meta Description"
+                                    },
+                                    "meta_keywords": {
+                                        "type": "string",
+                                        "example": "Meta Keywords"
+                                    },
+                                    "cat_is_deleted": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Product category found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product category found"
+                    }
+                }
+            }
+        },
+        "/category-created": {
+            "post": {
+                "tags": [
+                    "Category Management"
+                ],
+                "summary": "Category Create",
+                "description": "View the list of product categories.",
+                "operationId": "b917d37ae2f5698b4a4d06308508f4c6",
+                "parameters": [
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "cat_name": {
+                                        "type": "string",
+                                        "example": "Category Name"
+                                    },
+                                    "cat_description": {
+                                        "type": "string",
+                                        "example": "About Category"
+                                    },
+                                    "cat_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "cat_order_by": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "meta_title": {
+                                        "type": "string",
+                                        "example": "Add Meta Title"
+                                    },
+                                    "meta_description": {
+                                        "type": "string",
+                                        "example": "Meta Description"
+                                    },
+                                    "meta_keywords": {
+                                        "type": "string",
+                                        "example": "Meta Keywords"
+                                    },
+                                    "cat_is_deleted": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Product category found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product category found"
+                    }
+                }
+            }
+        },
+        "/categoryDelete/{id}": {
+            "post": {
+                "tags": [
+                    "Category Management"
+                ],
+                "summary": "Category Deleted",
+                "description": "View the list of product categories.",
+                "operationId": "0362eaa2528a9b17abf0c09e6a318b66",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Product category found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product category found"
+                    }
+                }
+            }
+        },
+        "/product-created": {
+            "post": {
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Product Create",
+                "description": "View the list of product.",
+                "operationId": "264a12533ad581ec8fb157d694cbea89",
+                "parameters": [
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "product_name": {
+                                        "type": "string",
+                                        "example": "product_name"
+                                    },
+                                    "product_description": {
+                                        "type": "string",
+                                        "example": "About Product"
+                                    },
+                                    "product_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "product_order_by": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "product_fetured": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "meta_title": {
+                                        "type": "string",
+                                        "example": "Add Meta Title"
+                                    },
+                                    "meta_description": {
+                                        "type": "string",
+                                        "example": "Meta Description"
+                                    },
+                                    "meta_keywords": {
+                                        "type": "string",
+                                        "example": "Meta Keywords"
+                                    },
+                                    "product_is_deleted": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 500.5
+                                    },
+                                    "discounted_amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100.5
+                                    },
+                                    "coupon_id": {
+                                        "type": "number",
+                                        "format": "integer",
+                                        "example": 21
+                                    },
+                                    "cat_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "unit_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "search_keywords": {
+                                        "type": "string",
+                                        "example": "This is Test"
+                                    },
+                                    "prerequisites": {
+                                        "type": "string",
+                                        "example": "This is Test"
+                                    },
+                                    "short_description": {
+                                        "type": "string",
+                                        "example": "This is Test"
+                                    },
+                                    "product_slug": {
+                                        "type": "string",
+                                        "example": "product-name"
+                                    },
+                                    "popular_service": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "session_number": {
+                                        "type": "integer",
+                                        "example": "5"
+                                    },
+                                    "discount_rate": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "5"
+                                    },
+                                    "giftcard_redemption": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Product found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product found"
+                    }
+                }
+            }
+        },
+        "/productDelete/{id}": {
+            "post": {
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Product Deleted",
+                "description": "For Product Delete",
+                "operationId": "f4bcb3463d990a2e3cc9257fa9557c01",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Product found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product found"
+                    }
+                }
+            }
+        },
+        "/product-update/{id}": {
+            "post": {
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Update Product",
+                "description": "Product Update id Wise",
+                "operationId": "fe6df3e11d11f38b15ec22010c27799f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "product_name": {
+                                        "type": "string",
+                                        "example": "product_name"
+                                    },
+                                    "product_description": {
+                                        "type": "string",
+                                        "example": "About Product"
+                                    },
+                                    "product_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "product_order_by": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "product_fetured": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "meta_title": {
+                                        "type": "string",
+                                        "example": "Add Meta Title"
+                                    },
+                                    "meta_description": {
+                                        "type": "string",
+                                        "example": "Meta Description"
+                                    },
+                                    "meta_keywords": {
+                                        "type": "string",
+                                        "example": "Meta Keywords"
+                                    },
+                                    "product_is_deleted": {
+                                        "type": "integer",
+                                        "example": "0"
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 500.5
+                                    },
+                                    "discounted_amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100.5
+                                    },
+                                    "coupon_id": {
+                                        "type": "number",
+                                        "format": "integer",
+                                        "example": 21
+                                    },
+                                    "cat_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "unit_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "search_keywords": {
+                                        "type": "string",
+                                        "example": "This is Test"
+                                    },
+                                    "prerequisites": {
+                                        "type": "string",
+                                        "example": "This is Test"
+                                    },
+                                    "short_description": {
+                                        "type": "string",
+                                        "example": "This is Test"
+                                    },
+                                    "product_slug": {
+                                        "type": "string",
+                                        "example": "product-name"
+                                    },
+                                    "popular_service": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "session_number": {
+                                        "type": "integer",
+                                        "example": "5"
+                                    },
+                                    "discount_rate": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "5"
+                                    },
+                                    "giftcard_redemption": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Product found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product found"
+                    }
+                }
+            }
+        },
+        "/product-list": {
+            "post": {
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "View Product List",
+                "description": "View the list of product .",
+                "operationId": "4f50ea782f13e6aadefeaf308ef90c00",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Product found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product found"
+                    }
+                }
+            }
+        },
+        "/product/{id}": {
+            "get": {
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "View Product Id Wise",
+                "description": "View the list of product categories.",
+                "operationId": "93a7bd083b4cfd013718feed46ccb752",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Product found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found: No product found"
+                    }
+                }
+            }
+        },
+        "/giftcard-cancel": {
+            "post": {
+                "tags": [
+                    "Gift-Cards"
+                ],
+                "summary": "For Gift Cancel ",
+                "operationId": "5cff061bd5008515a82a17f2a0d3ac4f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "gift_card_number": {
+                                        "type": "string",
+                                        "example": "FEMS-2024-8147"
+                                    },
+                                    "comments": {
+                                        "type": "string",
+                                        "example": "I Want To Cancel My Giftcard"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": "6"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/order-search": {
+            "post": {
+                "tags": [
+                    "Order Details"
+                ],
+                "summary": "For Order Search ",
+                "operationId": "dab10fb308161b2d84bc740d9de7687a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_id": {
+                                        "type": "string",
+                                        "example": "ORD-66c46b7083b2b-jq0Z2"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "deepak@thetemz.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0987654321"
+                                    },
+                                    "user_token": {
+                                        "type": "string",
+                                        "example": "FOREVER-MEDSPA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Result Found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/add-patient": {
+            "post": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Create a new patient",
+                "description": "Create a new patient.",
+                "operationId": "createPatient",
+                "parameters": [
+                    {
+                        "name": "user_token",
+                        "in": "query",
+                        "description": "API user token for authorization",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "FOREVER-MEDSPA"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "fname",
+                                    "lname",
+                                    "email",
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "fname": {
+                                        "type": "string",
+                                        "example": "Mohan"
+                                    },
+                                    "lname": {
+                                        "type": "string",
+                                        "example": "Sharma"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "mohan123@gmail.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Patient created successfully"
+                    },
+                    "400": {
+                        "description": "Bad request or validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Coupon Code",
+            "description": "Coupon Code"
+        },
+        {
+            "name": "Gift-Cards",
+            "description": "Gift-Cards"
+        },
+        {
+            "name": "Transaction",
+            "description": "Transaction"
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Category Management",
+            "description": "Category Management"
+        },
+        {
+            "name": "Product Management",
+            "description": "Product Management"
+        },
+        {
+            "name": "Order Details",
+            "description": "Order Details"
+        },
+        {
+            "name": "Patient",
+            "description": "Patient"
+        }
+    ]
+}

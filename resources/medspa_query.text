@@ -1,0 +1,5 @@
+
+UPDATE `transaction_histories` SET `status`=1,`payment_status`='paid',`transaction_status`='complete' WHERE `order_id`='FMSWCSU000000119';
+ Submit
+
+ ALTER TABLE `patients` CHANGE `patient_login_id` `patient_login_id` VARCHAR(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
