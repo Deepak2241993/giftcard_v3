@@ -16,29 +16,18 @@ class Kernel extends ConsoleKernel
         BackupDatabase::class, // Register your custom command
     ];
 
-    protected function schedule(Schedule $schedule)
-    {
-        
-        //  $schedule->command('/usr/local/bin/php /home/u929332160/public_html/artisan mail:cron')->everyMinute();
-        
-        // $schedule->command('mail:cron')->everyMinute();
-      $schedule->command('mail:cron')
-        ->everyFiveMinutes()
-        ->when(function () {
-        return now()->minute % 30 == 0; // Execute only at 0 and 30 minutes past the hour
-    });
+protected function schedule(Schedule $schedule)
+{
+    // Run at 2:00 AM and 2:00 PM
+    $schedule->command('mail:cron')->twiceDaily(8, 23);
 
-    // For Createing Patient_login_id
-    $schedule->command('patient_login_id:generate')
-        ->everyFiveMinutes()
-        ->when(function () {
-        return now()->minute % 30 == 0; // Execute only at 0 and 30 minutes past the hour
-    });
+    // Run at 2:00 AM and 2:00 PM
+    // $schedule->command('patient_login_id:generate')->twiceDaily(2, 14);
 
-    // For Backup Database
-    $schedule->command('backup:database')->daily();  // Or use ->dailyAt('02:00') for specific time
-    
-    }
+    // Database backup once daily at 2:00 AM
+    $schedule->command('backup:database')->dailyAt('02:00');
+}
+
 
     /**
      * Register the commands for the application.
