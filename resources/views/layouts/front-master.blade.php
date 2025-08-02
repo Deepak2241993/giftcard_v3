@@ -10,6 +10,8 @@
      @stack('csslink')
      
          @stack('css')
+         <link rel="shortcut icon" href="{{url('/medspa.png')}}" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="{{url('/medspa.png')}}" />
      
 </head>
 
