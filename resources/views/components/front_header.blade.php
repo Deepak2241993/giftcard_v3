@@ -112,7 +112,7 @@
     <div class="header-container">
         
         <div class="header-logo">
-            <img src="forever-color.fw_.png" alt="Forever MedSpa Logo" class="logo-img">
+            <img src="{{url('/forever-color.fw_.png')}}" alt="Forever MedSpa Logo" class="logo-img">
         </div>
 
         <nav class="header-nav">

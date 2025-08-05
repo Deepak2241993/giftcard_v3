@@ -163,7 +163,7 @@ class ServiceUnitController extends Controller
 public function ServicePage(Request $request)
 {
 
-    $services = Product::where('product_is_deleted', 0)
+    $units = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->paginate(10); // Paginate with 10 per page
@@ -219,7 +219,7 @@ public function ServicePage(Request $request)
             ];
         });
     return view('product.services', compact(
-        'services',
+        'units',
         'category',
         'search',
         'categoryMap',

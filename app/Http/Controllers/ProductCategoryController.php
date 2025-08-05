@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
+use App\Models\ServiceUnit;
 use App\Models\Banner;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -281,7 +282,7 @@ public function update(Request $request,$id)
 
     $categoryId = $ProductCategory->id;
 
-    $services = Product::where('product_is_deleted', 0)
+    $units = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->where('cat_id', $categoryId)
@@ -346,7 +347,7 @@ public function update(Request $request,$id)
         });
 
         return view('product.services', compact(
-            'services',
+            'units',
             'category',
             'search',
             'categoryMap',
