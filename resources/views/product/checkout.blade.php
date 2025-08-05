@@ -140,9 +140,9 @@
                                                 {{-- <td>{{ $loop->iteration }}</td> --}}
                                                 @if ($item['type'] === 'product')
                                                         @php
-                                                            $product = App\Models\Product::find($item['id']);
-                                                            $image = explode('|', $product->product_image);
-                                                            $price = $product->discounted_amount ?? $product->amount;
+                                                            $units = App\Models\ServiceUnit::find($item['id']);
+                                                            $image = explode('|', $units->product_image);
+                                                            $price = $units->discounted_amount ?? $units->amount;
                                                             $subtotal = $price*$item['quantity'];
                                                             $amount += $subtotal;
                                                            
@@ -168,7 +168,7 @@
                                                 
                                                 <td>
                                                     @if ($item['type'] === 'product')
-                                                        {{ $product->product_name }}
+                                                        {{ $units->product_name }}
                                                     @elseif ($item['type'] === 'unit')
                                                         {{ $unit->product_name }}
                                                     @endif
@@ -177,14 +177,14 @@
                                                 
                                                 <td>
                                                     @if ($item['type'] === 'product')
-                                                        {{ "$".$product->discounted_amount ?? "$".$product->amount }}
+                                                        {{ "$".$units->discounted_amount ?? "$".$units->amount }}
                                                     @elseif ($item['type'] === 'unit')
                                                         {{ "$".$unit->discounted_amount ?? "$".$unit->amount }}
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($item['type'] === 'product')
-                                                        {{ "$".$item['quantity']*$product->discounted_amount ?? "$".$item['quantity']*$product->amount }}
+                                                        {{ "$".$item['quantity']*$units->discounted_amount ?? "$".$item['quantity']*$units->amount }}
                                                     @elseif ($item['type'] === 'unit')
                                                         {{ "$".$item['quantity']*$unit->discounted_amount ?? "$".$item['quantity']*$unit->amount }}
                                                     @endif

@@ -483,59 +483,59 @@ function updateCartItemQuantity(key, newQuantity) {
         }
     }
 
-    function renderServiceCard(service) {
-        const container = document.querySelector('.service-options');
-        container.innerHTML = '';
+    // function renderServiceCard(service) {
+    //     const container = document.querySelector('.service-options');
+    //     container.innerHTML = '';
 
-        let popularBadge = service.popular_service == 1
-            ? `<div class="service-badge">Popular</div>` : '';
+    //     let popularBadge = service.popular_service == 1
+    //         ? `<div class="service-badge">Popular</div>` : '';
 
-        const cardHTML = `
-            <div class="service-card">
-                <div class="service-card-header">
-                    <h3>${service.product_name}</h3>
-                    <div class="service-price">From $${service.amount}</div>
-                    ${popularBadge}
-                </div>
+    //     const cardHTML = `
+    //         <div class="service-card">
+    //             <div class="service-card-header">
+    //                 <h3>${service.product_name}</h3>
+    //                 <div class="service-price">From $${service.amount}</div>
+    //                 ${popularBadge}
+    //             </div>
 
-                <div class="service-description">
-                    <p>${service.short_description || ''}</p>
-                    <button class="read-more-btn" onclick="toggleReadMore(this)">
-                        <span>Read More</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="hidden-content">
-                        <p>${service.product_description || ''}</p>
-                    </div>
-                </div>
+    //             <div class="service-description">
+    //                 <p>${service.short_description || ''}</p>
+    //                 <button class="read-more-btn" onclick="toggleReadMore(this)">
+    //                     <span>Read More</span>
+    //                     <i class="fas fa-chevron-down"></i>
+    //                 </button>
+    //                 <div class="hidden-content">
+    //                     <p>${service.product_description || ''}</p>
+    //                 </div>
+    //             </div>
 
-                <div class="service-footer">
-                    <div class="service-info">
-                        <div class="price">
-                            <i class="fas fa-tag"></i>
-                            <span class="price-display">From $${service.discounted_amount}</span>
-                        </div>
-                    </div>
-                    <div class="quantity-controls" style="display: none;">
-                        <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <span class="quantity-display">1</span>
-                        <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <button class="book-now-btn" onclick="toggleQuantityControls(this)"
-                        data-base-price="${service.discounted_amount}" data-id="${service.id}">
-                        <span>Book Now</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-        `;
+    //             <div class="service-footer">
+    //                 <div class="service-info">
+    //                     <div class="price">
+    //                         <i class="fas fa-tag"></i>
+    //                         <span class="price-display">From $${service.discounted_amount}</span>
+    //                     </div>
+    //                 </div>
+    //                 <div class="quantity-controls" style="display: none;">
+    //                     <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
+    //                         <i class="fas fa-minus"></i>
+    //                     </button>
+    //                     <span class="quantity-display">1</span>
+    //                     <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
+    //                         <i class="fas fa-plus"></i>
+    //                     </button>
+    //                 </div>
+    //                 <button class="book-now-btn" onclick="toggleQuantityControls(this)"
+    //                     data-base-price="${service.discounted_amount}" data-id="${service.id}">
+    //                     <span>Book Now</span>
+    //                     <i class="fas fa-arrow-right"></i>
+    //                 </button>
+    //             </div>
+    //         </div>
+    //     `;
 
-        container.innerHTML = cardHTML;
-    }
+    //     container.innerHTML = cardHTML;
+    // }
 
     // function showAllServices() {
     //     const container = document.querySelector('.service-options');

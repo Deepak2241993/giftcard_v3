@@ -196,19 +196,19 @@ $amount = 0;
     <div class="cart-items" id="cartItems" @if(empty($cart)) style="display: none;" @else style="display: block;" @endif>
             @foreach ($cart as $key => $item)
                 @php
-                    $product = App\Models\Product::find($item['id']);
-                    $image = explode('|', $product->product_image);
-                    $price = $product->discounted_amount ?? $product->amount;
+                    $units = App\Models\ServiceUnit::find($item['id']);
+                    $image = explode('|', $units->product_image);
+                    $price = $units->discounted_amount ?? $units->amount;
                     $subtotal = $price * $item['quantity'];
                     $amount += $subtotal;
-                    if ($product->giftcard_redemption == 0) {
+                    if ($units->giftcard_redemption == 0) {
                         $redeem++;
                     }
                 @endphp
 
                 <div class="cart-item" id="cartItem_{{ $key }}">
                     <div class="cart-item-header">
-                        <div class="cart-item-title">{{ $product->product_name }}</div>
+                        <div class="cart-item-title">{{ $units->product_name }}</div>
                         <button class="cart-item-remove" onclick="removeFromCart('{{ $key }}')">
                             <i class="fas fa-trash"></i>
                         </button>
