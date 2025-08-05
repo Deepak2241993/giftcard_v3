@@ -1365,7 +1365,7 @@ public function category_update(Request $request, $id)
                                ->first();
 
     if (!$category) {
-        return response()->json(['error' => 'Sorry, no product category found!', 'status' => 404], 404);
+        return response()->json(['error' => 'Sorry, no category found!', 'status' => 404], 404);
     }
 
     // Update category attributes with request data
@@ -1381,7 +1381,7 @@ public function category_update(Request $request, $id)
 
         $result=$category->update($data);
         if ($result) { // This check is now correctly looking for a non-null value
-            return response()->json(['status' => 200, 'msg' => 'Product category updated successfully'], 200);
+            return response()->json(['status' => 200, 'msg' => 'category updated successfully'], 200);
         } else {
             return response()->json(['msg' => 'Sorry, Category is not updated something went wrong!'.$id."-".$token, 'status' => 404], 404);
         }
@@ -1485,7 +1485,7 @@ public function category_update(Request $request, $id)
         $data['cat_image'] = url('/').$destinationPath.$filename;
         $result = $category->create($data);
         if ($result) {
-            return response()->json(['status' => 200, 'msg' => 'Product category created successfully'], 200);
+            return response()->json(['status' => 200, 'msg' => 'category created successfully'], 200);
         } else {
             return response()->json(['msg' => 'Something went wrong. Please try again!', 'status' => 404], 404);
         }
@@ -1494,7 +1494,7 @@ public function category_update(Request $request, $id)
 
         $result = $category->create($data);
         if ($result) {
-            return response()->json(['status' => 200, 'msg' => 'Product category created successfully'], 200);
+            return response()->json(['status' => 200, 'msg' => 'category created successfully'], 200);
         } else {
             return response()->json(['msg' => 'Something went wrong. Please try again!', 'status' => 404], 404);
         }
