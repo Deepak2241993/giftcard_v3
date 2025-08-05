@@ -1192,7 +1192,8 @@ public function category(Request $request)
 
     // Paginate the results
     $total = $query->count(); // Total categories
-    $categories = $query->skip(($page - 1) * $perPage)->take($perPage)->get(); // Get current page items
+    // $categories = $query->skip(($page - 1) * $perPage)->take($perPage)->get(); 
+    $categories = $query->get(); 
 
     // Check if categories were found and return the appropriate response
     if ($categories->isNotEmpty()) {

@@ -74,7 +74,7 @@
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="mb-0">Search Data</h4>
+                            <h4 class="mb-0">Upload Bulk Data</h4>
                         </div>
                         <div class="card-body">
                             <!-- Top Section with Buttons and Search Form -->
@@ -92,7 +92,7 @@
                                                 <label for="file">Choose CSV File(for Upload Bulk Data)</label>
                                                 <input type="file" accept=".csv" name="file" class="form-control" required>
                                             </div>
-                                            <button type="submit" class="btn btn-outline-primary w-100">Import</button>
+                                            <button type="submit" class="btn btn-outline-primary w-100">Upload</button>
                                         </form>
                                     </div>
                                       <!-- Deals Template Download & Media Button -->
@@ -106,10 +106,10 @@
                                         @else
                                             <a href="{{ url('/admin/export-categories-with-full-data') }}" class="btn btn-outline-info w-100" download="deals.csv">Download Full Data</a>
                                         @endif
-                                        <button type="button" class="btn btn-outline-primary w-100 mt-3" data-toggle="modal" data-target="#media_modal">Media</button>
+                                        <button type="button" class="btn btn-outline-primary w-100 mt-3" data-toggle="modal" data-target="#media_modal">Media Upload</button>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-4">
+                                {{-- <div class="col-md-4 mb-4">
                                     <!-- Search Form -->
                                     <h5>Search</h5>
                                     <form method="GET" action="{{ route('category.index') }}" class="d-flex w-100">
@@ -119,37 +119,35 @@
                                         <button type="submit" class="btn btn-outline-success ml-2">Search</button>
                                     </form>
                                 </div>
-                
+                 --}}
                               
                             </div>
-                             <div class="row mb-4">
-                                <div class="col-md-2">
-                                    <!-- Add More Button -->
-                                    <a href="{{ route('category.create') }}" class="btn btn-dark w-100">Add More</a>
-                                </div>
-                
-                                
-                            </div>
+                             
                         </div>
                     </div>
                 </div>
                 
                 
-
+<div class="card">
+    <div class="card-body">
+        <div class="col-md-2">
+                                    <!-- Add More Button -->
+                                    <a href="{{ route('category.create') }}" class="btn btn-dark w-100">Add More</a>
+                                </div>
                 @if ($paginator->isEmpty())
                     <p>No categories found.</p>
                 @else
-                    <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                    <table id="datatable-buttons" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Deals/Categories Name</th>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Deals/Categories Name">Deals/Categories Name</th>
                                 {{-- <th>Categories Image</th> --}}
-                                <th>Short Description</th>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Short Description">Short Description</th>
                                 {{-- <th>Start</th>
                                 <th>End</th> --}}
-                                <th>Created At</th>
-                                <th>Action</th>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Created At">Created At</th>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -173,23 +171,29 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('category.edit', $value['id']) }}"
-                                             class="btn btn-block btn-outline-primary">Edit</a>
-                                        <form action="{{ route('category.destroy', $value['id']) }}" method="POST"
-                                            style="display:inline;">
-                                            @method('DELETE')
+                                        class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        
+                                        <form action="{{ route('category.destroy', $value['id']) }}" method="POST" style="display:inline;">
                                             @csrf
-                                            <button  class="btn btn-block btn-outline-danger" type="submit">Delete</button>
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-outline-danger" type="submit" title="Delete" onclick="return confirm('Are you sure?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </form>
                                     </td>
+
                                 </tr>
                             @endforeach
                         </tbody><br>
-                        {{ $paginator->links() }}
+                      
                     </table>
                 @endif
-
+                </div>
+            </div>
                 <!-- Display pagination links -->
-                {{ $paginator->links() }}
+               
 
 
                 <!--end::Row-->
@@ -447,5 +451,22 @@ function Copy(getkey) {
     });
 }    
 </script>
+<script>
+    $(function () {
+      $("#datatable-buttons").DataTable({
+        "responsive": true, "lengthChange": true, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+  </script>
     @endpush
     
