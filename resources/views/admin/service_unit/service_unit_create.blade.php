@@ -19,6 +19,8 @@
     </div><!-- /.container-fluid -->
 </section>
 <section class="content-header">
+    <div class="card">
+    <div class="card-body">
     <!--begin::App Content-->
     <div class="app-content">
         @if(session()->has('error'))
@@ -108,9 +110,8 @@
                 <div class="mb-3 col-lg-12 self" id="image_field"
                     style="display:{{ isset($data['id']) ? 'none' : 'block' }}">
                     <label for="product_image" class="form-label">Service Image<span
-                            class="text-danger"><span class="text-danger">* 350 X 350 Px Size Should be between 10kb to 2mb</span></span></label><br>
-                    <input class="form-control" id="image" type="file" name="product_image[]" multiple
-                        {{ isset($data) ? '' : 'required' }}>
+                            class="text-danger"><span class="text-danger"> (350 X 350 Px Size Should be between 10kb to 2mb)</span></span></label><br>
+                    <input class="form-control" id="image" type="file" name="product_image[]" multiple>
                 </div>
 
                 <div class="mb-3 col-lg-6 self mt-2">
@@ -161,7 +162,7 @@
                     </select>
                 </div>
 
-            <div class="mb-3 col-lg-6">
+            {{-- <div class="mb-3 col-lg-6">
                 <label for="giftcard_redemption" class="form-label">Giftcard Redeem</label>
                 <select class="form-control" name="giftcard_redemption" id="from">
                     <option value="0"
@@ -171,12 +172,14 @@
                         {{ isset($data['giftcard_redemption']) && $data['giftcard_redemption'] == 1 ? 'selected' : '' }}>
                         Yes</option>
                 </select>
-            </div>
+            </div> --}}
             <div class="mb-3 col-lg-6 mt-4">
                 <button  class="btn btn-block btn-outline-primary" type="submit" id="submitBtn">Submit</button>
             </div>
         </div>
         </form>
+    </div>
+    </div>
     </div>
     <!--end::Row-->
 </section>

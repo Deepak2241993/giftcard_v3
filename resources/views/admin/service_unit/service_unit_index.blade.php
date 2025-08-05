@@ -24,7 +24,12 @@
             <!--begin::Container-->
             <div class="container-fluid">
                 
-
+<div class="card">
+    <div class="card-body">
+                 <div class="col-md-2 mb-2">
+                    <!-- Add More Button -->
+                    <a href="{{ route('unit.create') }}" class="btn btn-dark w-100">Add More</a>
+                </div>
                 @if (session('message'))
                     <div class="alert alert-success mt-4">
                         {{ session('message') }}
@@ -43,11 +48,11 @@
                     <thead>
                         <tr>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">Unit Name</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Orignal Price">Orignal Price</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Discounted Price">Discounted Price</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Status">Status</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
 
                         </tr>
                     </thead>
@@ -55,6 +60,19 @@
                         @foreach ($result as $value)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td class="text-nowrap">
+                                    <a href="{{ route('unit.edit', $value['id']) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <a href="{{ route('unitdelete', $value['id']) }}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+
+                                    <button class="btn btn-sm btn-outline-success" title="Buy" onclick="addcart({{ $value['id'] }})">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </td>
                                 <td>
                                     {{ $value->product_name ? $value->product_name: 'N/A' }}
                                 </td>
@@ -62,12 +80,7 @@
                                 <td>{{ $value->discounted_amount }}</td>
                                 <td>{{ $value->status == 1 ?  "Active":"Inactive" }}</td>
                                 
-                                <td>
-                                    <a href="{{ route('unit.edit', $value['id']) }}"  class="btn btn-block btn-outline-primary">Edit</a>
-                                    <a href="{{ route('unitdelete', $value['id']) }}"  class="btn btn-block btn-outline-danger">Delete</a>
-                                    <a class="btn btn-block btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
-                                  
-                                </td>
+                                
 
 
                                 <!-- Button trigger modal -->
@@ -80,6 +93,8 @@
                     </tbody>
                     
                 </table>
+            </div>
+        </div>
                 {{-- {{ $result->links() }} --}}
                 <!--end::Row-->
                 <!-- /.Start col -->
