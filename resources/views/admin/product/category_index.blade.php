@@ -146,8 +146,8 @@
                                 <th>Deals/Categories Name</th>
                                 {{-- <th>Categories Image</th> --}}
                                 <th>Short Description</th>
-                                <th>Start</th>
-                                <th>End</th>
+                                {{-- <th>Start</th>
+                                <th>End</th> --}}
                                 <th>Created At</th>
                                 <th>Action</th>
                             </tr>
@@ -166,9 +166,9 @@
                                         @endif
                                     </td> --}}
                                     <td>{!! mb_strimwidth($value['cat_description'] ?? 'NULL', 0, 200, '...') !!}</td>
-                                    <td>{{ isset($value['deal_start_date']) ? date('m-d-Y h:i:s', strtotime($value['deal_start_date'])) : 'No Date' }}
+                                    {{-- <td>{{ isset($value['deal_start_date']) ? date('m-d-Y h:i:s', strtotime($value['deal_start_date'])) : 'No Date' }}
                                     <td>{{ isset($value['deal_end_date']) ? date('m-d-Y h:i:s', strtotime($value['deal_end_date'])) : 'No Date' }}
-                                    </td>
+                                    </td> --}}
                                     <td>{{ isset($value['created_at']) ? date('m-d-Y h:i:s', strtotime($value['created_at'])) : 'No Date' }}
                                     </td>
                                     <td>

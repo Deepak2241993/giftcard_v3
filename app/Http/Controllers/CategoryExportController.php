@@ -51,12 +51,12 @@ class CategoryExportController extends Controller
     {
         // Fetch data from product_categories table
         $categories = ProductCategory::select(
-            'id', 'cat_name','cat_description','cat_image','deal_start_date','deal_end_date'
+            'id', 'cat_name','cat_description','cat_image'
         )->get();
 
         // Prepare CSV headers
         $csvHeader = [
-            'ID', 'Deal Name','Deal Description','Deal Image','Deal Start Date (mm-dd-yyyy)','Deal End Date (mm-dd-yyyy)'
+            'ID', 'Deal Name','Deal Description','Deal Image'
         ];
 
         // Open a file pointer for output
@@ -74,8 +74,6 @@ class CategoryExportController extends Controller
                 $category->cat_name,
                 $category->cat_description,
                 $category->cat_image,
-                date('m-d-Y',strtotime($category->deal_start_date)),
-                date('m-d-Y',strtotime($category->deal_end_date)),
                 // $status,
             ]);
         }

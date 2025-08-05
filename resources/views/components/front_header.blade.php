@@ -116,7 +116,7 @@
         </div>
 
         <nav class="header-nav">
-            <a href="https://forevermedspanj.com/" class="nav-link">Home</a>
+            <a href="https://forevermedspanj.com/" class="nav-link">Website</a>
             <a href="{{ url('/') }}" class="nav-link">Giftcards</a>
             <a href="{{ route('services') }}" class="nav-link">Services</a>
             @if (Session::get('patient_details'))

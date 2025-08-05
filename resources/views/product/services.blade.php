@@ -175,7 +175,7 @@
 
             </div>
 
-            <div class="contact-info">
+            {{-- <div class="contact-info">
                 <div class="contact-item website">
                     <div class="contact-icon">
                         <i class="fas fa-globe"></i>
@@ -194,17 +194,17 @@
                         <a href="tel:+12013404809">(201) 340-4809</a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <!-- Right Side - Service Selection -->
         <div class="service-selection">
             <div class="card-glow"></div>
             <div class="service-header">
-                <div class="header-content">
+                {{-- <div class="header-content">
                     <h2><i class="fas fa-list-ul"></i> Choose a Service Category</h2>
                     <p>Select from our premium treatment options</p>
-                </div>
+                </div> --}}
               <div class="search-container d-none d-md-block">
                 <input type="text" id="serviceSearch" class="search-input"
                     placeholder="Search treatments (e.g., Botox, Laser, Facials...)" autocomplete="off">

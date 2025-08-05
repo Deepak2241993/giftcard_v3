@@ -54,7 +54,7 @@
                             value="{{ isset($data) ? $data['slug'] : '' }}"
                             placeholder="Category slug">
                     </div>
-                    <div class="mb-3 col-lg-6 self">
+                    {{-- <div class="mb-3 col-lg-6 self">
                         <label for="deal_start_date" class="form-label">Deal Start Date</label>
                         <input class="form-control" id="deal_start_date" type="date" name="deal_start_date"
                             value="{{ isset($data) ? $data['deal_start_date'] : '' }}">
@@ -63,12 +63,12 @@
                         <label for="deal_end_date" class="form-label">Deal End Date</label>
                         <input class="form-control" id="deal_end_date" type="date" name="deal_end_date"
                             value="{{ isset($data) ? $data['deal_end_date'] : '' }}">
-                    </div>
+                    </div> --}}
 
                     <div class="mb-12 col-lg-12 self">
                         <label for="cat_description" class="form-label">Deal Description</label>
                         <textarea name="cat_description" id="cat_description" rows="4"
-                            class="form-control summernote">{{ isset($data) ? $data['cat_description'] : '' }}</textarea>
+                            class="form-control">{{ isset($data) ? $data['cat_description'] : '' }}</textarea>
                     </div>
                     @if(isset($data))
                         <div class="mb-3 col-lg-6 mt-4 self">

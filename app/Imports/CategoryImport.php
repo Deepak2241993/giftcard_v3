@@ -30,9 +30,7 @@ public function model(array $row)
     if (empty($row['deal_name'])) {
         $errors[] = 'Deal Name is required.';
     }
-    if (empty($row['deal_start_date_mm_dd_yyyy']) || empty($row['deal_end_date_mm_dd_yyyy'])) {
-        $errors[] = 'Deal start and end dates are required.';
-    }
+  
 
     // If there are errors, log them, add to session, and skip the row
     if (!empty($errors)) {
@@ -45,24 +43,6 @@ public function model(array $row)
 
         return null; // Skip this row if it has errors
     }
-
-    // Validate the date formats using Carbon
-    try {
-        $dealStartDate = Carbon::createFromFormat('m-d-Y', $row['deal_start_date_mm_dd_yyyy'])->format('Y-m-d');
-        $dealEndDate = Carbon::createFromFormat('m-d-Y', $row['deal_end_date_mm_dd_yyyy'])->format('Y-m-d');
-    } catch (\Exception $e) {
-        // Log and skip the row if there is a date format error
-        Log::channel('import')->warning('Row skipped: Invalid date format', ['row' => $row, 'error' => $e->getMessage()]);
-
-        // Store the date format error
-        $importErrors = Session::get('import_errors', []);  // Retrieve previous errors
-        $importErrors[] = ['row' => $row, 'errors' => ['Invalid date format']];
-        Session::put('import_errors', $importErrors);  // Flash errors to the session
-
-        return null;
-    }
-
-    // Add other field validations if needed (e.g., checking for valid values)
 
     // Proceed to update or create the ProductCategory
     try {
@@ -80,8 +60,6 @@ public function model(array $row)
                 'user_token' => 'FOREVER-MEDSPA',
                 'status' => (int) ($row['status'] ?? 1),
                 'slug' => Str::slug($row['deal_name'], '-'),
-                'deal_start_date' => $dealStartDate,
-                'deal_end_date' => $dealEndDate,
                 'created_at' => $createdAt,
                 'updated_at' => $updatedAt,
             ]

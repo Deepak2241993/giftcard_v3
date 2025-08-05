@@ -30,7 +30,7 @@
           <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Management</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-              <li><a href="{{ route('category.index') }}" class="dropdown-item">Deals Management </a></li>
+              <li><a href="{{ route('category.index') }}" class="dropdown-item">Categories</a></li>
               <li><a href="{{ route('product.index') }}" class="dropdown-item"> Services Management</a></li>  
               <li><a href="{{ route('unit.index') }}" class="dropdown-item"> Unit Management</a></li>  
               <li><a href="{{ route('terms.index') }}" class="dropdown-item">Terms & Condition</a></li>  
