@@ -285,14 +285,13 @@ public function update(Request $request,$id)
     $units = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
-        ->where('cat_id', $categoryId)
-        // ->where(function ($query) use ($categoryId) {
-        //     $query->where('unit_id', 'like', $categoryId . '|%')
-        //         ->orWhere('unit_id', 'like', '%|' . $categoryId . '|%')
-        //         ->orWhere('unit_id', 'like', '%|' . $categoryId)
-        //         ->orWhere('unit_id', $categoryId);
-        // })
-        ->paginate(10); // Paginate with 15 per page
+        ->where(function ($query) use ($categoryId) {
+            $query->where('cat_id', 'like', $categoryId . '|%')
+                ->orWhere('cat_id', 'like', '%|' . $categoryId . '|%')
+                ->orWhere('cat_id', 'like', '%|' . $categoryId)
+                ->orWhere('cat_id', $categoryId);
+        })
+        ->paginate(40); // Paginate with 15 per page
 
 
         $category = ProductCategory::where('cat_is_deleted', 0)
@@ -302,20 +301,20 @@ public function update(Request $request,$id)
             ->get();
 
         // Autocomplete array for frontend search
-        $search_category = ProductCategory::where('cat_is_deleted', 0)
-            ->where('status', 1)
-            ->where('user_token', 'FOREVER-MEDSPA')
-            ->pluck('cat_name')
-            ->toArray();
+        // $search_category = ProductCategory::where('cat_is_deleted', 0)
+        //     ->where('status', 1)
+        //     ->where('user_token', 'FOREVER-MEDSPA')
+        //     ->pluck('cat_name')
+        //     ->toArray();
 
-        $search_product = Product::where('product_is_deleted', 0)
-            ->where('status', 1)
-            ->where('user_token', 'FOREVER-MEDSPA')
-            ->pluck('product_name')
-            ->toArray();
+        // $search_product = Product::where('product_is_deleted', 0)
+        //     ->where('status', 1)
+        //     ->where('user_token', 'FOREVER-MEDSPA')
+        //     ->pluck('product_name')
+        //     ->toArray();
 
-        $finalarray = array_merge($search_category, $search_product);
-        $search = json_encode($finalarray);
+        // $finalarray = array_merge($search_category, $search_product);
+        // $search = json_encode($finalarray);
 
         // Category slug => name map for frontend JS
         // dd($category);
@@ -326,7 +325,7 @@ public function update(Request $request,$id)
             }
         }
       // Fetch all services for the frontend JS
-    $serviceData = Product::where('product_is_deleted', 0)
+     $serviceData = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->get()
@@ -349,7 +348,6 @@ public function update(Request $request,$id)
         return view('product.services', compact(
             'units',
             'category',
-            'search',
             'categoryMap',
             'serviceData'
         ));

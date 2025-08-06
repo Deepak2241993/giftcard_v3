@@ -30,7 +30,8 @@ class ServiceUnitController extends Controller
      */
     public function create()
     {
-        return view('admin.service_unit.service_unit_create');
+        $category = ProductCategory::where('cat_is_deleted',0)->where('status',1)->get();
+        return view('admin.service_unit.service_unit_create',compact('category'));
     }
 
     /**
@@ -63,6 +64,9 @@ class ServiceUnitController extends Controller
         $finalImageUrl = implode('|', $product_image);
         $data['product_image'] = $finalImageUrl;
     }
+    if (isset($data['cat_id']) && is_array($data['cat_id'])) {
+            $data['cat_id'] = implode('|', $data['cat_id']);
+        }
 
         $serviceUnit->create($data);
 
@@ -74,7 +78,9 @@ class ServiceUnitController extends Controller
     public function edit(ServiceUnit $serviceUnit,$id)
     {
        $data = ServiceUnit::find($id);
-        return view('admin.service_unit.service_unit_create',compact('data'));
+       $category = ProductCategory::where('cat_is_deleted',0)->where('status',1)->get();
+       $selectedcategory = explode('|',$data->cat_id);
+        return view('admin.service_unit.service_unit_create',compact('data','category','selectedcategory'));
     }
 
     public function update(Request $request)
@@ -114,6 +120,10 @@ class ServiceUnitController extends Controller
             
             // Update the service unit with the prepared data
             $data = ServiceUnit::find($request->id);
+
+        if (isset($updateData['cat_id']) && is_array($updateData['cat_id'])) {
+            $updateData['cat_id'] = implode('|', $updateData['cat_id']);
+        }
             $data->update($updateData);
 
             // Redirect back to the admin unit page with a success message
@@ -175,20 +185,20 @@ public function ServicePage(Request $request)
         ->get();
 
     // Autocomplete array for frontend search
-    $search_category = ProductCategory::where('cat_is_deleted', 0)
-        ->where('status', 1)
-        ->where('user_token', 'FOREVER-MEDSPA')
-        ->pluck('cat_name')
-        ->toArray();
+    // $search_category = ProductCategory::where('cat_is_deleted', 0)
+    //     ->where('status', 1)
+    //     ->where('user_token', 'FOREVER-MEDSPA')
+    //     ->pluck('cat_name')
+    //     ->toArray();
 
-    $search_product = Product::where('product_is_deleted', 0)
-        ->where('status', 1)
-        ->where('user_token', 'FOREVER-MEDSPA')
-        ->pluck('product_name')
-        ->toArray();
+    // $search_product = Product::where('product_is_deleted', 0)
+    //     ->where('status', 1)
+    //     ->where('user_token', 'FOREVER-MEDSPA')
+    //     ->pluck('product_name')
+    //     ->toArray();
 
-    $finalarray = array_merge($search_category, $search_product);
-    $search = json_encode($finalarray);
+    // $finalarray = array_merge($search_category, $search_product);
+    // $search = json_encode($finalarray);
 
     // Category slug => name map for frontend JS
     $categoryMap = [];
@@ -199,7 +209,7 @@ public function ServicePage(Request $request)
     }
 
     // Fetch all services for the frontend JS
-    $serviceData = Product::where('product_is_deleted', 0)
+     $serviceData = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->get()
@@ -221,7 +231,6 @@ public function ServicePage(Request $request)
     return view('product.services', compact(
         'units',
         'category',
-        'search',
         'categoryMap',
         'serviceData'
     ));

@@ -150,6 +150,25 @@
                         value="{{ isset($data) ? $data['max_qty'] : '1' }}"
                         placeholder="Number Of Session" required>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Select Category</label>
+                        <select class="select2bs4" multiple="multiple" name="cat_id[]" data-placeholder="Select Multiple Categories"
+                                style="width: 100%;" required>
+                            @if($category)
+                                @foreach($category as $value)
+                                    <option value="{{ $value->id }}"
+                                        
+                                        @if(isset($selectedcategory) && in_array($value->id, $selectedcategory)) selected @endif>
+                                        {{ $value->cat_name }}
+                                    </option>
+                                @endforeach
+                            @else
+                                <option>No category Found</option>
+                            @endif
+                        </select>
+                    </div>
+                        </div>
                 <div class="mb-3 col-lg-6">
                     <label for="status" class="form-label">Status</label>
                     <select class="form-control" name="status" id='status'>
