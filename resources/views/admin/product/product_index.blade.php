@@ -143,9 +143,9 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>
                                 @if(isset($id))
-                                <a class="btn btn-block btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ $id }})">Buy</a>
+                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ $id }})">Buy</a>
                                 @else
-                                <a class="btn btn-block btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
+                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
                                 @endif
                             </td>
                             <td>{{ $value['product_name'] ? $value['product_name'] : 'NULL' }}
@@ -174,24 +174,29 @@
 
                             <td>{{ $value['unit_id'] != null ? 'Unit Service' : 'Normal Deals & Service' }}
                             </td>
-                            <td class="text-center">
-                            <a href="{{ route('product.edit', $value['id']) }}"
-                            class="btn btn-sm btn-outline-primary me-1"
-                            title="Edit">
-                                <i class="fa fa-edit"></i>
-                            </a>
+                          <td class="text-nowrap">
+                            <div class="d-flex justify-content-center align-items-center me-2">
+                                <a href="{{ route('product.edit', $value['id']) }}"
+                                class="btn btn-sm btn-outline-primary"
+                                title="Edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>
 
-                            <form action="{{ route('product.destroy', $value['id']) }}" method="POST" class="d-inline">
-                                @method('DELETE')
-                                @csrf
-                                <button class="btn btn-sm btn-outline-danger"
-                                        type="submit"
-                                        title="Delete"
-                                        onclick="return confirm('Are you sure you want to delete this product?')">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </form>
+                                <form action="{{ route('product.destroy', $value['id']) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Delete"
+                                            onclick="return confirm('Are you sure you want to delete this product?')">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
+
+
+
 
 
 

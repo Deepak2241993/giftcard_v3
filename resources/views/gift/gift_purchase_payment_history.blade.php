@@ -26,7 +26,8 @@
     <div class="app-content">
         <!--begin::Container-->
         <div class="container-fluid">
-        <center>
+        <center class="card">
+          <div class="card-body">
             <div id="myDiv">
                 <div class="box" style="height:70%;
                 width: 50%;
@@ -73,9 +74,12 @@
                         
                     </thead>
                 </table>
+                 <button  class="btn btn-block btn-outline-warning mt-4 mb-4"onclick="printDiv()"> Print</button>
             </div>
+            </div>
+
         </div>
-            <button  class="btn btn-block btn-outline-warning mt-4"onclick="printDiv()"> Print</button>
+           
         </center>
                 
                 <!-- /.Start col -->

@@ -416,20 +416,22 @@
                                                             <td class="product-price">
                                                                 <form action="#" class="update-cart-form"
                                                                     data-id="{{ $item['id'] }}">
-                                                                    <input class="cart-input form-control"
-                                                                        id="cart_qty_{{ $key }}" type="number"
-                                                                        value="{{ $item['quantity'] }}"
-                                                                        data-id="{{ $item['id'] }}"
-                                                                        min="{{ $cart_data->min_qty ?? 1 }}"
-                                                                        max="{{ $cart_data->max_qty ?? 1 }}">
+                                                                   <input class="cart-input form-control"
+                                                                    id="cart_qty_{{ $key }}"
+                                                                    type="number"
+                                                                    value="{{ $item['quantity'] }}"
+                                                                    data-id="{{ $item['id'] }}"
+                                                                    min="{{ $cart_data->min_qty ?? 1 }}"
+                                                                    max="{{ $cart_data->max_qty ?? 1 }}"
+                                                                    onchange="updateCart({{ $item['id'] }}, '{{ $item['type'] ?? 'service' }}', '{{ $key }}')"
+                                                                    onkeyup="updateCart({{ $item['id'] }}, '{{ $item['type'] ?? 'service' }}', '{{ $key }}')"
+                                                                    >
+
                                                                 </form>
                                                             </td>
                                                             <td>{{ "$" . number_format($subtotal, 2) }}</td>
                                                             <!-- Subtotal -->
                                                             <td>
-                                                                <a href="javascript:void(0)"
-                                                                    onclick="updateCart({{ $item['id'] }},'{{ $item['type'] }}','{{ $key }}')"
-                                                                    class="btn btn-block btn-outline-success">Update</a>
                                                                 <a href="javascript:void(0)"
                                                                     onclick="removeFromCart('{{ $key }}')"
                                                                     class="btn btn-block btn-outline-danger">Remove</a>
@@ -438,7 +440,7 @@
                                                     @endforeach
 
                                                     <tr style="background-color:#333;color:aliceblue">
-                                                        <td colspan="4"><strong>Cart Total</strong></td>
+                                                        <td colspan="4"><button class="btn btn-outline-secondary" onclick="location.reload();">Calculate Cart Total</button></td>
                                                         <td colspan="2">{{ "$" . number_format($total, 2) }}</td>
                                                     </tr>
                                                 </tbody>
@@ -447,6 +449,8 @@
                                     </div>
 
                                     <button class="btn btn-primary" onclick="stepper.next()">Next</button>
+                                    
+
                                 </div>
                                 {{-- Patient Inforamtion --}}
                                 <div id="patient-information" class="content" role="tabpanel"
@@ -958,13 +962,9 @@
                     if (response.status === '200') {
                         console.log("Cart updated successfully!");
                         location.reload();
-                    } else {
-                        alert(response.error || "Failed to update the cart.");
                     }
                 },
-                error: function() {
-                    alert("An error occurred while updating the cart.");
-                }
+               
             });
         }
 
@@ -1086,3 +1086,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 </script>  --}}
+
+
+@endpush

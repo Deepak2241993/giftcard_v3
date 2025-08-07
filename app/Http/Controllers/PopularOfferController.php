@@ -548,5 +548,4 @@ public function Checkout(Request $request)
         return view('admin.cart.invoice', compact('transaction_data'));
     }
     
-
 }

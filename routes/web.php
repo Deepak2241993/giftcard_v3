@@ -151,6 +151,9 @@ Route::get('service-cart','PopularOfferController@AdminCartview')->name('service
 Route::get('payment-process','PopularOfferController@AdminPaymentProcess')->name('payment-process');
 Route::post('servic-checkout-process','PopularOfferController@CheckoutProcess')->name('servic-checkout-process');
 
+
+
+
 Route::post('internal-service-purchase','StripeController@InternalServicePurchase')->name('InternalServicePurchases');
 Route::get('/invoice/{transaction_data}', 'PopularOfferController@invoice')->name('service-invoice');
 Route::get('/giftcards-statement-admin-view/{id}', 'PatientController@GiftcardsStatementAdminView')->name('giftcards-statement-admin-view');

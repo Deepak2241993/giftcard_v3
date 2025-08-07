@@ -56,10 +56,11 @@
                             <thead>
                                 <tr>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
-                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Program Name">Program Name</th>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">Unit Name</th>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Status">Status</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,28 +69,12 @@
                                 @foreach($data as $value)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>
-                                        @if(isset($id))
-                                            <a class="btn btn-block btn-outline-warning" onclick="({{ $value['id'] }}, {{ $id }})">Buy</a>
+                                    <td>  @if(isset($id))
+                                            <a class="btn btn-sm btn-outline-primary" onclick="({{ $value['id'] }}, {{ $id }})">Buy</a>
                                         @else
-                                        <a class="btn btn-block btn-outline-warning" onclick="addcart({{ $value['id'] }})">Buy</a>
-                                        @endif
-
-                                        @if(!@isset($id))
-                                            
-                                        
-                                        <a href="{{route('program.edit',$value->id)}}"
-                                             class="btn btn-block btn-outline-primary mb-2">Edit</a>
-                                        <form
-                                            action="{{route('program.destroy',$value->id)}}"
-                                            method="POST">
-                                            @method('DELETE')
-                                            
-                                              @csrf
-                                            <button  class="btn btn-block btn-outline-danger" type="submit">Delete</button>
-                                        </form>
-                                        @endisset
-                                    </td>
+                                        <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
+                                        @endif</td>
+                                    
                                     <td>{{$value->program_name}}</td>
                                     <td>
                                         <ul>
@@ -111,7 +96,24 @@
                                         <span class="badge bg-danger">Inactive</span>
                                         @endif
                                       </td>
-                                 
+                                      <td class="text-nowrap">
+                                    @if(!@isset($id))
+                                        <div class="d-flex">
+                                            <a href="{{ route('program.edit', $value->id) }}"
+                                            class="btn btn-sm btn-outline-primary me-2"><i class="fa fa-edit"></i></a>
+
+                                            <form action="{{ route('program.destroy', $value->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm  btn-outline-danger"
+                                                        onclick="return confirm('Are you sure you want to delete this program?')">
+                                                   <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endisset
+                                </td>
+
                                 
                                     <!-- Button trigger modal -->
                                 </tr>

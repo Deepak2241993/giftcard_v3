@@ -48,11 +48,12 @@
                     <thead>
                         <tr>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">Unit Name</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Orignal Price">Orignal Price</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Discounted Price">Discounted Price</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Status">Status</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
 
                         </tr>
                     </thead>
@@ -60,17 +61,8 @@
                         @foreach ($result as $value)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td class="text-nowrap">
-                                    <a href="{{ route('unit.edit', $value['id']) }}" class="btn btn-sm btn-outline-primary" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-
-                                    <a href="{{ route('unitdelete', $value['id']) }}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure?')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-
-                                    <button class="btn btn-sm btn-outline-success" title="Buy" onclick="addcart({{ $value['id'] }})">
-                                        <i class="fas fa-shopping-cart"></i>
+                               <td><button class="btn btn-sm btn-outline-primary" title="Buy" onclick="addcart({{ $value['id'] }})">
+                                        Buy
                                     </button>
                                 </td>
                                 <td>
@@ -79,7 +71,17 @@
                                 <td>{{ $value->amount }}</td>
                                 <td>{{ $value->discounted_amount }}</td>
                                 <td>{{ $value->status == 1 ?  "Active":"Inactive" }}</td>
-                                
+                                 <td class="text-nowrap">
+                                    <a href="{{ route('unit.edit', $value['id']) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <a href="{{ route('unitdelete', $value['id']) }}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+
+                                    
+                                </td>
                                 
 
 
