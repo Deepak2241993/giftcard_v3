@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Auth;
-
+use Session;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -41,6 +41,9 @@ class ProductController extends Controller
         // Image Show
         $images = Storage::files('public/images');
 
+        if ($request->filled('patient_id')) {
+                Session::put('internal_patient_id', $request->get('patient_id'));
+            }
         return view('admin.product.product_index', compact('products', 'images'));
     }
     public function ServiceBuyFromPatientPage(Request $request, Product $product,$id)

@@ -106,7 +106,7 @@
                                         </a>
                                     @endif
                                     <a href="{{ url('/admin/export-categories') }}" class="btn btn-outline-warning mb-2" download="deals.csv">
-                                        Download Deals Data
+                                        Download Categories Data
                                     </a>
                                     <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#media_modal">
                                         Media

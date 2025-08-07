@@ -536,17 +536,12 @@ public function invoice()
         {
             // Validation
             $request->validate([
-                'fname' => 'required|string|max:255',
-                'email' => 'required|email|max:255',
                 'cart_total' => 'required|numeric|min:0',
                 'discount' => 'nullable|numeric|min:0',
                 'tax' => 'nullable|numeric|min:0',
                 'pay_amount' => 'required|numeric|min:0',
                 'payment_status' => 'required|string|max:255',
             ], [
-                'fname.required' => 'The first name is required.',
-                'email.required' => 'The email address is required.',
-                'email.email' => 'Please enter a valid email address.',
                 'cart_total.required' => 'The cart total amount is required.',
                 'cart_total.numeric' => 'The cart total must be a numeric value.',
                 'pay_amount.required' => 'The payment amount is required.',
@@ -584,10 +579,10 @@ public function invoice()
 
                 // Create transaction record
                 $transaction = TransactionHistory::create([
-                    'fname' => $request->fname,
-                    'lname' => $request->lname,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
+                    'fname' => $patient->fname,
+                    'lname' => $patient->lname,
+                    'email' => $patient->email,
+                    'phone' => $patient->phone,
                     'order_id' => null, // Placeholder
                     'gift_card_applyed' => $giftNumbers ? implode('|', $giftNumbers) : null,
                     'gift_card_amount' => $giftAmounts ? implode('|', $giftAmounts) : null,

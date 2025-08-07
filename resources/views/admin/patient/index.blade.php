@@ -83,15 +83,15 @@
                                                 <i class="fa fa-user"></i>
                                             </a>
 
-                                            <a href="{{ route('giftcards-sale') }}" class="btn btn-outline-success btn-sm" title="Buy Giftcard">
+                                            <a href="{{ route('giftcards-sale') }}?patient_id={{ $value->id }}" class="btn btn-outline-success btn-sm" title="Buy Giftcard">
                                                 <i class="fa fa-gift"></i>
                                             </a>
 
-                                            <a href="{{ route('product.index') }}" class="btn btn-outline-info btn-sm" title="Buy Services & Deals">
+                                            <a href="{{ route('product.index') }}?patient_id={{ $value->id }}" class="btn btn-outline-info btn-sm" title="Buy Services & Unit">
                                                 <i class="fa fa-dna"></i>
                                             </a>
 
-                                            <a href="{{ route('program.index') }}" class="btn btn-outline-warning btn-sm" title="Buy Program">
+                                            <a href="{{ route('program.index') }}?patient_id={{ $value->id }}" class="btn btn-outline-warning btn-sm" title="Buy Program">
                                                 <i class="fa fa-stethoscope"></i>
                                             </a>
                                         </div>

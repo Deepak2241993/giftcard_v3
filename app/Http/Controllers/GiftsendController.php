@@ -424,16 +424,15 @@ else{
         return $result;
     }
 
-   public function giftsale(Request $request, $id = null)
-{
-    $patient = null;
-
-    if ($id) {
-        $patient = Patient::findOrFail($id);
+   public function giftsale(Request $request)
+    {
+        $patient = Patient::findOrFail($request->filled('patient_id'));
+        // For Purchasing Giftcard patient Select 
+        if ($request->filled('patient_id')) {
+            Session::put('internal_patient_id', $request->get('patient_id'));
+        }
+        return view('gift.gift_sale', compact('patient'));
     }
-
-    return view('gift.gift_sale', compact('patient'));
-}
 
      // For Other Giftcards
 

@@ -426,11 +426,8 @@ class PatientController extends Controller
     public function PatientData(Request $request)
     {
         // Search patient by email OR phone (partial match)
-        $patientData = Patient::where(function ($query) use ($request) {
-            $query->where('email', 'like', '%' . $request->search . '%')
-                  ->orWhere('phone', 'like', '%' . $request->search . '%');
-        })->first();
-    
+        $patientData = Patient::find($request->id);
+
     // If no patient found
         if (!$patientData) {
             return response()->json([
@@ -444,10 +441,22 @@ class PatientController extends Controller
                       ->whereNull('recipient_name')
                       ->where('gift_send_to', $patientData->patient_login_id);
             })
+            // Gifts Receive by Others  using patient Login
             ->orWhere(function($query) use ($patientData) {
                 $query->whereColumn('gift_send_to', '!=', 'receipt_email')
                       ->whereNotNull('recipient_name')
                       ->where('gift_send_to', $patientData->patient_login_id);
+            })
+             ->orWhere(function($query) use ($patientData) {
+                 $query->whereColumn('gift_send_to', 'receipt_email')
+                      ->whereNull('recipient_name')
+                      ->where('gift_send_to', $patientData->email);
+            })
+            // Gifts Receive by Others  using patient Email
+            ->orWhere(function($query) use ($patientData) {
+                $query->whereColumn('gift_send_to', '!=', 'receipt_email')
+                      ->whereNotNull('recipient_name')
+                      ->where('gift_send_to', $patientData->email);
             })
             ->orderBy('id', 'DESC')
             ->get();
@@ -487,13 +496,6 @@ class PatientController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Patient data and gift cards retrieved successfully.',
-            'patient_data' => [
-                'fname' => $patientData->fname,
-                'lname' => $patientData->lname,
-                'email' => $patientData->email,
-                'phone' => $patientData->phone,
-                'id' => $patientData->id,
-            ],
             'giftcards' => $formattedGiftcards,
         ]);
     }

@@ -469,21 +469,21 @@
                                         <h5>Patient Details</h5>
                                         <div class="row mb-4">
                                             <div class="mt-4 col-md-3">
-                                                <input type="text" class="form-control" value="{{$patient->fname??''}}" id="fname" name="fname"
+                                                <input type="text" class="form-control" value="{{$patient->fname??''}}" readonly id="fname" name="fname"
                                                     Placeholder="First Name">
-                                                <input type="hidden" class="form-control" value="0" id="patient_id" name="patient_id"
+                                                <input type="hidden" class="form-control" value="{{$patient->id??''}}" id="patient_id" name="patient_id"
                                                 Placeholder="id">
                                             </div>
                                             <div class="mt-4 col-md-3">
-                                                <input type="text" class="form-control" value="{{$patient->lname??''}}" id="lname" name="lname"
+                                                <input type="text" class="form-control" value="{{$patient->lname??''}}" readonly id="lname" name="lname"
                                                     Placeholder="Last Name">
                                             </div>
                                             <div class="mt-4 col-md-3">
-                                                <input type="email" class="form-control" value="{{$patient->email??''}}" id="email" name="email"
+                                                <input type="email" class="form-control" value="{{$patient->email??''}}" readonly id="email" name="email"
                                                     Placeholder="Email">
                                             </div>
                                             <div class="mt-4 col-md-3">
-                                                <input type="text" class="form-control" value="{{$patient->phone??''}}" id="phone" name="phone"
+                                                <input type="text" class="form-control" value="{{$patient->phone??''}}" readonly id="phone" name="phone"
                                                     Placeholder="Phone">
                                             </div>
                                         </div>

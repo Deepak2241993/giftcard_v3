@@ -223,8 +223,8 @@ public function updateCart(Request $request)
     }
 
     public function AdminCartview(Request $request){
-         if (Session::has('patient_id')) {
-        $patient_id = Session::get('patient_id');
+         if (Session::has('internal_patient_id')) {
+        $patient_id = Session::get('internal_patient_id');
         try {
             $patient = Patient::findOrFail($patient_id);
 
@@ -278,7 +278,8 @@ public function updateCart(Request $request)
             return redirect()->back()->with('error', 'Patient not found.');
         }
     }
-        return view('admin.cart.cart');
+     $patients = Patient::where('is_deleted',0)->orderBy('id', 'DESC')->get();
+        return view('admin.cart.cart',compact('patients'));
     }
     //  For Items Remove From Carts
     public function CartRemove(Request $request){
