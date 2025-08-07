@@ -439,17 +439,18 @@
                                                         </tr>
                                                     @endforeach
 
-                                                    <tr style="background-color:#333;color:aliceblue">
-                                                        <td colspan="4"><button class="btn btn-outline-secondary" onclick="location.reload();">Calculate Cart Total</button></td>
-                                                        <td colspan="2">{{ "$" . number_format($total, 2) }}</td>
+                                                   <tr style="background-color:#333;color:aliceblue" id="cart-final-total-row">
+                                                        <td colspan="4" class="text-end fw-bold">Final Total:</td>
+                                                        <td colspan="2" class="fw-bold" id="cart-final-total">${{ number_format($total, 2) }}</td>
                                                     </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
 
                                     <button class="btn btn-primary" onclick="stepper.next()">Next</button>
-                                    
+
 
                                 </div>
                                 {{-- Patient Inforamtion --}}
@@ -755,8 +756,9 @@
 {{--  For All Giftcard Calculation, Tax, Discount and Total Calculation --}}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        
         // Get required elements
-        const cartTotal = parseFloat({{ $total }}) || 0; // Ensure it's a valid number
+       const cartTotal = parseFloat($('#cart_total').text().replace('$', '')) || 0;
         const discountInput = document.getElementById("discount");
         const taxSelect = document.getElementById("tax");
         const totalValue = document.getElementById("totalValue");
@@ -932,41 +934,73 @@
     <script>
         // Update Cart
         function updateCart(itemId, itemType, cart_id) {
-            var quantity = $('#cart_qty_' + cart_id).val();
-            var min = parseInt($('#cart_qty_' + cart_id).attr('min')); // Get the min value
-            var max = parseInt($('#cart_qty_' + cart_id).attr('max')); // Get the max value
-            // alert(quantity);
+    var quantity = $('#cart_qty_' + cart_id).val();
+    var min = parseInt($('#cart_qty_' + cart_id).attr('min'));
+    var max = parseInt($('#cart_qty_' + cart_id).attr('max'));
 
-            if (quantity <= 0) {
-                alert("Quantity must be at least 1");
-                return;
-            }
-            if (quantity < min || quantity > max) {
-                alert('Quantity must be between ' + min + ' and ' + max + '.');
-                location.reload();
-                return false;
-            }
+    if (quantity <= 0) {
+        alert("Quantity must be at least 1");
+        return;
+    }
+    if (quantity < min || quantity > max) {
+        alert('Quantity must be between ' + min + ' and ' + max + '.');
+        location.reload();
+        return false;
+    }
 
-            // Send AJAX request to update the cart
-            $.ajax({
-                url: '{{ route('update-cart') }}', // Replace with your actual route
-                method: 'POST',
-                data: {
-                    id: itemId,
-                    type: itemType,
-                    quantity: quantity,
-                    key: cart_id,
-                    _token: '{{ csrf_token() }}' // CSRF token for security
-                },
-                success: function(response) {
-                    if (response.status === '200') {
-                        console.log("Cart updated successfully!");
-                        location.reload();
+    // Send AJAX request to update the cart
+    $.ajax({
+        url: '{{ route('update-cart') }}',
+        method: 'POST',
+        data: {
+            id: itemId,
+            type: itemType,
+            quantity: quantity,
+            key: cart_id,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+            if (response.success) {
+                let updatedItems = response.cartItems;
+                let cartTotal = 0;
+
+                // Loop through updated cart items
+                for (const key in updatedItems) {
+                    if (updatedItems.hasOwnProperty(key)) {
+                        const item = updatedItems[key];
+
+                        const priceText = $('#cart-item-' + item.id + ' .product-price').eq(0).text().replace('$', '');
+                        const discountedPriceText = $('#cart-item-' + item.id + ' .product-price').eq(1).text().replace('$', '');
+
+                        const price = parseFloat(discountedPriceText) > 0 ? parseFloat(discountedPriceText) : parseFloat(priceText);
+                        const quantity = parseInt(item.quantity);
+                        const subtotal = price * quantity;
+                        cartTotal += subtotal;
+
+                        // Update subtotal column
+                        $('#cart-item-' + item.id + ' td:nth-child(5)').text('$' + subtotal.toFixed(2));
                     }
-                },
-               
-            });
+                }
+
+                // Update displayed cart total
+                $('#cart-final-total').text('$' + cartTotal.toFixed(2));
+                $('#cart_total').text('$' + cartTotal.toFixed(2));
+
+                // Calculate gift card, discount, tax, and grand total
+                var giftCardTotal = calculateGiftCardTotal();
+                var discount = parseFloat($('#discount').val()) || 0;
+                var tax = parseFloat($('#tax').val()) || 0;
+
+                const subtotalAfterDiscounts = Math.max(cartTotal - giftCardTotal - discount, 0);
+                const taxAmount = (subtotalAfterDiscounts * tax) / 100;
+                const grandTotal = subtotalAfterDiscounts + taxAmount;
+
+                $('#totalValue').text('$' + grandTotal.toFixed(2));
+            }
         }
+    });
+}
+
 
     </script>
 <script>
@@ -1055,6 +1089,9 @@
 
 
 </script>
+
+
+
 
 
 
