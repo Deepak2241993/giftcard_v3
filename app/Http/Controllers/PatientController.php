@@ -426,7 +426,7 @@ class PatientController extends Controller
     public function PatientData(Request $request)
     {
         // Search patient by email OR phone (partial match)
-        $patientData = Patient::find($request->id);
+        $patientData = Patient::find($request->search);
 
     // If no patient found
         if (!$patientData) {
@@ -493,11 +493,18 @@ class PatientController extends Controller
         $formattedGiftcards = array_values($formattedGiftcards);
     
         // Return JSON response
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Patient data and gift cards retrieved successfully.',
-            'giftcards' => $formattedGiftcards,
-        ]);
+       return response()->json([
+        'status' => 'success',
+        'message' => 'Patient data and gift cards retrieved successfully.',
+        'giftcards' => $formattedGiftcards,
+        'patient' => [
+            'fname' => $patientData->fname,
+            'lname' => $patientData->lname,
+            'phone' => $patientData->phone,
+            'email' => $patientData->email
+        ]
+    ]);
+
     }
 
 }

@@ -223,7 +223,8 @@ public function updateCart(Request $request)
     }
 
     public function AdminCartview(Request $request){
-         if (Session::has('internal_patient_id')) {
+        
+        if (Session::has('internal_patient_id')) {
         $patient_id = Session::get('internal_patient_id');
         try {
             $patient = Patient::findOrFail($patient_id);
@@ -238,6 +239,17 @@ public function updateCart(Request $request)
                 $query->whereColumn('gift_send_to', '!=', 'receipt_email')
                       ->whereNotNull('recipient_name')
                       ->where('gift_send_to', $patient->patient_login_id);
+            })
+               ->orWhere(function($query) use ($patientData) {
+                 $query->whereColumn('gift_send_to', 'receipt_email')
+                      ->whereNull('recipient_name')
+                      ->where('gift_send_to', $patientData->email);
+            })
+            // Gifts Receive by Others  using patient Email
+            ->orWhere(function($query) use ($patientData) {
+                $query->whereColumn('gift_send_to', '!=', 'receipt_email')
+                      ->whereNotNull('recipient_name')
+                      ->where('gift_send_to', $patientData->email);
             })
             ->orderBy('id', 'DESC')
             ->get();
