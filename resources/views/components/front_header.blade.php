@@ -105,6 +105,45 @@
     }
 }
 
+/* For Phone Button */
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btnc-primary {
+    border: 1px solid #d66c3d;
+    background-color: #d66c3d;
+    color: #fff;
+    border-radius: 7px;
+}
+a.btn.btnc-primary.btn-phone {
+    font-size: 14px;
+    font-size: 14px;
+    padding: 3px 18px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+a.btn.btnc-primary.btn-phone {
+    font-size: 12px;
+}
 </style>
 
 
@@ -146,7 +185,8 @@
             <!-- Hamburger Icon (mobile only) -->
             <div class="mobile-only-icon" id="hamburgerMenu">
                 <i class="fas fa-bars"></i>
-        </div>
+            </div>
+            <a href="tel:12013404809" class="btn btnc-primary btn-phone"><span style="color:#fff"><i class="fa fa-phone" aria-hidden="true"></i> Book appointment</span> <br><span class="emergency-number">(201) 340-4809<span></span></span></a>
         </nav>
     </div>
     <!-- Mobile Menu Links -->
@@ -159,6 +199,7 @@
         @else
             <a href="{{ url('/patient-login') }}">Login</a>
         @endif
+        
     </div>
      @if(url()->current() == route('services'))
         <div id="mobileSearchContainer" class="d-block d-md-none">
@@ -166,6 +207,7 @@
             <div class="search-dropdown" id="mobileSearchDropdown"></div>
         </div>
     @endif
+    
 </header>
 
 @php
