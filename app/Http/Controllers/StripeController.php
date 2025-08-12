@@ -241,195 +241,196 @@ class StripeController extends Controller
 
 
    public function CheckoutProcess(Request $request)
-{
-    $request->validate([
-        'fname' => 'required|string|max:255',
-        'lname' => 'required|string|max:255',
-        'city' => 'required|string|max:255',
-        'country' => 'required|string|max:255',
-        'zip_code' => 'required|digits:5',
-        'email' => 'required|email|max:255',
-        'phone' => 'required|digits_between:7,10',
-    ]);
+    {
+        $request->validate([
+            'fname' => 'required|string|max:255',
+            'lname' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'zip_code' => 'required|digits:5',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|digits_between:7,10',
+        ]);
 
-    DB::beginTransaction();  // Start transaction
+        DB::beginTransaction();  // Start transaction
 
-    try {
-       
-        // Generate New Order For this 
-        $orderId = 'MSWC-SER-'.date('Y')."-".time();
-        $gift_number = null;
-        $gift_amount = null;
-        $totalAmount = 0;
+        try {
+        
+            // Generate New Order For this 
+            $orderId = 'MSWC-SER-'.date('Y')."-".time();
+            $gift_number = null;
+            $gift_amount = null;
+            $totalAmount = 0;
 
-//  If Gift card applyed for redeem
-        if (session()->has('total_gift_applyed')) {
-            $cards = session('cart', []);
-            $giftcards = session('giftcards', []);
-            $gift_numbers = [];
-            $gift_amounts = [];
-  
-            foreach ($giftcards as $giftcard) {
-                if (isset($giftcard['number'])) {
-                    $gift_numbers[] = $giftcard['number'];
-                    $gift_amounts[] = $giftcard['amount'];
+    //  If Gift card applyed for redeem
+            // if (session()->has('total_gift_applyed') && $cards = session('cart', []) ) {
+            //     $cards = session('cart', []);
+            //     $giftcards = session('giftcards', []);
+            //     $gift_numbers = [];
+            //     $gift_amounts = [];
+    
+            //     foreach ($giftcards as $giftcard) {
+            //         if (isset($giftcard['number'])) {
+            //             $gift_numbers[] = $giftcard['number'];
+            //             $gift_amounts[] = $giftcard['amount'];
+            //         }
+            //     }
+
+            //     $gift_number = implode('|', $gift_numbers);
+            //     $gift_amount = implode('|', $gift_amounts);
+            //     $sub_amount = session('totalValue', 0) + session('total_gift_applyed', 0) - session('tax_amount', 0);
+            //     $final_amount = session('totalValue', 0);
+            //     $taxamount = session('tax_amount', 0);
+                
+            // }
+            //  If Gift card Not applyed for redeem
+            if ($cards = session('cart', []))
+            {
+            
+
+                foreach ($cards as $item) {
+                    if($item['type']=='product')
+                    {
+
+                        $cart_data = Product::find($item['id']);
+                       
+                        $totalAmount += $item['quantity']*$cart_data->discounted_amount ??  $item['quantity']*$cart_data->amount;
+                    }
+                    if($item['type']=='unit')
+                        {
+                            $cart_data = ServiceUnit::find($item['id']);
+                    
+                        $totalAmount += $item['quantity']*$cart_data->discounted_amount ??  $item['quantity']*$cart_data->amount;
+                    }
+
                 }
+
+                $taxamount = ($totalAmount * 0) / 100;
+                $sub_amount = $totalAmount;
+                $final_amount = $totalAmount + $taxamount;
             }
 
-            $gift_number = implode('|', $gift_numbers);
-            $gift_amount = implode('|', $gift_amounts);
-            $sub_amount = session('totalValue', 0) + session('total_gift_applyed', 0) - session('tax_amount', 0);
-            $final_amount = session('totalValue', 0);
-            $taxamount = session('tax_amount', 0);
+            $data = [
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'city' => $request->city,
+                'country' => $request->country,
+                'zip_code' => $request->zip_code,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'order_id' => $orderId,
+                'gift_card_applyed' => $gift_number ? $gift_number:null,
+                'gift_card_amount' => $gift_amount ? $gift_amount :null,
+                'sub_amount' => $sub_amount,
+                'final_amount' => $final_amount,
+                'address' => $request->address,
+                'tax_amount' => $taxamount,
+                'user_token' => 'FOREVER-MEDSPA',
+                'payment_mode' => 'online',
+                'patient_login_id' => Auth::guard('patient')->user()->patient_login_id ?? null,
+
+            ];
+           
             
-        }
-        //  If Gift card Not applyed for redeem
-        else {
-           
-            $cards = session('cart', []);
-           
+                // Insert data and get the latest inserted ID
+                $latestId = DB::table('transaction_histories')->insertGetId($data);
+
+                // Concatenate order_id with the prefix and latest ID
+                $orderId = 'FMSWCSU' . str_pad($latestId, 8, '0', STR_PAD_LEFT); // Example: MSWC-SER-00000001
+
+                // Update the order_id field
+                DB::table('transaction_histories')
+                    ->where('id', $latestId)
+                    ->update(['order_id' => $orderId]);
+
+                // Optional: Store updated data in the controller
+                $data['order_id'] = $orderId;
+                // $this->transactionHistoryController->store(new \Illuminate\Http\Request($data));
+            // Store data in ServiceOrder table
+        
+            
             foreach ($cards as $item) {
                 if($item['type']=='product')
                 {
 
                     $cart_data = Product::find($item['id']);
-                    $totalAmount += $item['quantity']*$cart_data->discounted_amount ??  $item['quantity']*$cart_data->amount;
                 }
                 if($item['type']=='unit')
                 {
 
                     $cart_data = ServiceUnit::find($item['id']);
-                    $totalAmount += $item['quantity']*$cart_data->discounted_amount ??  $item['quantity']*$cart_data->amount;
                 }
 
+                $order_data = [
+                    'order_id' => $orderId,
+                    'service_id' => $item['id'],
+                    'status' => 0,
+                    'number_of_session' => $cart_data->session_number?$item['quantity']*$cart_data->session_number:$item['quantity'],
+                    'user_token' => 'FOREVER-MEDSPA',
+                    'actual_amount' => $cart_data->amount,
+                    'discounted_amount' => $cart_data->discounted_amount ?? 0.00,
+                    'payment_mode' => 'online',
+                    'qty' => $item['quantity'],
+                    'service_type' => $item['type'],
+                     'patient_login_id' => Auth::guard('patient')->user()->patient_login_id ?? null,
+                ];
+                // ServiceOrderController::create($order_data);
+                $this->ServiceOrderController->store(new \Illuminate\Http\Request($order_data));
+                event(new ServicePurchases($order_data));
             }
 
-            $taxamount = ($totalAmount * 0) / 100;
-            $sub_amount = $totalAmount;
-            $final_amount = $totalAmount + $taxamount;
+            DB::commit();  // Commit transaction
+
+        } catch (\Exception $e) {
+            DB::rollBack();  // Rollback transaction
+            Log::error('Checkout Process Error: ' . $e->getMessage());
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
 
-        $data = [
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'city' => $request->city,
-            'country' => $request->country,
-            'zip_code' => $request->zip_code,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'order_id' => $orderId,
-            'gift_card_applyed' => $gift_number ? $gift_number:null,
-            'gift_card_amount' => $gift_amount ? $gift_amount :null,
-            'sub_amount' => $sub_amount,
-            'final_amount' => $final_amount,
-            'address' => $request->address,
-            'tax_amount' => $taxamount,
-            'user_token' => 'FOREVER-MEDSPA',
-            'payment_mode' => 'online',
-            'patient_login_id' => Auth::guard('patient')->user()->patient_login_id
-        ];
+        // Stripe Checkout Session
+        try {
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            $redirecturl = route('strip_checkout_success') . '?session_id={CHECKOUT_SESSION_ID}';
 
-        
-            // Insert data and get the latest inserted ID
-            $latestId = DB::table('transaction_histories')->insertGetId($data);
-
-            // Concatenate order_id with the prefix and latest ID
-            $orderId = 'FMSWCSU' . str_pad($latestId, 8, '0', STR_PAD_LEFT); // Example: MSWC-SER-00000001
-
-            // Update the order_id field
-            DB::table('transaction_histories')
-                ->where('id', $latestId)
-                ->update(['order_id' => $orderId]);
-
-            // Optional: Store updated data in the controller
-            $data['order_id'] = $orderId;
-            // $this->transactionHistoryController->store(new \Illuminate\Http\Request($data));
-        // Store data in ServiceOrder table
-       
-        
-        foreach ($cards as $item) {
-            if($item['type']=='product')
-            {
-
-                $cart_data = Product::find($item['id']);
-            }
-            if($item['type']=='unit')
-            {
-
-                $cart_data = ServiceUnit::find($item['id']);
-            }
-
-            $order_data = [
-                'order_id' => $orderId,
-                'service_id' => $item['id'],
-                'status' => 0,
-                'number_of_session' => $cart_data->session_number?$item['quantity']*$cart_data->session_number:$item['quantity'],
-                'user_token' => 'FOREVER-MEDSPA',
-                'actual_amount' => $cart_data->amount,
-                'discounted_amount' => $cart_data->discounted_amount,
-                'payment_mode' => 'online',
-                'qty' => $item['quantity'],
-                'service_type' => $item['type'],
-                'patient_login_id' => Auth::guard('patient')->user()->patient_login_id
-            ];
-
-            // ServiceOrderController::create($order_data);
-            $this->ServiceOrderController->store(new \Illuminate\Http\Request($order_data));
-            event(new ServicePurchases($order_data));
-        }
-
-        DB::commit();  // Commit transaction
-
-    } catch (\Exception $e) {
-        DB::rollBack();  // Rollback transaction
-        Log::error('Checkout Process Error: ' . $e->getMessage());
-        return back()->withErrors(['error' => $e->getMessage()]);
-    }
-
-    // Stripe Checkout Session
-    try {
-        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-        $redirecturl = route('strip_checkout_success') . '?session_id={CHECKOUT_SESSION_ID}';
-
-        $response = $stripe->checkout->sessions->create([
-            'success_url' => $redirecturl,
-            'customer_email' => $request->email,
-            'payment_method_types' => ['link', 'card'],
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'product_data' => [
-                            'name' => $orderId ?: '',
+            $response = $stripe->checkout->sessions->create([
+                'success_url' => $redirecturl,
+                'customer_email' => $request->email,
+                'payment_method_types' => ['link', 'card'],
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'product_data' => [
+                                'name' => $orderId ?: '',
+                            ],
+                            'unit_amount' => session()->get('totalValue') ? session()->get('totalValue') * 100 : $final_amount * 100,
+                            'currency' => 'USD',
                         ],
-                        'unit_amount' => session()->get('totalValue') ? session()->get('totalValue') * 100 : $final_amount * 100,
-                        'currency' => 'USD',
+                        'quantity' => 1
                     ],
-                    'quantity' => 1
                 ],
-            ],
-            'mode' => 'payment',
-            'allow_promotion_codes' => false,
-        ]);
+                'mode' => 'payment',
+                'allow_promotion_codes' => false,
+            ]);
 
-        // Update payment_session_id in TransactionHistory
-        TransactionHistory::where('order_id', $orderId)->update(['payment_session_id' => $response->id]);
+            // Update payment_session_id in TransactionHistory
+            TransactionHistory::where('order_id', $orderId)->update(['payment_session_id' => $response->id]);
 
         // Trigger the payment event with relevant data
-        event(new ServicePurchasesPayment([
-        'session_id' => $response->id,
-        'payment_intent' => $response->payment_intent,
-        'email' => $request->email,
-        'order_id' => $orderId,
-        'amount' => session()->get('totalValue') ?? $final_amount,
-        'patient_id'=>Auth::guard('patient')->user()->patient_login_id
-        ]));
-        return redirect($response['url']);
+            // event(new ServicePurchasesPayment([
+            // 'session_id' => $response->id,
+            // 'payment_intent' => $response->payment_intent,
+            // 'email' => $request->email,
+            // 'order_id' => $orderId,
+            // 'amount' => session()->get('totalValue') ?? $final_amount,
+            // 'patient_id' => Auth::guard('patient')->user()->patient_login_id ?? null,
+            // ]));
+            return redirect($response['url']);
 
-    } catch (\Exception $e) {
-        Log::error('Stripe Checkout Session Error: ' . $e->getMessage());
-        return back()->withErrors(['error' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            Log::error('Stripe Checkout Session Error: ' . $e->getMessage());
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
-}
 
 
 
@@ -508,7 +509,7 @@ class StripeController extends Controller
    
     } catch (\Exception $e) {
         // Log the error message
-        \Log::error('Giftcard_Redeem_Statement : ' . $e->getMessage());
+        \Log::error('Transaction Status : ' . $e->getMessage());
         return view('stripe.failed')->with('error', 'Payment processing failed. Please contact support.');
     }
 }

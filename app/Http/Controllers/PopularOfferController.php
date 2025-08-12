@@ -120,30 +120,30 @@ class PopularOfferController extends Controller
         $cart = session()->get('cart', []);
 
     //  For Services Purchase
-        if (!empty($request->product_id)) {
+        if (!empty($request->type=='product')) {
 
-            $product_data = Product::find($request->product_id);
+            $product_data = Product::find($request->id);
             // Generate a unique key for each unit
-            $unitKey = 'unit_' . $request->product_id . '_' . time();
+            $unitKey = 'unit_' . $request->id . '_' . time();
     
             // Add the unit to the cart
             $cart[$unitKey] = [
                 'type'      => 'product',
-                'id'        => $request->product_id,
+                'id'        => $request->id,
                 'quantity'  => $request->quantity ?? 1, // Default quantity to 1 if not provided
             ];
         }
 
         // For Unit Purchase
-        if (!empty($request->unit_id)) {
-            $unit_data = ServiceUnit::find($request->unit_id);
+        if (!empty($request->type=='unit')) {
+            $unit_data = ServiceUnit::find($request->id);
             // Generate a unique key for each unit
-            $unitKey = 'unit_' . $request->unit_id . '_' . time();
+            $unitKey = 'unit_' . $request->id . '_' . time();
     
             // Add the unit to the cart
             $cart[$unitKey] = [
                 'type'      => 'unit',
-                'id'        => $request->unit_id,
+                'id'        => $request->id,
                 'quantity'  => $unit_data->min_qty,
             ];
         }
@@ -316,6 +316,12 @@ public function updateCart(Request $request)
 public function Checkout(Request $request)
 {
     try {
+      if (isset($_GET['type']) && $_GET['type'] === 'guest') {
+        return redirect()
+            ->route('checkout_view')
+            ->with('success', 'Please proceed to checkout.');
+        }
+
         if (Auth::guard('patient')->check()) {
             return redirect()->route('checkout_view')->with('success', 'Please proceed to checkout.');
         } else {

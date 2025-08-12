@@ -561,9 +561,20 @@ function toggleQuantityControls(button) {
     const totalPrice = basePrice * quantity
     const serviceName = serviceFooter.closest(".service-card").querySelector("h3").textContent
     const productId = button.dataset.id
+    const type = button.dataset.type
+    const unit_id = button.dataset.unit_id
+
 
     // ✅ Call your AJAX function
-    addcart(productId, quantity)
+    if(type==='unit')
+    {
+       addcart(unit_id, quantity, type)
+    }
+    else
+    {
+       addcart(productId, quantity, type)
+    }
+   
 
     button.style.background = "var(--success-color)"
     buttonText.textContent = "Added!"

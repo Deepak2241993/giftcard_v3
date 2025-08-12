@@ -267,7 +267,10 @@
                                 class="book-now-btn"
                                 onclick="toggleQuantityControls(this)"
                                 data-base-price="{{$value['discounted_amount']}}"
-                                data-id="{{$value['id']}}">
+                                data-id="{{$value['id']}}"
+                                data-type="unit"
+                                data-unit_id="{{$value['id']}}"
+                                >
                                 <span>Book Now</span>
                                 <i class="fas fa-arrow-right"></i>
                             </button>
@@ -289,16 +292,17 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @push('footerscript')
        <script>
-        function addcart(id, quantity) {
+        function addcart(id, quantity,type) {
+        
     $.ajax({
         url: '{{ route('cart') }}',
         method: "POST",
         dataType: "json",
         data: {
             _token: '{{ csrf_token() }}',
-            product_id: id,
+            id: id,
             quantity: quantity,
-            type: "product"
+            type: type
         },
         success: function (response) {
             if (response.success) {
@@ -416,7 +420,7 @@ function updateCartItemQuantity(key, newQuantity) {
                 searchInput.value = '';
                 searchDropdown.style.display = 'none';
                 this.style.display = 'none';
-                showAllServices();
+                
             });
 
             document.addEventListener('click', function (e) {
@@ -442,7 +446,7 @@ function updateCartItemQuantity(key, newQuantity) {
             });
         }
 
-        showAllServices(); // initial load
+        
     });
 
     function handleSearch(inputElem, dropdownElem, clearBtn = null, isMobile = false) {
@@ -479,7 +483,7 @@ function updateCartItemQuantity(key, newQuantity) {
         } else {
             if (clearBtn) clearBtn.style.display = 'none';
             dropdownElem.style.display = 'none';
-            showAllServices();
+           
         }
     }
 

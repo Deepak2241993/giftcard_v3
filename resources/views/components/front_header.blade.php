@@ -106,7 +106,7 @@
 }
 
 /* For Phone Button */
-.btn {
+.btn_phone {
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
@@ -118,8 +118,6 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
-    background-color: transparent;
-    border: 1px solid transparent;
     padding: .375rem .75rem;
     font-size: 1rem;
     border-radius: .25rem;
@@ -186,7 +184,7 @@ a.btn.btnc-primary.btn-phone {
             <div class="mobile-only-icon" id="hamburgerMenu">
                 <i class="fas fa-bars"></i>
             </div>
-            <a href="tel:12013404809" class="btn btnc-primary btn-phone"><span style="color:#fff"><i class="fa fa-phone" aria-hidden="true"></i> Book appointment</span> <br><span class="emergency-number">(201) 340-4809<span></span></span></a>
+            <a href="tel:12013404809" class="btn btn_phone btnc-primary btn-phone"><span style="color:#fff"><i class="fa fa-phone" aria-hidden="true"></i> Book appointment</span> <br><span class="emergency-number">(201) 340-4809<span></span></span></a>
         </nav>
     </div>
     <!-- Mobile Menu Links -->
