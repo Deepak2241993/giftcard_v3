@@ -367,10 +367,19 @@ $amount = 0;
                                     $redeem = 0;
                                     $total = 0; // Initialize total amount
                                     @endphp
+                                    {{-- {{ dd($cart) }}; --}}
                                     @foreach ($cart as $key => $item)
                                     @php
-                                    $cart_data = App\Models\ServiceUnit::find($item['id']);
-                                    $subtotal = $item['quantity']*$cart_data->discounted_amount ??  $item['quantity']*$cart_data->amount;
+                                    if($item['type']=='product')
+                                    {
+                                       $cart_data = App\Models\Product::find($item['unit_id']);
+
+                                    }
+                                    else {
+                                        $cart_data = App\Models\ServiceUnit::find($item['unit_id']);
+                                    }
+                                    $subtotal = ($item['quantity'] * $cart_data->discounted_amount) ?? ($item['quantity'] * $cart_data->amount);
+
                                     $total += $subtotal; // Add subtotal to total
                                     @endphp
                                     <tr id="cart-item-{{ $cart_data->id }}">
@@ -383,17 +392,17 @@ $amount = 0;
                                        </td>
                                        <td class="product-price">
                                           <form action="#" class="update-cart-form"
-                                             data-id="{{ $item['id'] }}">
+                                             data-id="{{ $item['unit_id'] }}">
                                              <input class="cart-input form-control"
-                                                id="cart_qty_{{ $key }}"
-                                                type="number"
-                                                value="{{ $item['quantity'] }}"
-                                                data-id="{{ $item['id'] }}"
-                                                min="{{ $cart_data->min_qty ?? 1 }}"
-                                                max="{{ $cart_data->max_qty ?? 1 }}"
-                                                onchange="updateCart({{ $item['id'] }}, '{{ $item['type'] ?? 'service' }}', '{{ $key }}')"
-                                                onkeyup="updateCart({{ $item['id'] }}, '{{ $item['type'] ?? 'service' }}', '{{ $key }}')"
-                                                >
+                                             id="cart_qty_{{ $key }}"
+                                             type="number"
+                                             value="{{ $item['quantity'] }}"
+                                             data-id="{{ $item['unit_id'] }}"
+                                             min="{{ $cart_data->min_qty ?? 1 }}"
+                                             max="{{ $cart_data->max_qty ?? 1 }}"
+                                             onchange="updateCart('{{ $key }}')"
+                                             onkeyup="updateCart('{{ $key }}')">
+
                                           </form>
                                        </td>
                                        <td>{{ "$" . number_format($subtotal, 2) }}</td>
@@ -709,7 +718,7 @@ $amount = 0;
            $('#lname').val(patient_data['lname']).trigger('input');
            $('#email').val(patient_data['email']).trigger('input');
            $('#phone').val(patient_data['phone']);
-           $('#patient_id').val(patient_data['id']);
+           $('#patient_id').val(patient_data['patient_id']);
    
            // Update gift card container
            let giftcardsContainer = $('#giftcards-container');
@@ -851,62 +860,72 @@ $amount = 0;
 {{--  For All Giftcard Calculation, Tax, Discount and Total Calculation --}}
 {{--  For Payment of Cart --}}
 <script>
-   document.addEventListener("DOMContentLoaded", function () {
-    let fnameField = document.getElementById("fname");
-    let emailField = document.getElementById("email");
-    let submitButton = document.getElementById("submitPayment");
-    let errorMessagesDiv = document.getElementById("errorMessages");
-   
+document.addEventListener("DOMContentLoaded", function () {
+    const fnameField = document.getElementById("fname");
+    const lnameField = document.getElementById("lname");
+    const emailField = document.getElementById("email");
+    const phoneField = document.getElementById("phone");
+    const patient_id = document.getElementById("patient_id");
+    const submitButton = document.getElementById("submitPayment");
+    const errorMessagesDiv = document.getElementById("errorMessages");
+
     submitButton.addEventListener("click", function (e) {
         e.preventDefault();
-   
+
+        // Collect gift cards
         let giftCards = [];
-        document.querySelectorAll("input[name='card_number[]']").forEach((input, index) => {
+        const cardNumbers = document.querySelectorAll("input[name='card_number[]']");
+        const cardAmounts = document.querySelectorAll("input[name='gift_card_amount[]']");
+
+        cardNumbers.forEach((input, index) => {
             giftCards.push({
-                card_number: input.value,
-                amount: document.querySelectorAll("input[name='gift_card_amount[]']")[index].value
+                card_number: input.value.trim(),
+                amount: cardAmounts[index]?.value.trim() || 0
             });
         });
-   
+
+        // Build form data
         let formData = {
-        cart_total: {!! json_encode($total) !!},
-        discount: document.getElementById("discount")?.value || 0,
-        tax: $("#tax_amount_payment").text().replace("$", "").trim() || 0,  // Use `.text()` instead of `.val()`
-        gift_cards: giftCards || 0,
-        pay_amount: document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim() || 0,
-        payment_status: document.getElementById("payment_status")?.value || "",
-        _token: "{{ csrf_token() }}",
-        patient_id: $("#patient_id").val() || "",
-        fname: fnameField.value.trim(),
-        lname: document.getElementById("lname").value.trim(),
-        email: emailField.value.trim(),
-        phone: $("#phone").val() || "",
-        giftapply: $("#giftcard_amount_payment").text().replace("$", "").trim() || 0  // Use `.text()` instead of `.val()`
-    };
-   
+            cart_total: {!! json_encode($total) !!},
+            discount: document.getElementById("discount")?.value || 0,
+            tax: $("#tax_amount_payment").text().replace("$", "").trim() || 0,
+            gift_cards: giftCards.length > 0 ? giftCards : [],
+            pay_amount: document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim() || 0,
+            payment_status: document.getElementById("payment_status")?.value || "",
+            _token: "{{ csrf_token() }}",
+            patient_id:patient_id?.value.trim() || "",
+            fname: fnameField?.value.trim() || "",
+            lname: lnameField?.value.trim() || "",
+            email: emailField?.value.trim() || "",
+            phone: phoneField?.value.trim() || "",
+            giftapply: $("#giftcard_amount_payment").text().replace("$", "").trim() || 0
+        };
+
         // Clear previous errors
         errorMessagesDiv.style.display = "none";
         errorMessagesDiv.innerHTML = "";
-   
+
+        // Send AJAX
         $.ajax({
             url: "{{ route('InternalServicePurchases') }}",
             type: "POST",
             data: formData,
             success: function (response) {
-            alert("Payment details submitted successfully!");
-            window.location.href = "{{ url('/admin/invoice') }}/" + response.invoice_id;
-            console.log(response);
+                alert("Payment details submitted successfully!");
+                if (response.invoice_id) {
+                    window.location.href = "{{ url('/admin/invoice') }}/" + response.invoice_id;
+                }
+                console.log(response);
             },
-   
             error: function (xhr) {
                 if (xhr.status === 422) { // Laravel validation error
                     let errors = xhr.responseJSON.errors;
                     let errorHtml = "<ul>";
-                    
+
                     Object.keys(errors).forEach(function (key) {
                         errorHtml += `<li>${errors[key][0]}</li>`;
                     });
-   
+
                     errorHtml += "</ul>";
                     errorMessagesDiv.innerHTML = errorHtml;
                     errorMessagesDiv.style.display = "block";
@@ -916,14 +935,14 @@ $amount = 0;
             }
         });
     });
-   });
-   
+});
 </script>
+
 {{-- Payment Code End   --}}
 {{-- For Cart Update --}}
 <script>
    // Update Cart
-   function updateCart(itemId, itemType, cart_id) {
+   function updateCart(cart_id) {
    var quantity = $('#cart_qty_' + cart_id).val();
    var min = parseInt($('#cart_qty_' + cart_id).attr('min'));
    var max = parseInt($('#cart_qty_' + cart_id).attr('max'));
@@ -943,8 +962,6 @@ $amount = 0;
    url: '{{ route('update-cart') }}',
    method: 'POST',
    data: {
-       id: itemId,
-       type: itemType,
        quantity: quantity,
        key: cart_id,
        _token: '{{ csrf_token() }}'
@@ -958,9 +975,10 @@ $amount = 0;
            for (const key in updatedItems) {
                if (updatedItems.hasOwnProperty(key)) {
                    const item = updatedItems[key];
-   
-                   const priceText = $('#cart-item-' + item.id + ' .product-price').eq(0).text().replace('$', '');
-                   const discountedPriceText = $('#cart-item-' + item.id + ' .product-price').eq(1).text().replace('$', '');
+                  console.log('item', item);
+                  
+                   const priceText = $('#cart-item-' + item.unit_id + ' .product-price').eq(0).text().replace('$', '');
+                   const discountedPriceText = $('#cart-item-' + item.unit_id + ' .product-price').eq(1).text().replace('$', '');
    
                    const price = parseFloat(discountedPriceText) > 0 ? parseFloat(discountedPriceText) : parseFloat(priceText);
                    const quantity = parseInt(item.quantity);
@@ -968,7 +986,7 @@ $amount = 0;
                    cartTotal += subtotal;
    
                    // Update subtotal column
-                   $('#cart-item-' + item.id + ' td:nth-child(5)').text('$' + subtotal.toFixed(2));
+                   $('#cart-item-' + item.unit_id + ' td:nth-child(5)').text('$' + subtotal.toFixed(2));
                }
            }
    

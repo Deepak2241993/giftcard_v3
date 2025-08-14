@@ -535,6 +535,7 @@ public function invoice()
 
         public function InternalServicePurchase(Request $request)
         {
+            // dd($request->all());
             // Validation
             $request->validate([
                 'cart_total' => 'required|numeric|min:0',
@@ -562,7 +563,7 @@ public function invoice()
                 // Get patient details
                 $patient = Patient::find($request->patient_id);
                 $patientLoginId = $patient ? $patient->patient_login_id : null;
-
+               
                 // Process Gift Cards
                 $giftNumbers = $giftAmounts = [];
                 if (!empty($request->gift_cards)) {
@@ -584,7 +585,6 @@ public function invoice()
                     'lname' => $patient->lname,
                     'email' => $patient->email,
                     'phone' => $patient->phone,
-                    'order_id' => null, // Placeholder
                     'gift_card_applyed' => $giftNumbers ? implode('|', $giftNumbers) : null,
                     'gift_card_amount' => $giftAmounts ? implode('|', $giftAmounts) : null,
                     'sub_amount' => $subAmount,
@@ -615,8 +615,16 @@ public function invoice()
 
                 // Process Cart Items
                 $cart = session()->get('cart', []);
+                
                 foreach ($cart as $item) {
-                    $cartData = ServiceUnit::find($item['id']);
+                    if ($item['type'] == 'product') {
+                        $cartData = Product::find($item['unit_id']);
+                    } elseif ($item['type'] == 'unit') {
+                        $cartData = ServiceUnit::find($item['unit_id']);
+                    } else {
+                        continue; // Skip if type is not recognized
+                    }
+                //    dd($cartData);
 
                     if ($cartData) {
                         $discountedAmount = $cartData->discounted_amount ?? $cartData->amount;
@@ -624,7 +632,7 @@ public function invoice()
 
                         $orderData = [
                             'order_id' => $updatedOrderId,
-                            'service_id' => $item['id'],
+                            'service_id' => $item['unit_id'],
                             'status' => 0,
                             'number_of_session' => $cartData->session_number
                                 ? $item['quantity'] * $cartData->session_number

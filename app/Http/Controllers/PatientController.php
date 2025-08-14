@@ -501,7 +501,8 @@ class PatientController extends Controller
             'fname' => $patientData->fname,
             'lname' => $patientData->lname,
             'phone' => $patientData->phone,
-            'email' => $patientData->email
+            'email' => $patientData->email,
+            'patient_id' => $patientData->id,
         ]
     ]);
 

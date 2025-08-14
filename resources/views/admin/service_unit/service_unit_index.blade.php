@@ -61,9 +61,12 @@
                         @foreach ($result as $value)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                               <td><button class="btn btn-sm btn-outline-primary" title="Buy" onclick="addcart({{ $value['id'] }})">
-                                        Buy
-                                    </button>
+                               <td>
+                                 @if(Session::has('internal_patient_id'))
+                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ Session::has('internal_patient_id') ?? Session::get('internal_patient_id') }})">Buy</a>
+                                @else
+                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
+                                @endif
                                 </td>
                                 <td>
                                     {{ $value->product_name ? $value->product_name: 'N/A' }}
@@ -140,7 +143,7 @@
         }
     </script>
     <script>
-        function addcart(id) {
+       function addcart(id,patient_id) {
             $.ajax({
                 url: '{{ route('cart') }}',
                 method: "post",
@@ -148,6 +151,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     unit_id: id,
+                    patient_id: patient_id || null,
+                    quantity: 1,
                     type: "unit"
                 },
                 success: function(response) {

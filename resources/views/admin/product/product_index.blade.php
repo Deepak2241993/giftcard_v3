@@ -138,12 +138,13 @@
                     </tr>
                 </thead>
                 <tbody id="data-table-body">
+                    
                     @foreach ($products as $value)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>
-                                @if(isset($id))
-                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ $id }})">Buy</a>
+                                @if(Session::has('internal_patient_id'))
+                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ Session::has('internal_patient_id') ?? Session::get('internal_patient_id') }})">Buy</a>
                                 @else
                                 <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
                                 @endif
@@ -353,8 +354,8 @@
                 dataType: "json",
                 data: {
                     _token: '{{ csrf_token() }}',
-                    product_id: id,
-                    patient_id: patient_id,
+                    unit_id: id,
+                    patient_id: patient_id || null,
                     quantity: 1,
                     type: "product"
                 },

@@ -116,7 +116,7 @@ Route::get('/giftcards-sale/{id?}', 'GiftsendController@giftsale')->name('giftca
 Route::post('/giftcancel','GiftsendController@giftcancel')->name('giftcancel');
 Route::resource('/category', ProductCategoryController::class);
 Route::resource('/product', ProductController::class);
-Route::get('/service-buy-from-patient/{id}', 'ProductController@ServiceBuyFromPatientPage')->name('service-buy-from-patient');
+// Route::get('/service-buy-from-patient/{id}', 'ProductController@ServiceBuyFromPatientPage')->name('service-buy-from-patient');
 Route::get('/service-search','ProductController@ServiceSearch')->name('service-search');
 Route::get('/unit-search','ProductController@UnitSearch')->name('unit-search');
 Route::resource('/unit', ServiceUnitController::class);

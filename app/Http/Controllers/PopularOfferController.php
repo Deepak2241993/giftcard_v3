@@ -115,10 +115,9 @@ class PopularOfferController extends Controller
 
     public function Cart(Request $request)
     {
-        
+        // dd($request->all());
         // Retrieve cart from session or initialize an empty array
         $cart = session()->get('cart', []);
-
     //  For Services Purchase
         if (!empty($request->type=='product')) {
 
@@ -129,22 +128,24 @@ class PopularOfferController extends Controller
             // Add the unit to the cart
             $cart[$unitKey] = [
                 'type'      => 'product',
-                'id'        => $request->id,
                 'quantity'  => $request->quantity ?? 1, // Default quantity to 1 if not provided
+                'unit_id'        => $request->unit_id,
+                'patient_id' => $request->patient_id ?? null,
             ];
         }
 
         // For Unit Purchase
         if (!empty($request->type=='unit')) {
-            $unit_data = ServiceUnit::find($request->id);
+            $unit_data = ServiceUnit::find($request->unit_id);
             // Generate a unique key for each unit
             $unitKey = 'unit_' . $request->id . '_' . time();
     
             // Add the unit to the cart
             $cart[$unitKey] = [
                 'type'      => 'unit',
-                'id'        => $request->id,
                 'quantity'  => $unit_data->min_qty,
+                'unit_id'        => $request->unit_id,
+                'patient_id' => $request->patient_id ?? null,
             ];
         }
 
@@ -167,8 +168,9 @@ class PopularOfferController extends Controller
                     // Add the unit to the cart
                     $cart[$unitKey] = [
                         'type'     => 'unit',
-                        'id'       => $value,
                         'quantity' => $program_data->min_qty,
+                        'unit_id'       => $value,
+                        'patient_id' => $request->patient_id ?? null,
                     ];
                 }
             } else {
@@ -226,6 +228,7 @@ public function updateCart(Request $request)
         
         if (Session::has('internal_patient_id')) {
         $patient_id = Session::get('internal_patient_id');
+        
         try {
             $patient = Patient::findOrFail($patient_id);
 
@@ -240,16 +243,16 @@ public function updateCart(Request $request)
                       ->whereNotNull('recipient_name')
                       ->where('gift_send_to', $patient->patient_login_id);
             })
-               ->orWhere(function($query) use ($patientData) {
+               ->orWhere(function($query) use ($patient) {
                  $query->whereColumn('gift_send_to', 'receipt_email')
                       ->whereNull('recipient_name')
-                      ->where('gift_send_to', $patientData->email);
+                      ->where('gift_send_to', $patient->email);
             })
             // Gifts Receive by Others  using patient Email
-            ->orWhere(function($query) use ($patientData) {
+            ->orWhere(function($query) use ($patient) {
                 $query->whereColumn('gift_send_to', '!=', 'receipt_email')
                       ->whereNotNull('recipient_name')
-                      ->where('gift_send_to', $patientData->email);
+                      ->where('gift_send_to', $patient->email);
             })
             ->orderBy('id', 'DESC')
             ->get();
