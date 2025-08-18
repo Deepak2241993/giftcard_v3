@@ -164,56 +164,44 @@
         </button>
     </div>
 
-    {{-- <div class="categories-list" id="categoriesList">
-        @foreach ($category as $key => $value)
-            <div class="category-item mb-3" data-category="{{ $value->slug ?? '' }}">
-                <div class="category-content d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">
-                        <a href="{{ route('category-list',$value->slug) }}" style="text-decoration: none; color: inherit;">
-                            {{ $value->cat_name ?? '' }}
-                        </a>
-                    </h4>
+    <div class="categories-list" id="categoriesList">
+            <div class="accordion" id="categoryAccordion">
+                @foreach ($category as $key => $value)
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ $key }}">
+                            <button class="accordion-button {{ $key != 0 ? 'collapsed' : '' }}" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse{{ $key }}" 
+                                    aria-expanded="{{ $key == 0 ? 'true' : 'false' }}" 
+                                    aria-controls="collapse{{ $key }}">
+                                {{ $value->cat_name ?? '' }}
+                            </button>
+                        </h2>
 
-                </div>
-
+                        <div id="collapse{{ $key }}" 
+                            class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}" 
+                            aria-labelledby="heading{{ $key }}" 
+                            data-bs-parent="#categoryAccordion">
+                            <div class="accordion-body">
+                                <ul class="list-group">
+                                    @foreach ($services as $sKey => $service)
+                                        @if ($value->id == $service->cat_id)
+                                            <li class="list-group-item">
+                                                <a href="{{ route('category-list',$service->product_slug) }}">{{ $service->product_name }}</a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-        @endforeach
-    </div> --}}
+    </div>
 </div>
 
-<div class="accordion" id="categoryAccordion">
-    @foreach ($category as $key => $value)
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="heading{{ $key }}">
-                <button class="accordion-button {{ $key != 0 ? 'collapsed' : '' }}" 
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#collapse{{ $key }}" 
-                        aria-expanded="{{ $key == 0 ? 'true' : 'false' }}" 
-                        aria-controls="collapse{{ $key }}">
-                    {{ $value->cat_name ?? '' }}
-                </button>
-            </h2>
 
-            <div id="collapse{{ $key }}" 
-                 class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}" 
-                 aria-labelledby="heading{{ $key }}" 
-                 data-bs-parent="#categoryAccordion">
-                <div class="accordion-body">
-                    <ul class="list-group">
-                        @foreach ($services as $sKey => $service)
-                            @if ($value->id == $service->cat_id)
-                                <li class="list-group-item">
-                                    <a href="{{ route('category-list',$service->product_slug) }}">{{ $service->product_name }}</a>
-                                </li>
-                            @endif
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    @endforeach
-</div>
 
 
 
@@ -421,26 +409,86 @@ function updateCartItemQuantity(key, newQuantity) {
     </script> 
 <script>
     const categoryMap = @json($categoryMap);
-    // For Category Search
+
+    // Function to filter categories/services
+    function performSearch(searchTerm) {
+        searchTerm = searchTerm.toLowerCase();
+        let hasResults = false;
+
+        document.querySelectorAll(".accordion-item").forEach((item) => {
+            let matchFound = false;
+
+            // Check service names inside the category
+            item.querySelectorAll(".list-group-item a").forEach((link) => {
+                const text = link.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    link.parentElement.style.display = "block";
+                    matchFound = true;
+                } else {
+                    link.parentElement.style.display = "none";
+                }
+            });
+
+            // Show or hide the whole category
+            if (matchFound) {
+                item.style.display = "block";
+                hasResults = true;
+
+                // Expand matched categories
+                const collapse = item.querySelector(".accordion-collapse");
+                const button = item.querySelector(".accordion-button");
+                if (collapse && !collapse.classList.contains("show")) {
+                    new bootstrap.Collapse(collapse, { show: true });
+                    button.classList.remove("collapsed");
+                }
+            } else {
+                item.style.display = "none";
+            }
+        });
+
+        document.getElementById("clearCategorySearch").style.display = searchTerm ? "inline-block" : "none";
+
+        if (!hasResults && searchTerm) {
+            showNotification("No matching services found", "error");
+        }
+    }
+
+    // For Category Search (when selecting from list)
     function selectCategory(category, selectedItem) {
-  document.querySelectorAll(".category-item").forEach((item) => {
-    item.classList.remove("active");
-  });
+        document.querySelectorAll(".category-item").forEach((item) => {
+            item.classList.remove("active");
+        });
 
-  selectedItem.classList.add("active");
+        selectedItem.classList.add("active");
 
-  const searchInput = document.getElementById("categorySearch");
-  const categoryName = categoryMap[category] || "";
-  searchInput.value = categoryName;
+        const searchInput = document.getElementById("categorySearch");
+        const categoryName = categoryMap[category] || "";
+        searchInput.value = categoryName;
 
-  if (categoryName) {
-    performSearch(categoryName);
-  }
+        if (categoryName) {
+            performSearch(categoryName);
+        }
 
-  showNotification(`Selected category: ${categoryName}`, "success");
-  createRipple(selectedItem);
-}
+        showNotification(`Selected category: ${categoryName}`, "success");
+        createRipple(selectedItem);
+    }
+
+    // Input event for live searching
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("categorySearch");
+        const clearBtn = document.getElementById("clearCategorySearch");
+
+        searchInput.addEventListener("input", () => {
+            performSearch(searchInput.value);
+        });
+
+        clearBtn.addEventListener("click", () => {
+            searchInput.value = "";
+            performSearch("");
+        });
+    });
 </script>
+
 
 {{-- For Service Search --}}
 <script>
