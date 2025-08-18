@@ -183,6 +183,11 @@ public function ServicePage(Request $request)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->orderBy('id', 'DESC')
         ->get();
+    $services = Product::where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->orderBy('id', 'DESC')
+        ->get();
 
     // Autocomplete array for frontend search
     // $search_category = ProductCategory::where('cat_is_deleted', 0)
@@ -209,7 +214,7 @@ public function ServicePage(Request $request)
     }
 
     // Fetch all services for the frontend JS
-     $serviceData = ServiceUnit::where('product_is_deleted', 0)
+     $ServiceUnit = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->get()
@@ -232,7 +237,8 @@ public function ServicePage(Request $request)
         'units',
         'category',
         'categoryMap',
-        'serviceData'
+        'ServiceUnit',
+        'services'
     ));
 }
 

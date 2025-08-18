@@ -143,7 +143,7 @@ class PopularOfferController extends Controller
             // Add the unit to the cart
             $cart[$unitKey] = [
                 'type'      => 'unit',
-                'quantity'  => $unit_data->min_qty,
+                'quantity'  => $request->quantity ?? $unit_data->min_qty,
                 'unit_id'        => $request->unit_id,
                 'patient_id' => $request->patient_id ?? null,
             ];

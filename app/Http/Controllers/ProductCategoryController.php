@@ -274,24 +274,35 @@ public function update(Request $request,$id)
      }
 
      public function categorytpage(Request $request,$slug){
-       $ProductCategory = ProductCategory::where('slug', $slug)
-        ->where('cat_is_deleted', 0)
+       $services = Product::where('product_slug', $slug)
+        ->where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->firstOrFail();
 
-    $categoryId = $ProductCategory->id;
+    // This is Show Unit as per category
+
+    // $categoryId = explode('|',$services->unit_id) ;
+    // $units = ServiceUnit::where('product_is_deleted', 0)
+    //     ->where('status', 1)
+    //     ->where('user_token', 'FOREVER-MEDSPA')
+    //     ->where(function ($query) use ($categoryId) {
+    //         $query->where('cat_id', 'like', $categoryId . '|%')
+    //             ->orWhere('cat_id', 'like', '%|' . $categoryId . '|%')
+    //             ->orWhere('cat_id', 'like', '%|' . $categoryId)
+    //             ->orWhere('cat_id', $categoryId);
+    //     })
+    //     ->paginate(40); // Paginate with 15 per page
+    
+
+    // This is Show Unit as per services
+    $unit_id_array = explode('|', $services->unit_id);
 
     $units = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
-        ->where(function ($query) use ($categoryId) {
-            $query->where('cat_id', 'like', $categoryId . '|%')
-                ->orWhere('cat_id', 'like', '%|' . $categoryId . '|%')
-                ->orWhere('cat_id', 'like', '%|' . $categoryId)
-                ->orWhere('cat_id', $categoryId);
-        })
-        ->paginate(40); // Paginate with 15 per page
+        ->whereIn('id', $unit_id_array) // ✅ filter by exploded IDs
+        ->paginate(40);
 
 
         $category = ProductCategory::where('cat_is_deleted', 0)
@@ -299,6 +310,11 @@ public function update(Request $request,$id)
             ->where('user_token', 'FOREVER-MEDSPA')
             ->orderBy('id', 'DESC')
             ->get();
+         $services = Product::where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->orderBy('id', 'DESC')
+        ->get();
 
         // Autocomplete array for frontend search
         // $search_category = ProductCategory::where('cat_is_deleted', 0)
@@ -325,7 +341,7 @@ public function update(Request $request,$id)
             }
         }
       // Fetch all services for the frontend JS
-     $serviceData = ServiceUnit::where('product_is_deleted', 0)
+     $ServiceUnit = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->get()
@@ -349,7 +365,8 @@ public function update(Request $request,$id)
             'units',
             'category',
             'categoryMap',
-            'serviceData'
+            'ServiceUnit',
+            'services'
         ));
      }
 

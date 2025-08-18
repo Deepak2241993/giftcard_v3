@@ -236,7 +236,7 @@ $amount = 0;
     <div class="cart-items" id="cartItems" @if(empty($cart)) style="display: none;" @else style="display: block;" @endif>
             @foreach ($cart as $key => $item)
                 @php
-                    $units = App\Models\ServiceUnit::find($item['id']);
+                    $units = App\Models\ServiceUnit::find($item['unit_id']);
                     $image = explode('|', $units->product_image);
                     $price = $units->discounted_amount ?? $units->amount;
                     $subtotal = $price * $item['quantity'];

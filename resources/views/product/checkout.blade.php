@@ -140,7 +140,7 @@
                                                 {{-- <td>{{ $loop->iteration }}</td> --}}
                                                 @if ($item['type'] === 'product')
                                                         @php
-                                                            $units = App\Models\ServiceUnit::find($item['id']);
+                                                            $units = App\Models\ServiceUnit::find($item['unit_id']);
                                                             $image = explode('|', $units->product_image);
                                                             $price = $units->discounted_amount ?? $units->amount;
                                                             $subtotal = $price*$item['quantity'];
@@ -154,7 +154,7 @@
                                                     </td>--}}
                                                     @elseif ($item['type'] === 'unit')
                                                         @php
-                                                            $unit = App\Models\ServiceUnit::find($item['id']);
+                                                            $unit = App\Models\ServiceUnit::find($item['unit_id']);
                                                             $image = explode('|', $unit->product_image);
                                                             $price = $unit->discounted_amount ?? $unit->amount;
                                                             $subtotal = $price*$item['quantity'];

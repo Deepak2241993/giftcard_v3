@@ -292,13 +292,13 @@ class StripeController extends Controller
                     if($item['type']=='product')
                     {
 
-                        $cart_data = Product::find($item['id']);
+                        $cart_data = Product::find($item['unit_id']);
                        
                         $totalAmount += $item['quantity']*$cart_data->discounted_amount ??  $item['quantity']*$cart_data->amount;
                     }
                     if($item['type']=='unit')
                         {
-                            $cart_data = ServiceUnit::find($item['id']);
+                            $cart_data = ServiceUnit::find($item['unit_id']);
                     
                         $totalAmount += $item['quantity']*$cart_data->discounted_amount ??  $item['quantity']*$cart_data->amount;
                     }
@@ -353,17 +353,17 @@ class StripeController extends Controller
                 if($item['type']=='product')
                 {
 
-                    $cart_data = Product::find($item['id']);
+                    $cart_data = Product::find($item['unit_id']);
                 }
                 if($item['type']=='unit')
                 {
 
-                    $cart_data = ServiceUnit::find($item['id']);
+                    $cart_data = ServiceUnit::find($item['unit_id']);
                 }
 
                 $order_data = [
                     'order_id' => $orderId,
-                    'service_id' => $item['id'],
+                    'service_id' => $item['unit_id'],
                     'status' => 0,
                     'number_of_session' => $cart_data->session_number?$item['quantity']*$cart_data->session_number:$item['quantity'],
                     'user_token' => 'FOREVER-MEDSPA',

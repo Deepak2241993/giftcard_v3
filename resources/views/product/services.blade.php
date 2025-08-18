@@ -122,6 +122,10 @@
 
 
 </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome (for icons if needed) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endpush
     
 
@@ -146,34 +150,72 @@
             </div>
 
             <div class="categories">
-                <div class="categories-header">
-                    <h3><i class="fas fa-th-large"></i> Treatment Categories</h3>
-                </div>
+    <div class="categories-header">
+        <h3><i class="fas fa-th-large"></i> Treatment Categories</h3>
+    </div>
 
-                <!-- Category Search -->
-                <div class="category-search-container">
-                    <input type="text" id="categorySearch" class="category-search-input"
-                        placeholder="Search categories..." autocomplete="off">
-                    <i class="fas fa-search category-search-icon"></i>
-                    <button class="clear-category-search-btn" id="clearCategorySearch" style="display: none;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+    <!-- Category Search -->
+    <div class="category-search-container">
+        <input type="text" id="categorySearch" class="category-search-input"
+               placeholder="Search categories..." autocomplete="off">
+        <i class="fas fa-search category-search-icon"></i>
+        <button class="clear-category-search-btn" id="clearCategorySearch" style="display: none;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
 
-               <div class="categories-list" id="categoriesList">
-                @foreach ($category as $value)
-                    <div class="category-item" data-category="{{ $value->slug ?? '' }}" onclick="selectCategory('{{ $value->slug ?? '' }}', this)">
-                    <div class="category-content">
-                        <a href="{{route('category-list',$value->slug)}}" style="text-decoration: none; color: inherit;">
-                            <h4>{{ $value->cat_name ?? '' }}</h4>
+    {{-- <div class="categories-list" id="categoriesList">
+        @foreach ($category as $key => $value)
+            <div class="category-item mb-3" data-category="{{ $value->slug ?? '' }}">
+                <div class="category-content d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <a href="{{ route('category-list',$value->slug) }}" style="text-decoration: none; color: inherit;">
+                            {{ $value->cat_name ?? '' }}
                         </a>
+                    </h4>
 
-                    </div>
-                    </div>
-                @endforeach
                 </div>
 
             </div>
+        @endforeach
+    </div> --}}
+</div>
+
+<div class="accordion" id="categoryAccordion">
+    @foreach ($category as $key => $value)
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ $key }}">
+                <button class="accordion-button {{ $key != 0 ? 'collapsed' : '' }}" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#collapse{{ $key }}" 
+                        aria-expanded="{{ $key == 0 ? 'true' : 'false' }}" 
+                        aria-controls="collapse{{ $key }}">
+                    {{ $value->cat_name ?? '' }}
+                </button>
+            </h2>
+
+            <div id="collapse{{ $key }}" 
+                 class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}" 
+                 aria-labelledby="heading{{ $key }}" 
+                 data-bs-parent="#categoryAccordion">
+                <div class="accordion-body">
+                    <ul class="list-group">
+                        @foreach ($services as $sKey => $service)
+                            @if ($value->id == $service->cat_id)
+                                <li class="list-group-item">
+                                    <a href="{{ route('category-list',$service->product_slug) }}">{{ $service->product_name }}</a>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+
 
             {{-- <div class="contact-info">
                 <div class="contact-item website">
@@ -290,9 +332,10 @@
     </div>
     @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @push('footerscript')
        <script>
-        function addcart(id, quantity,type) {
+        function addcart(unit_id, quantity,type) {
         
     $.ajax({
         url: '{{ route('cart') }}',
@@ -300,7 +343,7 @@
         dataType: "json",
         data: {
             _token: '{{ csrf_token() }}',
-            id: id,
+            unit_id: unit_id,
             quantity: quantity,
             type: type
         },
@@ -401,7 +444,7 @@ function updateCartItemQuantity(key, newQuantity) {
 
 {{-- For Service Search --}}
 <script>
-    const allServices = @json($serviceData);
+    const allServices = @json($ServiceUnit);
 
     document.addEventListener('DOMContentLoaded', function () {
         const serviceContainer = document.querySelector('.service-options');
@@ -541,61 +584,6 @@ function updateCartItemQuantity(key, newQuantity) {
         container.innerHTML = cardHTML;
     }
 
-    // function showAllServices() {
-    //     const container = document.querySelector('.service-options');
-    //     container.innerHTML = '';
-
-    //     allServices.forEach(service => {
-    //         let popularBadge = service.popular_service == 1
-    //             ? `<div class="service-badge">Popular</div>` : '';
-
-    //         const cardHTML = `
-    //             <div class="service-card">
-    //                 <div class="service-card-header">
-    //                     <h3>${service.product_name}</h3>
-    //                     <div class="service-price">From <del>$${service.amount}</del></div>
-    //                     ${popularBadge}
-    //                 </div>
-
-    //                 <div class="service-description">
-    //                     <p>${service.short_description || ''}</p>
-    //                     <button class="read-more-btn" onclick="toggleReadMore(this)">
-    //                         <span>Read More</span>
-    //                         <i class="fas fa-chevron-down"></i>
-    //                     </button>
-    //                     <div class="hidden-content">
-    //                         <p>${service.product_description || ''}</p>
-    //                     </div>
-    //                 </div>
-
-    //                 <div class="service-footer">
-    //                     <div class="service-info">
-    //                         <div class="price">
-    //                             <i class="fas fa-tag"></i>
-    //                             <span class="price-display">From $${service.discounted_amount}</span>
-    //                         </div>
-    //                     </div>
-    //                     <div class="quantity-controls" style="display: none;">
-    //                         <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
-    //                             <i class="fas fa-minus"></i>
-    //                         </button>
-    //                         <span class="quantity-display">1</span>
-    //                         <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
-    //                             <i class="fas fa-plus"></i>
-    //                         </button>
-    //                     </div>
-    //                     <button class="book-now-btn" onclick="toggleQuantityControls(this)"
-    //                         data-base-price="${service.discounted_amount}" data-id="${service.id}">
-    //                         <span>Book Now</span>
-    //                         <i class="fas fa-arrow-right"></i>
-    //                     </button>
-    //                 </div>
-    //             </div>
-    //         `;
-
-    //         container.innerHTML += cardHTML;
-    //     });
-    // }
 </script>
 
 
