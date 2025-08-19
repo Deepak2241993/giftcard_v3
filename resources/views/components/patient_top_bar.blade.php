@@ -1,5 +1,5 @@
        <!--begin::Start Navbar Links-->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light sticky-top">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -131,29 +131,39 @@
 
     </ul>
     <ul class="navbar-nav ms-auto">
-      <!-- User Menu Dropdown -->
-      <li class="nav-item dropdown user-menu">
-          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-            <img src="@if (Auth::guard('patient')->user()->image != '') {{ URL::asset(Auth::guard('patient')->user()->image) }}@else{{ URL::asset('medspa.png') }} @endif"
-                        class="img-circle elevation-2" height="35" width="35" alt="User Image" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
-              <span class="d-none d-md-inline">{{ Auth::guard('patient')->user()->fname }}</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <!-- User Image -->
-              <li class="user-header text-bg-primary">
-                  <img src="{{ Auth::guard('patient')->user()->image ? URL::asset(Auth::guard('patient')->user()->image) : URL::asset('No_Image_Available.jpg') }}" 
-                       class="rounded-circle shadow" alt="User Image">
-                  <p>
-                      {{ Auth::guard('patient')->user()->fname }}
-                  </p>
-              </li>
-              <!-- Menu Footer -->
-              <li class="user-footer">
-                  <a href="#" class="btn btn-block btn-default btn-flat">Profile</a>
-                  <a href="{{ url('/logout') }}" class="btn btn-block btn-default btn-flat float-end">Sign out</a>
-              </li>
-          </ul>
-      </li>
-  </ul>
+    <!-- User Menu Dropdown -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="@if (Auth::guard('patient')->user()->image != '') 
+                        {{ URL::asset(Auth::guard('patient')->user()->image) }} 
+                      @else 
+                        {{ URL::asset('medspa.png') }} 
+                      @endif"
+                 class="img-circle elevation-2 me-2"
+                 height="35" width="35"
+                 alt="User Image"
+                 onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
+
+            <span class="d-none d-md-inline">{{ Auth::guard('patient')->user()->fname }}</span>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <!-- User Image -->
+            <li class="dropdown-header text-center">
+                <img src="{{ Auth::guard('patient')->user()->image ? URL::asset(Auth::guard('patient')->user()->image) : URL::asset('No_Image_Available.jpg') }}" 
+                     class="rounded-circle shadow mb-2"
+                     width="60" height="60"
+                     alt="User Image">
+                <p class="mb-0">{{ Auth::guard('patient')->user()->fname }}</p>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <!-- Menu Footer -->
+            <li><a class="dropdown-item" href="{{ url('/profile') }}">Profile</a></li>
+            <li><a class="dropdown-item" href="{{ url('/logout') }}">Sign out</a></li>
+        </ul>
+    </li>
+</ul>
+
   
   </nav>
