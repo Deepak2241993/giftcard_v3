@@ -56,7 +56,8 @@
                                 data-bs-target="#redeem_{{ $value['user_id'] }}" 
                                 onclick="modalopen({{ $value['user_id'] }}, '{{ $value['giftnumber'] }}', '{{ $value['total_amount'] }}')" 
                                 title="Redeem Giftcard">
-                                    <i class="fa fa-check"></i>
+                                   Redeem 
+                                   {{-- <i class="fa fa-check"></i> --}}
                                 </a>
 
                                 <a type="button" 
@@ -64,8 +65,8 @@
                                 data-bs-toggle="modal" 
                                 data-bs-target="#docancel_{{ $value['user_id'] }}" 
                                 onclick="docancel({{ $value['user_id'] }}, '{{ $value['giftnumber'] }}')" 
-                                title="Cancel Giftcard">
-                                    <i class="fa fa-times"></i>
+                                title="Cancel Giftcard">Cancel
+                                    {{-- <i class="fa fa-times"></i> --}}
                                 </a>
                             @endif
 
@@ -74,8 +75,8 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#Statment_{{ $value['user_id'] }}" 
                             onclick="Statment({{ $value['user_id'] }}, '{{ $value['giftnumber'] }}')" 
-                            title="View History">
-                                <i class="fa fa-history"></i>
+                            title="View History">History
+                                {{-- <i class="fa fa-history"></i> --}}
                             </a>
                         </td>
                         {{-- <td>{{ $value['recipient_name'] ? $value['recipient_name']:$value['your_name'] }}</td>

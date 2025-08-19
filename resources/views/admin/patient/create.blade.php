@@ -643,9 +643,9 @@
                                         <div class="col-12 col-sm-12">
                                             <div class="card card-primary card-outline card-tabs">
                                                 <div class="card-header p-0 pt-1 border-bottom-0 m-4">
-                                                   <a href="{{route('giftcards-sale',['id'=>$patient->id])}}" class="btn btn-primary">Giftcard Buy</a>
-                                                   <a href="{{route('service-buy-from-patient',['id'=>$patient->id])}}" class="btn btn-dark">Service & Deals Sale</a>
-                                                   <a href="{{route('program-sale',['id'=>$patient->id])}}" class="btn btn-warning">Program Sale</a>
+                                                   <a href="{{ route('giftcards-sale') }}?patient_id={{ $patient->id }}" class="btn btn-primary">Giftcard Buy</a>
+                                                   <a href="{{ route('product.index') }}?patient_id={{ $patient->id }}" class="btn btn-dark">Service & Deals Sale</a>
+                                                   <a href="{{ route('program.index') }}?patient_id={{ $patient->id }}" class="btn btn-warning">Program Sale</a>
                                                 </div>
                                             </div>
                                         </div>

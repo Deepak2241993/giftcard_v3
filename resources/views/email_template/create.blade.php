@@ -58,7 +58,7 @@
                             <input class="form-control" type="file" name="image"
                                 id="image"{{ isset($emailTemplate) ? '' : 'required' }}>
                         </div>
-                        @if($emailTemplate)
+                        @if(isset($emailTemplate))
                         <div class="mb-3 col-lg-6 col-md-6">
                             <img src="{{ isset($emailTemplate) ? $emailTemplate->image : '' }}" alt="" height="100" width="100">
                         </div>

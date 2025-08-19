@@ -19,11 +19,11 @@
     <div class="auth-page">
         <div class="container-fluid p-0">
             <div class="row g-0">
-                <div class="col-xxl-6 col-lg-4 col-md-5 d-block d-md-block">
+                <div class="col-xxl-6 col-lg-6 col-md-7 col-12 d-block d-md-block">
                     <div class="auth-full-page-content d-flex p-sm-5 p-4">
                         <div class="w-100">
                             <div class="d-flex flex-column h-100">
-                                
+
                                 <div class="auth-content my-auto">
                                     <div class="md-5 text-center">
                                         <a href="{{ url('/') }}" class="d-block auth-logo">
@@ -36,14 +36,16 @@
                                             <div class="text-center">
                                                 <h4 class="mb-0">Patient Login</h4>
                                             </div>
-                                            <form class="mt-4 mb-4 pt-2 card-body" action="{{ route('patient-login') }}" method="POST">
+                                            <form class="mt-4 mb-4 pt-2 card-body" action="{{ route('patient-login') }}"
+                                                method="POST">
                                                 @csrf
                                                 <!-- Email Input -->
                                                 <div class="form-floating form-floating-custom mb-4">
                                                     <input type="text"
                                                         class="form-control @error('patient_login_id') is-invalid @enderror"
-                                                        value="{{ old('patient_login_id', request()->cookie('username')) }}" id="input-username"
-                                                        placeholder="Enter User Name" name="patient_login_id">
+                                                        value="{{ old('patient_login_id', request()->cookie('username')) }}"
+                                                        id="input-username" placeholder="Enter User Name"
+                                                        name="patient_login_id">
                                                     @error('patient_login_id')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
@@ -53,19 +55,19 @@
                                                     <div class="form-floating-icon">
                                                         <i data-feather="users"></i>
                                                     </div>
-                                                   <input type="hidden"
-                                                    class="form-control @error('amount') is-invalid @enderror"
-                                                    value="{{ request()->query('amount') ?? '' }}"
-                                                    id="session_amount"
-                                                    name="amount">
+                                                    <input type="hidden"
+                                                        class="form-control @error('amount') is-invalid @enderror"
+                                                        value="{{ request()->query('amount') ?? '' }}" id="session_amount"
+                                                        name="amount">
 
                                                 </div>
-                                            
+
                                                 <!-- Password Input -->
                                                 <div class="form-floating form-floating-custom mb-4 auth-pass-inputgroup">
                                                     <input type="password"
                                                         class="form-control pe-5 @error('password') is-invalid @enderror"
-                                                        name="password" value="{{ request()->cookie('password') }}" id="password-input" placeholder="Enter Password">
+                                                        name="password" value="{{ request()->cookie('password') }}"
+                                                        id="password-input" placeholder="Enter Password">
                                                     @error('password')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
@@ -81,22 +83,26 @@
                                                         <i data-feather="lock"></i>
                                                     </div>
                                                 </div>
-                                            
+
                                                 <!-- Remember Me Checkbox -->
                                                 <div class="form-check mb-3">
-                                                    <input type="checkbox" class="form-check-input" name="remember" id="remember" {{ request()->cookie('remember') ? 'checked' : '' }}>
+                                                    <input type="checkbox" class="form-check-input" name="remember"
+                                                        id="remember" {{ request()->cookie('remember') ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="remember">Remember Me</label>
                                                 </div>
-                                            
+
                                                 <!-- Submit and Signup Buttons -->
                                                 <div class="mb-3">
-                                                    <button class="btn btn-success waves-effect waves-light" type="submit">Log In</button>
-                                                    <button class="btn btn-primary waves-effect waves-light" type="button" onclick="SignUp()">Signup</button>
-                                                    <a class="btn btn-dark waves-effect waves-light" href="{{ route('checkout') }}/?type=guest">Guest Buy</a>
+                                                    <button class="btn btn-success waves-effect waves-light"
+                                                        type="submit">Log In</button>
+                                                    <button class="btn btn-primary waves-effect waves-light" type="button"
+                                                        onclick="SignUp()">Signup</button>
+                                                    <a class="btn btn-dark waves-effect waves-light"
+                                                        href="{{ route('checkout') }}/?type=guest">Guest Buy</a>
                                                 </div>
-                                                <a href="{{route('forgot-password')}}">Forgot Password? / User Name</a>
+                                                <a href="{{ route('forgot-password') }}">Forgot Password</a>
                                             </form>
-                                            
+
                                         </div>
                                     </div>
 
@@ -111,72 +117,89 @@
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
                                                         <div data-mdb-input-init class="form-outline">
-                                                            <input type="text" id="firstName" name="fname" class="form-control form-control-lg" />
-                                                            <label class="form-label" for="firstName">First Name<span class="text-danger">*</span></label>
+                                                            <input type="text" id="firstName" name="fname"
+                                                                class="form-control form-control-lg" />
+                                                            <label class="form-label" for="firstName">First Name<span
+                                                                    class="text-danger">*</span></label>
                                                         </div>
                                                         <div id="error-fname" class="text-danger mt-1"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div data-mdb-input-init class="form-outline">
-                                                            <input type="text" id="lastName" name="lname" class="form-control form-control-lg" />
+                                                            <input type="text" id="lastName" name="lname"
+                                                                class="form-control form-control-lg" />
                                                             <label class="form-label" for="lastName">Last Name</label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            
+
                                                 <div class="row g-3 mt-3">
                                                     <div class="col-md-6">
                                                         <div data-mdb-input-init class="form-outline">
-                                                            <input type="email" id="emailAddress" name="email" class="form-control form-control-lg" />
-                                                            <label class="form-label" for="emailAddress">Email<span class="text-danger">*</span></label>
+                                                            <input type="email" id="emailAddress" name="email"
+                                                                class="form-control form-control-lg" />
+                                                            <label class="form-label" for="emailAddress">Email<span
+                                                                    class="text-danger">*</span></label>
                                                         </div>
                                                         <div id="error-email" class="text-danger mt-1"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div data-mdb-input-init class="form-outline">
-                                                            <input type="tel" id="phoneNumber" name="phone" class="form-control form-control-lg" />
-                                                            <label class="form-label" for="phoneNumber">Phone Number</label>
+                                                            <input type="tel" id="phoneNumber" name="phone"
+                                                                class="form-control form-control-lg" />
+                                                            <label class="form-label" for="phoneNumber">Phone
+                                                                Number</label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            
+
                                                 <div class="row g-3 mt-3">
                                                     <div class="col-md-8">
                                                         <div data-mdb-input-init class="form-outline">
-                                                            <input type="text" id="User_name" name="patient_login_id" class="form-control form-control-lg" />
-                                                            <label class="form-label" for="User_name">Create User Name<span class="text-danger">*</span></label>
+                                                            <input type="text" id="User_name" name="patient_login_id"
+                                                                class="form-control form-control-lg" />
+                                                            <label class="form-label" for="User_name">Create User
+                                                                Name<span class="text-danger">*</span></label>
                                                         </div>
-                                                        <div class="showbalance" style="color: red; margin-top: 10px;"></div>
+                                                        <div class="showbalance" style="color: red; margin-top: 10px;">
+                                                        </div>
                                                         <div id="error-username" class="text-danger mt-1"></div>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <button class="form-control btn btn-primary btn-lg" id="user_id_check" onclick="CheckUser()" type="button">
+                                                        <button class="form-control btn btn-primary btn-lg"
+                                                            id="user_id_check" onclick="CheckUser()" type="button">
                                                             Check
                                                         </button>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div data-mdb-input-init class="form-outline">
-                                                            <input type="password" id="password" name="password" class="form-control form-control-lg" />
-                                                            <label class="form-label" for="password">Password<span class="text-danger">*</span></label>
+                                                            <input type="password" id="password" name="password"
+                                                                class="form-control form-control-lg" />
+                                                            <label class="form-label" for="password">Password<span
+                                                                    class="text-danger">*</span></label>
                                                         </div>
                                                         <div id="error-password" class="text-danger mt-1"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div data-mdb-input-init class="form-outline">
-                                                            <input type="password" id="cpassword" name="cpassword" class="form-control form-control-lg" />
-                                                            <label class="form-label" for="cpassword">Confirm Password<span class="text-danger">*</span></label>
+                                                            <input type="password" id="cpassword" name="cpassword"
+                                                                class="form-control form-control-lg" />
+                                                            <label class="form-label" for="cpassword">Confirm
+                                                                Password<span class="text-danger">*</span></label>
                                                         </div>
                                                         <div id="error-cpassword" class="text-danger mt-1"></div>
                                                     </div>
                                                 </div>
-                                            
+
                                                 <div class="d-flex justify-content-between gap-3 mt-4">
-                                                    <button class="btn btn-success btn-lg w-50" type="button" onclick="PatientSignIn(event)">Submit</button>
-                                                    <button class="btn btn-primary btn-lg w-50" onclick="Login()" type="button">Login</button>
+                                                    <button class="btn btn-success btn-lg w-50" type="button"
+                                                        onclick="PatientSignIn(event)">Submit</button>
+                                                    <button class="btn btn-primary btn-lg w-50" onclick="Login()"
+                                                        type="button">Login</button>
                                                 </div>
-                                                
+
                                             </form>
-                                            
+
 
                                         </div>
                                     </div>
@@ -196,7 +219,7 @@
                     <!-- end auth full page content -->
                 </div>
                 <!-- end col -->
-                <div class="col-xxl-6 col-lg-8 col-md-7 d-none d-md-block">
+                <div class="col-12 col-md-7 col-lg-6 col-xxl-6 d-none d-md-block">
                     <div class="auth-bg pt-md-5 p-4 d-flex">
                         <div class="bg-overlay"></div>
                         <ul class="bg-bubbles">
@@ -280,8 +303,8 @@
     <script src="{{ URL::asset('assets/js/pages/feather-icon.init.js') }}"></script>
     {{--  For check User Name Existing  --}}
     <script>
-    $('#signup').hide();
-       
+        $('#signup').hide();
+
         //  for open sign Form
         function SignUp() {
             $('#login_id').hide();
@@ -292,94 +315,96 @@
             $('#login_id').show();
             $('#signup').hide();
         }
+
         function CheckUser() {
-    var user_name = $('#User_name').val();
+            var user_name = $('#User_name').val();
 
-    // Clear previous error messages
-    $('#error-username').text(''); // Specific to the username error field
-    $('.showbalance').hide(); // Hide previous success/error messages
+            // Clear previous error messages
+            $('#error-username').text(''); // Specific to the username error field
+            $('.showbalance').hide(); // Hide previous success/error messages
 
-    $.ajax({
-        url: '{{ route('checkusername') }}',
-        method: 'post',
-        dataType: 'json',
-        data: {
-            _token: '{{ csrf_token() }}',
-            username: user_name,
-        },
-        success: function(response) {
-            if (response.success) {
-                $('.showbalance').html(response.message).css('color', 'green').show();
-            } else {
-                $('.showbalance').html(response.message).css('color', 'red').show();
-            }
-        },
-        error: function(xhr) {
-            console.log(xhr.responseText);
+            $.ajax({
+                url: '{{ route('checkusername') }}',
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    username: user_name,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('.showbalance').html(response.message).css('color', 'green').show();
+                    } else {
+                        $('.showbalance').html(response.message).css('color', 'red').show();
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
         }
-    });
-}
 
 
 
         //  For SignUp Logic Code
         function PatientSignIn(event) {
-        event.preventDefault(); // Prevent form submission
+            event.preventDefault(); // Prevent form submission
 
-        var firstName = $('#firstName').val();
-        var lastName = $('#lastName').val();
-        var emailAddress = $('#emailAddress').val();
-        var phoneNumber = $('#phoneNumber').val();
-        var User_name = $('#User_name').val();
-        var password = $('#password').val();
-        var cpassword = $('#cpassword').val();
+            var firstName = $('#firstName').val();
+            var lastName = $('#lastName').val();
+            var emailAddress = $('#emailAddress').val();
+            var phoneNumber = $('#phoneNumber').val();
+            var User_name = $('#User_name').val();
+            var password = $('#password').val();
+            var cpassword = $('#cpassword').val();
 
-        // Clear previous error messages
-        $('#error-fname').text('');
-        $('#error-email').text('');
-        $('#error-username').text('');
-        $('#error-password').text('');
-        $('#error-cpassword').text('');
-        $('.showbalance').hide(); // Hide previous messages
+            // Clear previous error messages
+            $('#error-fname').text('');
+            $('#error-email').text('');
+            $('#error-username').text('');
+            $('#error-password').text('');
+            $('#error-cpassword').text('');
+            $('.showbalance').hide(); // Hide previous messages
 
-        $.ajax({
-            url: '{{ route('patient-signup') }}',
-            method: 'post',
-            dataType: 'json',
-            data: {
-                _token: '{{ csrf_token() }}',
-                fname: firstName,
-                lname: lastName,
-                email: emailAddress,
-                phone: phoneNumber,
-                patient_login_id: User_name,
-                password: password,
-                cpassword: cpassword,
-            },
-            success: function(response) {
-                if (response.success) {
-                    // Show success message
-                    alert(response.message);
-                    // Optionally, redirect to login or home page:
-                    window.location.href = '{{route('patient-login')}}';
-                } else {
-                    alert('Something went wrong!');
+            $.ajax({
+                url: '{{ route('patient-signup') }}',
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    fname: firstName,
+                    lname: lastName,
+                    email: emailAddress,
+                    phone: phoneNumber,
+                    patient_login_id: User_name,
+                    password: password,
+                    cpassword: cpassword,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Show success message
+                        alert(response.message);
+                        // Optionally, redirect to login or home page:
+                        window.location.href = '{{ route('patient-login') }}';
+                    } else {
+                        alert('Something went wrong!');
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        if (errors.fname) $('#error-fname').text(errors.fname[0]).show();
+                        if (errors.email) $('#error-email').text(errors.email[0]).show();
+                        if (errors.email) $('#error-email').text(errors.email).show();
+                        if (errors.patient_login_id) $('#error-username').text(errors.patient_login_id[0])
+                        .show();
+                        if (errors.password) $('#error-password').text(errors.password[0]).show();
+                        if (errors.cpassword) $('#error-cpassword').text(errors.cpassword[0]).show();
+                    } else {
+                        console.log(xhr.responseText);
+                    }
                 }
-            },
-            error: function(xhr) {
-                if (xhr.status === 422) {
-                    var errors = xhr.responseJSON.errors;
-                    if (errors.fname) $('#error-fname').text(errors.fname[0]).show();
-                    if (errors.email) $('#error-email').text(errors.email[0]).show();
-                    if (errors.email) $('#error-email').text(errors.email).show();
-                    if (errors.patient_login_id) $('#error-username').text(errors.patient_login_id[0]).show();
-                    if (errors.password) $('#error-password').text(errors.password[0]).show();
-                    if (errors.cpassword) $('#error-cpassword').text(errors.cpassword[0]).show();
-                } else {
-                    console.log(xhr.responseText);
-                }
-            }
-        });
-    }
+            });
+        }
     </script>
 @endsection
