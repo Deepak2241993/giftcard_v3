@@ -53,6 +53,12 @@
                                                     <div class="form-floating-icon">
                                                         <i data-feather="users"></i>
                                                     </div>
+                                                   <input type="hidden"
+                                                    class="form-control @error('amount') is-invalid @enderror"
+                                                    value="{{ request()->query('amount') ?? '' }}"
+                                                    id="session_amount"
+                                                    name="amount">
+
                                                 </div>
                                             
                                                 <!-- Password Input -->

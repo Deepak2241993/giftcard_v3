@@ -76,74 +76,74 @@ class AdminController extends Controller
     //  for Patienet Login Process
 
     public function PatientLoginPost(Request $request)
-{
-    $request->validate([
-        'patient_login_id' => 'required',
-        'password' => 'required|min:8'
-    ], [
-        'patient_login_id.required' => 'The username field is required.',
-    ]);
-
-    $credentials = $request->only('patient_login_id', 'password');
-    $remember = $request->filled('remember'); 
-
-    // Befor Login Update Data of Patient Timeline of giftcard from center purchase  and giftcard table
-    $patient = Patient::where('patient_login_id', $request->patient_login_id)->first();
-    if($patient)
     {
-    Giftsend::where('gift_send_to', $patient->email)->update(['gift_send_to' => $patient->patient_login_id]);
-    Giftsend::where('receipt_email', $patient->email)->update(['receipt_email' => $patient->patient_login_id]);
-    TimelineEvent::where('patient_id', $patient->email)->update(['patient_id' => $patient->patient_login_id]);
+        $request->validate([
+            'patient_login_id' => 'required',
+            'password' => 'required|min:8'
+        ], [
+            'patient_login_id.required' => 'The username field is required.',
+        ]);
+
+        $credentials = $request->only('patient_login_id', 'password');
+        $remember = $request->filled('remember'); 
+
+        // Befor Login Update Data of Patient Timeline of giftcard from center purchase  and giftcard table
+        $patient = Patient::where('patient_login_id', $request->patient_login_id)->first();
+        if($patient)
+        {
+        Giftsend::where('gift_send_to', $patient->email)->update(['gift_send_to' => $patient->patient_login_id]);
+        Giftsend::where('receipt_email', $patient->email)->update(['receipt_email' => $patient->patient_login_id]);
+        TimelineEvent::where('patient_id', $patient->email)->update(['patient_id' => $patient->patient_login_id]);
+        }
+
+        // Attempt login
+        if (Auth::guard('patient')->attempt($credentials)) {
+            $patient = Auth::guard('patient')->user();
+            
+            // Check if patient status is 1 (active)
+            if ($patient->status != 1) {
+                Auth::guard('patient')->logout();
+                return back()->withErrors(['patient_login_id' => 'Your account is inactive. Please verify your Email'])->withInput();
+            }
+
+            // Handle "Remember Me" functionality
+            if ($remember) {
+                cookie()->queue('username', $request->patient_login_id, 43200); // 30 days
+                cookie()->queue('password', $request->password, 43200); // 30 days
+                cookie()->queue('remember', $request->remember, 43200); // 30 days
+            } else {
+                // Clear cookies if 'Remember Me' is unchecked
+                cookie()->queue(cookie()->forget('username'));
+                cookie()->queue(cookie()->forget('password'));
+                cookie()->queue(cookie()->forget('remember'));
+            }
+
+            // Store Patient Details in Session
+            $request->session()->put('patient_details', $patient);
+            $request->session()->put('result.name', $patient->fname . ' ' . $patient->lname); // Store full name in session
+
+
+            // Event Hit for Giftcard table update
+            
+            event(new EventLogin($patient));
+
+            // Check for amount in session and redirect accordingly
+            if ($request->amount !=null) {
+                $amount = Session::get('amount');
+                return redirect()->route('home')->with('amount', $amount);
+            }
+                    // Check for session value and redirect accordingly
+            else if (session()->has('cart')) {
+                return redirect()->route('checkout_view');
+            }
+            else {
+                return redirect()->route('patient-dashboard')->with('success', 'Login successful!');
+            }
+        }
+
+        // Return errors properly if login fails
+        return back()->withErrors(['patient_login_id' => 'Invalid credentials.'])->withInput();
     }
-
-    // Attempt login
-    if (Auth::guard('patient')->attempt($credentials)) {
-        $patient = Auth::guard('patient')->user();
-        
-        // Check if patient status is 1 (active)
-        if ($patient->status != 1) {
-            Auth::guard('patient')->logout();
-            return back()->withErrors(['patient_login_id' => 'Your account is inactive. Please verify your Email'])->withInput();
-        }
-
-        // Handle "Remember Me" functionality
-        if ($remember) {
-            cookie()->queue('username', $request->patient_login_id, 43200); // 30 days
-            cookie()->queue('password', $request->password, 43200); // 30 days
-            cookie()->queue('remember', $request->remember, 43200); // 30 days
-        } else {
-            // Clear cookies if 'Remember Me' is unchecked
-            cookie()->queue(cookie()->forget('username'));
-            cookie()->queue(cookie()->forget('password'));
-            cookie()->queue(cookie()->forget('remember'));
-        }
-
-        // Store Patient Details in Session
-        $request->session()->put('patient_details', $patient);
-        $request->session()->put('result.name', $patient->fname . ' ' . $patient->lname); // Store full name in session
-
-
-        // Event Hit for Giftcard table update
-        
-        event(new EventLogin($patient));
-
-        // Check for amount in session and redirect accordingly
-        if (Session::has('amount')) {
-            $amount = Session::get('amount');
-            return redirect()->route('home')->with('amount', $amount);
-        }
-                // Check for session value and redirect accordingly
-               else if (session()->has('cart')) {
-                    return redirect()->route('checkout_view');
-                }
-        else {
-            return redirect()->route('patient-dashboard')->with('success', 'Login successful!');
-        }
-    }
-
-    // Return errors properly if login fails
-    return back()->withErrors(['patient_login_id' => 'Invalid credentials.'])->withInput();
-}
 
 
 
