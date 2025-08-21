@@ -145,7 +145,7 @@
         <nav class="header-nav">
             <a href="https://forevermedspanj.com/" class="nav-link">Website</a>
             <a href="{{ url('/') }}" class="nav-link">Giftcards</a>
-            {{-- <a href="{{ route('services') }}" class="nav-link">Services</a> --}}
+            <a href="{{ route('services') }}" class="nav-link">Services</a>
             @if (Session::get('patient_details'))
                 <a class="nav-link"
                     href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
@@ -157,12 +157,12 @@
                 $cartCount = count($cart);
             @endphp
 
-            {{-- <div class="cart-icon" id="cartIcon">
+            <div class="cart-icon" id="cartIcon">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count {{ $cartCount === 0 ? 'hiddencount' : '' }}" id="cartCount">
                     {{ $cartCount }}
                 </span>
-            </div> --}}
+            </div>
             <!-- Search Icon (mobile only) -->
             @if(url()->current() == route('services'))
             <div class="mobile-only-icon" id="searchIcon">
