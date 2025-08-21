@@ -145,7 +145,7 @@
         <nav class="header-nav">
             <a href="https://forevermedspanj.com/" class="nav-link">Website</a>
             <a href="{{ url('/') }}" class="nav-link">Giftcards</a>
-            <a href="{{ route('services') }}" class="nav-link">Services</a>
+            {{-- <a href="{{ route('services') }}" class="nav-link">Services</a> --}}
             @if (Session::get('patient_details'))
                 <a class="nav-link"
                     href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
