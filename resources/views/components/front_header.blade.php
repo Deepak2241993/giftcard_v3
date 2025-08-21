@@ -157,12 +157,12 @@
                 $cartCount = count($cart);
             @endphp
 
-            <div class="cart-icon" id="cartIcon">
+            {{-- <div class="cart-icon" id="cartIcon">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count {{ $cartCount === 0 ? 'hiddencount' : '' }}" id="cartCount">
                     {{ $cartCount }}
                 </span>
-            </div>
+            </div> --}}
             <!-- Search Icon (mobile only) -->
             @if(url()->current() == route('services'))
             <div class="mobile-only-icon" id="searchIcon">
