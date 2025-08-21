@@ -113,6 +113,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #000000;
 }
 
 .header-logo {
@@ -158,7 +159,7 @@
 }
 
 .nav-link {
-  color: var(--info-color);
+  color: var(--text-white);
   text-decoration: none;
   font-weight: 500;
   font-size: var(--font-size-base);
@@ -168,10 +169,10 @@
   position: relative;
 }
 
-.nav-link:hover {
+/* .nav-link:hover {
   color: var(--primary-color);
   background: rgba(230, 126, 80, 0.1);
-}
+} */
 
 .nav-link::after {
   content: "";
@@ -191,11 +192,11 @@
 
 .cart-icon {
   position: relative;
-  background: var(--gradient-primary);
+  background: #f39548;
   color: var(--text-white);
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-lg);
+  /* border-radius: var(--radius-lg); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1916,10 +1917,8 @@ body {
 
 /* Website Footer Styles */
 .website-footer {
-  background: #d3d3d3;
-  padding: var(--space-lg) 0;
-  margin-top: var(--space-5xl);
-  border-top: 1px solid #c0c0c0;
+  background: #000000;
+  border-top: 1px solid #0a0a0a;
 }
 
 .footer-content {
@@ -1932,7 +1931,7 @@ body {
 .footer-content p {
   margin: 0;
   font-size: var(--font-size-sm);
-  color: #666666;
+  color: #ffffff;
   font-weight: 400;
   line-height: 1.5;
 }

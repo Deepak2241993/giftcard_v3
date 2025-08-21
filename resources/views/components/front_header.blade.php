@@ -2,7 +2,7 @@
 
 <style>
     .logo-img {
-        max-height: 50px;
+        max-height: 75px;
         width: auto;
     }
 
@@ -124,24 +124,14 @@
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 .btnc-primary {
-    border: 1px solid #d66c3d;
-    background-color: #d66c3d;
-    color: #fff;
-    border-radius: 7px;
+    border: 1px solid #F39548;
+    color: #FFFFFF;
+    --button-bg-color: #F39548;
+    background: var(--button-bg-color);
+    border-color: #F39548;
+    padding: 11px 35px 11px 35px;
 }
-a.btn.btnc-primary.btn-phone {
-    font-size: 14px;
-    font-size: 14px;
-    padding: 3px 18px;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
-}
-a.btn.btnc-primary.btn-phone {
-    font-size: 12px;
-}
+
 </style>
 
 
@@ -155,7 +145,7 @@ a.btn.btnc-primary.btn-phone {
         <nav class="header-nav">
             <a href="https://forevermedspanj.com/" class="nav-link">Website</a>
             <a href="{{ url('/') }}" class="nav-link">Giftcards</a>
-            {{-- <a href="{{ route('services') }}" class="nav-link">Services</a> --}}
+            <a href="{{ route('services') }}" class="nav-link">Services</a>
             @if (Session::get('patient_details'))
                 <a class="nav-link"
                     href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
@@ -184,7 +174,7 @@ a.btn.btnc-primary.btn-phone {
             <div class="mobile-only-icon" id="hamburgerMenu">
                 <i class="fas fa-bars"></i>
             </div>
-            <a href="tel:12013404809" class="btn btn_phone btnc-primary btn-phone"><span style="color:#fff"><i class="fa fa-phone" aria-hidden="true"></i> Book appointment</span> <br><span class="emergency-number">(201) 340-4809<span></span></span></a>
+            <a href="https://forevermedspanj.com/services/book-appointments/" class="btn btn_phone btnc-primary btn-phone"><span style="color:#fff"><i class="fa fa-phone" aria-hidden="true"></i> Book appointment</span></a>
         </nav>
     </div>
     <!-- Mobile Menu Links -->

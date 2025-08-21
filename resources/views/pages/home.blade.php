@@ -32,7 +32,8 @@
 
     @push('csslink')
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{{ url('/') }}/giftcards/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+        {{-- <link rel="stylesheet" href="{{ url('/') }}/giftcards/css/bootstrap.min.css"> --}}
         <!-- Pogo Slider CSS -->
         <link rel="stylesheet" href="{{ url('/') }}/giftcards/css/pogo-slider.min.css">
         <!-- Site CSS -->
@@ -646,6 +647,9 @@
     <!-- best deals -->
 @endsection
 @push('footerscript')
+{{-- Bootstrap 4.1 Script --}}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+{{-- Bootstrap 4.1 Script END --}}
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ url('/') }}/giftcards/js/giftcard.js"></script>
