@@ -256,7 +256,10 @@ class PatientController extends Controller
                 ->count();
                 return view('patient.patient_dashboad', compact('order','giftcards'));                
             }
-            return redirect()->route('patient-login')->withErrors(['patient_login_id' => 'Please log in first.']);
+            else{
+
+                return redirect()->route('patient-login')->withErrors(['patient_login_id' => 'Please log in first.']);
+            }
         }
         // PAtient Profile
         public function PatientProfile(Patient $patient, Request $request)

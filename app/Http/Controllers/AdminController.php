@@ -56,7 +56,11 @@ class AdminController extends Controller
         $this->validate($request, [
             'email'   => 'required|email',
             'password'  => 'required|alphaNum|min:8'
-           ]);
+           ],
+           [
+            'email.required' => 'The email field is required.',
+            'password.required' => 'The Password field is required and must be at least 8 characters long.',
+        ]);
       
            $credentials = $request->only('email', 'password');
       
@@ -82,6 +86,7 @@ class AdminController extends Controller
             'password' => 'required|min:8'
         ], [
             'patient_login_id.required' => 'The username field is required.',
+            'password.required' => 'The Password field is required and must be at least 8 characters long.',
         ]);
 
         $credentials = $request->only('patient_login_id', 'password');
@@ -133,7 +138,7 @@ class AdminController extends Controller
                 return redirect()->route('home')->with('amount', $amount);
             }
                     // Check for session value and redirect accordingly
-            else if (session()->has('cart')) {
+            else if (session()->has('front_cart')) {
                 return redirect()->route('checkout_view');
             }
             else {
