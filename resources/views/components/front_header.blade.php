@@ -193,6 +193,12 @@
         display: none !important;
     }
 }
+
+@media (max-width: 991px) {
+    body {
+        margin-top: 100px; /* matches your header height */
+    }
+}
 </style>
 
 <header class="page-header">
