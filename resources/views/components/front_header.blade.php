@@ -103,13 +103,24 @@
             display: none;
             flex-direction: column;
             background-color: white;
-            position: absolute;
+            position: fixed;   /* FIX: stays below header */
             top: 70px;
             left: 0;
             right: 0;
             padding: 15px;
-            z-index: 999;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;  /* ensure it sits above search */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            max-height: calc(100vh - 70px); /* scroll if too tall */
+            overflow-y: auto;
+        }
+
+
+
+        #mobileMenu .close-btn {
+            text-align: right;
+            font-size: 20px;
+            cursor: pointer;
+                margin-bottom: 10px;
         }
 
         #mobileMenu a {
@@ -125,36 +136,27 @@
         }
     }
 
-    /* Mobile search container */
+    /* Mobile search container always visible */
     #mobileSearchContainer {
         display: none;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background-color: white;
-        padding: 10px 15px;
-        z-index: 999;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Show search box only on mobile */
-    @media (min-width: 769px) {
-        #mobileSearchContainer {
-            display: none !important;
-        }
     }
 
     @media (max-width: 768px) {
+        #mobileSearchContainer {
+            display: block !important;
+            position: relative;
+            width: 100%;
+            background-color: white;
+            padding: 10px 15px;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
         #mobileSearchContainer input[type="text"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
-
-        #mobileSearchContainer.show {
-            display: block;
         }
     }
 
@@ -221,12 +223,6 @@
                     {{ $cartCount }}
                 </span>
             </div>
-            <!-- Search Icon (mobile only) -->
-            @if(url()->current() == route('services'))
-            <div class="mobile-only-icon" id="searchIcon">
-                <i class="fas fa-search"></i>
-            </div>
-            @endif
 
             <!-- Hamburger Icon (mobile only) -->
             <div class="mobile-only-icon" id="hamburgerMenu">
@@ -237,6 +233,7 @@
     </div>
     <!-- Mobile Menu Links -->
     <div id="mobileMenu">
+        <div class="close-btn">&times;</div>
         <a href="https://forevermedspanj.com/">Website</a>
         <a href="{{ url('/') }}">Giftcards</a>
         <a href="{{ route('services') }}">Services</a>
@@ -359,7 +356,6 @@ $amount = 0;
 @push('footerscript')
     <script>
         function removeFromCart(id) {
-            // alert(id);
             $.ajax({
                 url: '{{ route('cartremove') }}',
                 method: "POST",
@@ -371,7 +367,6 @@ $amount = 0;
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Update the cart view, e.g., remove the item from the DOM
                         $('#cart-item-' + id).remove();
                         alert(response.success);
                         location.reload();
@@ -386,14 +381,13 @@ $amount = 0;
         }
         </script>
 
-           </script>
      {{-- For Clear All Cart Value --}}
      <script>
     document.getElementById('clearCartBtn').addEventListener('click', function () {
         if (!confirm("Are you sure you want to clear your cart?")) return;
 
         $.ajax({
-            url: '{{ route("cart.clear") }}', // Make sure this route exists in web.php
+            url: '{{ route("cart.clear") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -401,7 +395,7 @@ $amount = 0;
             },
             success: function (response) {
                 if (response.success) {
-                    location.reload(); // Or update sidebar dynamically
+                    location.reload();
                 } else {
                     alert(response.message || "Failed to clear cart.");
                 }
@@ -412,27 +406,27 @@ $amount = 0;
         });
     });
 </script>
-<!--mobile view-->
-<!-- <script>
-    document.getElementById('hamburgerMenu').addEventListener('click', function () {
-        document.getElementById('mobileMenu').classList.toggle('show');
-    });
-</script> -->
-<!-- search bar -->
+
+<!-- Hamburger toggle -->
 <script>
-    // // Toggle mobile menu
     // document.getElementById('hamburgerMenu').addEventListener('click', function () {
     //     document.getElementById('mobileMenu').classList.toggle('show');
-    //     document.getElementById('mobileSearchContainer').classList.remove('show'); // hide search if open
     // });
 
-    // // Toggle mobile search
-    // document.getElementById('searchIcon').addEventListener('click', function () {
-    //     document.getElementById('mobileSearchContainer').classList.toggle('show');
-    //     document.getElementById('mobileMenu').classList.remove('show'); // hide menu if open
-    // });
+    // Toggle mobile menu
+document.getElementById('hamburgerMenu').addEventListener('click', function () {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('show');
+    document.getElementById('mobileSearchContainer').classList.remove('show'); // hide search
+});
+
+// Add close button functionality
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('close-btn')) {
+        document.getElementById('mobileMenu').classList.remove('show');
+    }
+});
+
 </script>
-
-
 
 @endpush
