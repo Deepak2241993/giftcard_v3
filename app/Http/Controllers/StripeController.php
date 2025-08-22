@@ -284,7 +284,7 @@ class StripeController extends Controller
                 
             // }
             //  If Gift card Not applyed for redeem
-            if ($cards = session('cart', []))
+            if ($cards = session('front_cart', []))
             {
             
 

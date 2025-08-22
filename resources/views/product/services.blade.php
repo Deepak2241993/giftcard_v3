@@ -334,7 +334,9 @@
                     _token: '{{ csrf_token() }}',
                     unit_id: unit_id,
                     quantity: quantity,
-                    type: type
+                    type: type,
+                    cart_name: "front_cart"
+
                 },
                 success: function(response) {
                     if (response.success) {
@@ -386,7 +388,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     key: key,
-                    quantity: newQuantity
+                    quantity: newQuantity,
+                    cart_name: "front_cart"
                 },
                 success: function(response) {
                     if (response.success) {
