@@ -6,6 +6,60 @@
         width: auto;
     }
 
+    .page-header {
+       width: 100%;
+       background: #000; /* full-width black background */
+        margin: 0;
+        padding: 15px 0; /* padding top & bottom */
+    }
+
+    .header-container {
+        width: 100%;
+        max-width: 1300px; /* keeps content centered */
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px; /* left/right padding inside */
+    }
+
+    .header-logo img {
+        display: block;
+    }
+
+    .header-nav {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .header-nav .nav-link {
+        color: #fff;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .header-nav .nav-link:hover {
+        color: #F39548;
+    }
+
+    .cart-icon {
+        position: relative;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .cart-count {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background: #F39548;
+        color: #fff;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 50%;
+    }
+
     .mobile-only-icon {
         width: 44px;
         height: 44px;
@@ -70,70 +124,74 @@
             display: flex;
         }
     }
-</style>
-<style>
-    /* Mobile search container */
-#mobileSearchContainer {
-    display: none;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    right: 0;
-    background-color: white;
-    padding: 10px 15px;
-    z-index: 999;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
-/* Show search box only on mobile */
-@media (min-width: 769px) {
+    /* Mobile search container */
     #mobileSearchContainer {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background-color: white;
+        padding: 10px 15px;
+        z-index: 999;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Show search box only on mobile */
+    @media (min-width: 769px) {
+        #mobileSearchContainer {
+            display: none !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #mobileSearchContainer input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #mobileSearchContainer.show {
+            display: block;
+        }
+    }
+
+    /* For Phone Button */
+    .btn_phone {
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        border-radius: .25rem;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .btnc-primary {
+        border: 1px solid #F39548;
+        color: #FFFFFF;
+        --button-bg-color: #F39548;
+        background: var(--button-bg-color);
+        border-color: #F39548;
+        padding: 11px 35px 11px 35px;
+    }
+
+    @media (max-width: 768px) {
+    .header-nav .btn-phone {
         display: none !important;
     }
 }
-
-@media (max-width: 768px) {
-    #mobileSearchContainer input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    #mobileSearchContainer.show {
-        display: block;
-    }
-}
-
-/* For Phone Button */
-.btn_phone {
-    display: inline-block;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    text-align: center;
-    text-decoration: none;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-.btnc-primary {
-    border: 1px solid #F39548;
-    color: #FFFFFF;
-    --button-bg-color: #F39548;
-    background: var(--button-bg-color);
-    border-color: #F39548;
-    padding: 11px 35px 11px 35px;
-}
-
 </style>
-
 
 <header class="page-header">
     <div class="header-container">
@@ -179,16 +237,22 @@
     </div>
     <!-- Mobile Menu Links -->
     <div id="mobileMenu">
-        <a href="https://forevermedspanj.com/">Home</a>
+        <a href="https://forevermedspanj.com/">Website</a>
         <a href="{{ url('/') }}">Giftcards</a>
         <a href="{{ route('services') }}">Services</a>
         @if (Session::get('patient_details'))
-            <a href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
+        <a href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
         @else
-            <a href="{{ url('/patient-login') }}">Login</a>
+        <a href="{{ url('/patient-login') }}">Login</a>
         @endif
-        
+
+        <a href="https://forevermedspanj.com/services/book-appointments/" class="btn btn_phone btnc-primary btn-phone" style="margin-top:10px; text-align:center;">
+            <span style="color:#fff">
+                <i class="fa fa-phone" aria-hidden="true"></i> Book appointment
+            </span>
+        </a>
     </div>
+
      @if(url()->current() == route('services'))
         <div id="mobileSearchContainer" class="d-block d-md-none">
             <input type="text" placeholder="Search..." id="mobileSearchInput" />
@@ -354,17 +418,17 @@ $amount = 0;
 </script> -->
 <!-- search bar -->
 <script>
-    // Toggle mobile menu
-    document.getElementById('hamburgerMenu').addEventListener('click', function () {
-        document.getElementById('mobileMenu').classList.toggle('show');
-        document.getElementById('mobileSearchContainer').classList.remove('show'); // hide search if open
-    });
+    // // Toggle mobile menu
+    // document.getElementById('hamburgerMenu').addEventListener('click', function () {
+    //     document.getElementById('mobileMenu').classList.toggle('show');
+    //     document.getElementById('mobileSearchContainer').classList.remove('show'); // hide search if open
+    // });
 
-    // Toggle mobile search
-    document.getElementById('searchIcon').addEventListener('click', function () {
-        document.getElementById('mobileSearchContainer').classList.toggle('show');
-        document.getElementById('mobileMenu').classList.remove('show'); // hide menu if open
-    });
+    // // Toggle mobile search
+    // document.getElementById('searchIcon').addEventListener('click', function () {
+    //     document.getElementById('mobileSearchContainer').classList.toggle('show');
+    //     document.getElementById('mobileMenu').classList.remove('show'); // hide menu if open
+    // });
 </script>
 
 

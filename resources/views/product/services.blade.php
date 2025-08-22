@@ -153,63 +153,59 @@
             </div>
 
             <div class="categories">
-    <div class="categories-header mb-2">
-        <h3><i class="fas fa-th-large"></i> Treatment Categories</h3>
-    </div>
+                <div class="categories-header mb-2">
+                    <h3><i class="fas fa-th-large"></i> Treatment Categories</h3>
+                </div>
 
-    <!-- Category Search -->
-    <div class="category-search-container mb-3 position-relative">
-        <input type="text" id="categorySearch" class="form-control" placeholder="Search categories..." autocomplete="off">
-        <i class="fas fa-search category-search-icon position-absolute" style="right:40px; top:12px;"></i>
-        <button class="btn btn-sm btn-light position-absolute" id="clearCategorySearch" style="right:5px; top:6px; display:none;" >
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-
-    <!-- Categories Accordion -->
-    <div class="accordion" id="accordionExample">
-        @foreach ($category as $key => $value)
-            <div class="card accordion-item">
-                <div class="card-header p-2" id="heading{{ $key }}">
-                    <h2 class="mb-0">
-                        <button class="btn text-left w-100 {{ $key != 0 ? 'collapsed' : '' }}" 
-                                type="button" 
-                                data-toggle="collapse" 
-                                data-target="#collapse{{ $key }}" 
-                                aria-expanded="{{ $key == 0 ? 'true' : 'false' }}" 
-                                aria-controls="collapse{{ $key }}" style="color: #f39548;">
-                            <i class="fas fa-folder mr-2"></i> {{ $value->cat_name ?? '' }}
+                    <!-- Category Search -->
+                    <div class="category-search-container mb-3 position-relative">
+                        <input type="text" id="categorySearch" class="form-control" placeholder="Search categories..." autocomplete="off">
+                        <i class="fas fa-search category-search-icon position-absolute" style="right:40px; top:12px;"></i>
+                        <button class="btn btn-sm btn-light position-absolute" id="clearCategorySearch" style="right:5px; top:6px; display:none;" >
+                            <i class="fas fa-times"></i>
                         </button>
-                    </h2>
-                </div>
+                    </div>
 
-                <div id="collapse{{ $key }}" 
-                     class="collapse {{ $key == 0 ? 'show' : '' }}" 
-                     aria-labelledby="heading{{ $key }}" 
-                     data-parent="#accordionExample">
-                    <ul class="list-group list-group-flush">
-                        @foreach ($services as $sKey => $service)
-                            @if ($value->id == $service->cat_id)
-                                <li class="list-group-item p-2">
-                                    <a href="{{ route('category-list', $service->product_slug) }}" style="color:var(--text-primary) text-decoration: underline;">
-                                        {{ $service->product_name }}
-                                    </a>
-                                </li>
-                            @endif
+                    <!-- Categories Accordion -->
+                    <div class="accordion" id="accordionExample">
+                        @foreach ($category as $key => $value)
+                        <div class="card accordion-item">
+                            <div class="card-header p-2" id="heading{{ $key }}">
+                                <h2 class="mb-0">
+                                    <button class="btn text-left w-100 {{ $key != 0 ? 'collapsed' : '' }}" 
+                                    type="button" 
+                                    data-toggle="collapse" 
+                                    data-target="#collapse{{ $key }}" 
+                                    aria-expanded="{{ $key == 0 ? 'true' : 'false' }}" 
+                                    aria-controls="collapse{{ $key }}" style="color: #f39548;">
+                                    <i class="fas fa-folder mr-2"></i> {{ $value->cat_name ?? '' }}
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapse{{ $key }}" 
+                                class="collapse {{ $key == 0 ? 'show' : '' }}" 
+                                aria-labelledby="heading{{ $key }}" 
+                                data-parent="#accordionExample">
+                                <ul class="list-group list-group-flush">
+                                    @foreach ($services as $sKey => $service)
+                                    @if ($value->id == $service->cat_id)
+                                    <li class="list-group-item p-2">
+                                        <a href="{{ route('category-list', $service->product_slug) }}" style="color:var(--text-primary) text-decoration: underline;">
+                                            {{ $service->product_name }}
+                                        </a>
+                                    </li>
+                                    @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
                         @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endforeach
-    </div>
-</div>
-
-           
+                    </div>
+                </div>        
 
 
-
-
-            {{-- <div class="contact-info">
+             {{-- <div class="contact-info">
                 <div class="contact-item website">
                     <div class="contact-icon">
                         <i class="fas fa-globe"></i>
@@ -228,9 +224,10 @@
                         <a href="tel:+12013404809">(201) 340-4809</a>
                     </div>
                 </div>
-            </div> --}}
+              </div> --}}
         </div>
 
+        
         <!-- Right Side - Service Selection -->
         <div class="service-selection">
             <div class="card-glow"></div>
@@ -273,7 +270,7 @@
                                     <span>Read More</span>
                                     <i class="fas fa-chevron-down"></i>
                                 </button>
-                                </p>
+                                
 
                                 <div class="hidden-content">
                                     <p>{!! $value['product_description'] !!}</p>
