@@ -29,7 +29,7 @@
 {{-- <link rel="stylesheet" href="{{url('/')}}/giftcards/css/style.css">  --}}
 @endpush
     @php
-        $cart = session()->get('cart', []);
+        $cart = session()->get('front_cart', []);
         $amount = 0;
     @endphp
   

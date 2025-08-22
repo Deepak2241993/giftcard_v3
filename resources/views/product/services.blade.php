@@ -183,26 +183,26 @@
                                 </h2>
                             </div>
 
-                            <div id="collapse{{ $key }}" 
-                                class="collapse {{ $key == 0 ? 'show' : '' }}" 
-                                aria-labelledby="heading{{ $key }}" 
-                                data-parent="#accordionExample">
-                                <ul class="list-group list-group-flush">
-                                    @foreach ($services as $sKey => $service)
-                                    @if ($value->id == $service->cat_id)
-                                    <li class="list-group-item p-2">
-                                        <a href="{{ route('category-list', $service->product_slug) }}" style="color:var(--text-primary) text-decoration: underline;">
-                                            {{ $service->product_name }}
-                                        </a>
-                                    </li>
-                                    @endif
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
+                <div id="collapse{{ $key }}" 
+                     class="collapse {{ $key == 0 ? 'show' : '' }}" 
+                     aria-labelledby="heading{{ $key }}" 
+                     data-parent="#accordionExample">
+                    <ul class="list-group list-group-flush">
+                        @foreach ($services as $sKey => $service)
+                            @if ($value->id == $service->cat_id)
+                                <li class="list-group-item p-2">
+                                    <a href="{{ route('category-list', $service->product_slug) }}" style="color:var(--text-primary) text-decoration: underline;">
+                                        {{ $service->product_name }}
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
-                    </div>
-                </div>        
+                    </ul>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
 
 
              {{-- <div class="contact-info">
@@ -329,7 +329,9 @@
                     _token: '{{ csrf_token() }}',
                     unit_id: unit_id,
                     quantity: quantity,
-                    type: type
+                    type: type,
+                    cart_name: "front_cart"
+
                 },
                 success: function(response) {
                     if (response.success) {
@@ -381,7 +383,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     key: key,
-                    quantity: newQuantity
+                    quantity: newQuantity,
+                    cart_name: "front_cart"
                 },
                 success: function(response) {
                     if (response.success) {

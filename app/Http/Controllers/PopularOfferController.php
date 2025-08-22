@@ -117,7 +117,13 @@ class PopularOfferController extends Controller
     {
         // dd($request->all());
         // Retrieve cart from session or initialize an empty array
+        if(isset($request->cart_name)){
+                      
+            $cart = session()->get($request->cart_name, []);
+        }else{
+
         $cart = session()->get('cart', []);
+        }
     //  For Services Purchase
         if (!empty($request->type=='product')) {
 
@@ -181,7 +187,12 @@ class PopularOfferController extends Controller
         
     
         // Save the updated cart back to the session
+        
+        if(isset($request->cart_name)){
+            session()->put($request->cart_name, $cart);
+        }else{
         session()->put('cart', $cart);
+        }
         
         // Put Patient Id In Session For Buyinf from patient Page
        // Store patient_id in session
@@ -198,13 +209,24 @@ class PopularOfferController extends Controller
 //  For Update cart
 public function updateCart(Request $request)
 {
-    $cart = session()->get('cart', []);
+     if(isset($request->cart_name)){
+                      
+            $cart = session()->get($request->cart_name, []);
+        }else{
+
+        $cart = session()->get('cart', []);
+        }
+
     $key = $request->key;
     $quantity = (int) $request->quantity;
 
     if (isset($cart[$key])) {
         $cart[$key]['quantity'] = $quantity;
+         if(isset($request->cart_name)){
+            session()->put($request->cart_name, $cart);
+        }else{
         session()->put('cart', $cart);
+        }
     }
 
     // Return updated data
@@ -296,19 +318,30 @@ public function updateCart(Request $request)
      $patients = Patient::where('is_deleted',0)->orderBy('id', 'DESC')->get();
         return view('admin.cart.cart',compact('patients'));
     }
+
     //  For Items Remove From Carts
     public function CartRemove(Request $request){
         $request->validate([
             'product_id' => 'required|string'
         ]);
-        $cart = session()->get('cart', []);
+        if(isset($request->cart_name)){
+                      
+            $cart = session()->get($request->cart_name, []);
+        }else{
+            $cart = session()->get('cart', []);
+        }
         $productId = $request->product_id;
         $unitId = $request->unit_id;
 // dd($cart[$productId]);
         if (isset($cart[$productId]) || isset($cart[$unitId])) {
             unset($cart[$productId]);
             unset($cart[$unitId]);
+            if(isset($request->cart_name)){
+                session()->put($request->cart_name, $cart); 
+            }else{
             session()->put('cart', $cart);
+            }
+
             return response()->json(['success' => 'Product removed from cart successfully!']);
         } else {
             return response()->json(['error' => 'Product not found in cart!'], 404);
@@ -358,10 +391,14 @@ public function Checkout(Request $request)
         }
     // For Claer All Cart Value
     public function clearCart(Request $request)
-{
-    session()->forget('cart'); // Remove the cart session
-    return response()->json(['success' => true, 'message' => 'Cart cleared successfully']);
-}
+        {
+            if(isset($request->cart_name)){
+            session()->forget($request->cart_name);
+            } else{
+            session()->forget('cart');
+            }
+            return response()->json(['success' => true, 'message' => 'Cart cleared successfully']);
+        }
 
         public function CheckoutProcess(Request $request)
         {

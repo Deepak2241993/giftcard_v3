@@ -211,7 +211,7 @@
                 <a class="nav-link" href="{{ url('/patient-login') }}">Login</a>
             @endif
             @php
-                $cart = session()->get('cart', []);
+                $cart = session()->get('front_cart', []);
                 $cartCount = count($cart);
             @endphp
 
@@ -263,7 +263,7 @@
 </header>
 
 @php
-$cart = session()->get('cart', []);
+$cart = session()->get('front_cart', []);
  $redeem = 0;
 $amount = 0;
     @endphp
@@ -366,7 +366,8 @@ $amount = 0;
                 dataType: "json",
                 data: {
                     _token: '{{ csrf_token() }}',
-                    product_id: id
+                    product_id: id,
+                    cart_name: "front_cart"
                 },
                 success: function(response) {
                     if (response.success) {
@@ -395,7 +396,8 @@ $amount = 0;
             url: '{{ route("cart.clear") }}', // Make sure this route exists in web.php
             type: 'POST',
             data: {
-                _token: '{{ csrf_token() }}'
+                _token: '{{ csrf_token() }}',
+                cart_name: "front_cart"
             },
             success: function (response) {
                 if (response.success) {
