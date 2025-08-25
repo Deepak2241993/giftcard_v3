@@ -112,99 +112,21 @@
     max-width: 98vw;
     margin: 2vw auto;
   }
+  .table th{
+    max-width: 100px !important;
 }
 
 @media (max-width: 350px) {
   .card, .main_box_coupon {
     min-width: 95vw;
     padding: 2px;
-  }
+    }
+  .table th{
+    max-width: 100px !important;
+    }
   
 }
 
-    </style>
-
-    <!-- <style>
-        @media (max-width: 768px) {
-  #msform fieldset, 
-  #msform #secondbox, 
-  #msform #paymentdbox {
-    padding: 8px 2vw !important;
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  #msform .col-lg-12, 
-  #msform .col-md-12, 
-  #msform .col-12,
-  #msform .col-lg-8, 
-  #msform .col-md-8, 
-  #msform .col-md-6,
-  #msform .col-md-4, 
-  #msform .col-lg-4 {
-    width: 100% !important;
-    max-width: 100vw !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin-bottom: 8px;
-    float: none !important;
-    display: block !important;
-  }
-
-  #msform button,
-  #msform .btn,
-  .button-group .btn {
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-  }
-
-  .button-group {
-    flex-direction: column !important;
-    gap: 10px;
-    display: flex !important;
-  }
-
-  
-  #msform label,
-  #msform .form-label {
-    font-size: 1.05em;
-    margin-bottom: 2px !important;
-    display: block;
-  }
-  #msform textarea,
-  #msform input[type="text"],
-  #msform input[type="email"],
-  #msform input[type="number"],
-  #msform select {
-    font-size: 1em;
-    width: 100% !important;
-    padding: 8px !important;
-    margin-bottom: 12px !important;
-    box-sizing: border-box;
-  }
-  
-  #msform .text-success, #msform .text-danger {
-    font-size: 0.98em;
-    margin-left: 0 !important;
-    margin-bottom: 8px !important;
-  }
-  
-  #paymentdbox, .fs-title, #paymentresult {
-    width: 100% !important;
-    max-width: 100vw;
-    word-break: break-word;
-    padding: 8px 0 !important;
-    margin: 0 !important;
-    background: #fff;
-  }
-}
-
-    </style> -->
-
-    <style>
-        
     </style>
 
     @endpush
