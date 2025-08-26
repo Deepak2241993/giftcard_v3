@@ -40,7 +40,8 @@
 <script src="{{url('/')}}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{url('/')}}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{url('/')}}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 {{--  For Auto Search Js --}}
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>

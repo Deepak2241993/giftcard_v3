@@ -646,6 +646,7 @@
                                                    <a href="{{ route('giftcards-sale') }}?patient_id={{ $patient->id }}" class="btn btn-primary">Giftcard Buy</a>
                                                    <a href="{{ route('product.index') }}?patient_id={{ $patient->id }}" class="btn btn-dark">Service & Deals Sale</a>
                                                    <a href="{{ route('program.index') }}?patient_id={{ $patient->id }}" class="btn btn-warning">Program Sale</a>
+                                                   <a href="{{ route('unit.index') }}?patient_id={{ $patient->id }}" class="btn btn-success">Unit Sale</a>
                                                 </div>
                                             </div>
                                         </div>

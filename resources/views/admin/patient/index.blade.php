@@ -79,7 +79,7 @@
                                     <td>
                                         
                                         <div class="btn-group mb-2" role="group" aria-label="Quick Actions">
-                                            <a href="{{ route('patient.edit', $value->id) }}" class="btn btn-outline-primary btn-sm" title="View Profile">
+                                            <a href="{{ route('patient.edit', $value->id) }}?patient_id={{ $value->id }}" class="btn btn-outline-primary btn-sm" title="View Profile">
                                                 <i class="fa fa-user"></i>
                                             </a>
 

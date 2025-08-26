@@ -7,6 +7,10 @@ $amount = 0;
 // $cart = session()->pull('cart');
 @endphp
 @push('css')
+
+
+
+
 <style>
    .cart-page-total {
    background-color: #f8f9fa;
@@ -751,7 +755,7 @@ $amount = 0;
                if (response.success) {
                    // Update the cart view, e.g., remove the item from the DOM
                    $('#cart-item-' + id).remove();
-                   alert(response.success);
+                    toastr.success(response.success);
                    location.reload();
                } else {
                    alert(response.error);
@@ -1210,4 +1214,5 @@ document.addEventListener("DOMContentLoaded", function () {
        }
    });
 </script>  --}}
+
 @endpush

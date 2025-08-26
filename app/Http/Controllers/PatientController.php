@@ -25,6 +25,7 @@ class PatientController extends Controller
      */
     public function index()
     {
+       
         $data = Patient::where('is_deleted',0)->orderBy('id', 'DESC')->get();
     
         return view('admin.patient.index', compact('data'));
@@ -70,6 +71,10 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient, Request $request, TransactionHistory $transaction)
 {
+     if(isset($_GET['patient_id']))
+         {
+            $request->session()->put('internal_patient_id', $request->get('patient_id'));
+        }
     $patient_login_id = $patient->patient_login_id;
     $patient_email = $patient->email;
 
