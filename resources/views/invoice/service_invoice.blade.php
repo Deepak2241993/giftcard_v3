@@ -88,113 +88,155 @@
                           <td class="tm_width_3 tm_primary_color">${{ number_format($itemPrice, 2) }}</td>
                           <td class="tm_width_1">{{ $value->qty }}</td>
                           <td class="tm_width_2 tm_text_right">${{ number_format($itemTotal, 2) }}</td>
-                        </tr>
-                      @endforeach
+                        </tr> @endforeach
                     </tbody>
                   </table>
                   
-                  <div class="tm_invoice_footer tm_border_left tm_border_left_none_md">
-                    <div class="tm_left_footer tm_padd_left_15_md">
-                      <p class="tm_mb2"><b class="tm_primary_color">Payment info:</b></p>
-                      <p class="tm_m0">Payment Status - {{ ucFirst($transaction_data->payment_status) }}<br>Amount: ${{ $transaction_data->transaction_amount }}</p>
-                    </div>
-                    <div class="tm_right_footer">
-                      <table>
-                        <tbody>
-                          <tr class="tm_gray_bg tm_border_top tm_border_left tm_border_right">
-                            <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtotal</td>
-                            <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">${{ number_format($subtotal, 2) }}</td>
-                          </tr>
-                  
-                          <tr class="tm_gray_bg tm_border_top tm_border_left tm_border_right">
-                            <td class="tm_width_3 tm_primary_color tm_border_none tm_bold" style="color: #007bff;">Discount</td>
-                            <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold" style="color: #007bff;">- ${{ number_format($transaction_data->discount ?? 0, 2) }}</td>
-                          </tr>
-                  
-                          @if ($transaction_data->gift_card_amount != null)
-                            @php
-                              $giftamount = explode('|', $transaction_data->gift_card_amount);
-                              $Totalgiftamount = array_sum($giftamount);
-                            @endphp
-                            <tr class="tm_gray_bg tm_border_left tm_border_right">
-                              <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0" style="color: #dc3545;">Giftcard Applied</td>
-                              <td class="tm_width_3 tm_text_right tm_border_none tm_pt0 tm_danger_color" style="color: #dc3545;">- ${{ number_format($Totalgiftamount, 2) }}</td>
-                            </tr>
-                          @endif
-                  
-                          <tr class="tm_gray_bg tm_border_left tm_border_right">
-                            <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Tax <span class="tm_ternary_color">(0%)</span></td>
-                            <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">+ ${{ number_format($transaction_data->tax_amount, 2) }}</td>
-                          </tr>
-                  
-                          @php
-                            $payableAmount = $subtotal - ($transaction_data->discount ?? 0) - ($Totalgiftamount ?? 0) + $transaction_data->tax_amount;
-                          @endphp
-                          <tr class="tm_border_top tm_gray_bg tm_border_left tm_border_right">
-                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color">Grand Total</td>
-                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">${{ number_format($payableAmount, 2) }}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  
+                  <div class="tm_invoice_footer
+                                        tm_border_left tm_border_left_none_md">
+                                        <div class="tm_left_footer tm_padd_left_15_md">
+                                            <p class="tm_mb2"><b class="tm_primary_color">Payment info:</b></p>
+                                            <p class="tm_m0">Payment Status -
+                                                {{ ucFirst($transaction_data->payment_status) }}<br>Amount:
+                                                ${{ $transaction_data->transaction_amount }}</p>
+                                        </div>
+                                        <div class="tm_right_footer">
+                                            <table>
+                                                <tbody>
+                                                    <tr class="tm_gray_bg tm_border_top tm_border_left tm_border_right">
+                                                        <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">
+                                                            Subtotal</td>
+                                                        <td
+                                                            class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
+                                                            ${{ number_format($subtotal, 2) }}</td>
+                                                    </tr>
+
+                                                    <tr class="tm_gray_bg tm_border_top tm_border_left tm_border_right">
+                                                        <td class="tm_width_3 tm_primary_color tm_border_none tm_bold"
+                                                            style="color: #007bff;">Discount</td>
+                                                        <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold"
+                                                            style="color: #007bff;">-
+                                                            ${{ number_format($transaction_data->discount ?? 0, 2) }}
+                                                        </td>
+                                                    </tr>
+
+                                                    @if ($transaction_data->gift_card_amount != null)
+                                                        @php
+                                                            $giftamount = explode(
+                                                                '|',
+                                                                $transaction_data->gift_card_amount,
+                                                            );
+                                                            $Totalgiftamount = array_sum($giftamount);
+                                                        @endphp
+                                                        <tr class="tm_gray_bg tm_border_left tm_border_right">
+                                                            <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0"
+                                                                style="color: #dc3545;">Giftcard Applied</td>
+                                                            <td class="tm_width_3 tm_text_right tm_border_none tm_pt0 tm_danger_color"
+                                                                style="color: #dc3545;">-
+                                                                ${{ number_format($Totalgiftamount, 2) }}</td>
+                                                        </tr>
+                                                    @endif
+
+                                                    <tr class="tm_gray_bg tm_border_left tm_border_right">
+                                                        <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">
+                                                            Tax <span class="tm_ternary_color">
+                                                                @php
+                                                                    $taxAmount = $transaction_data->tax_amount;
+                                                                    $taxableAmount =
+                                                                        $subtotal -
+                                                                        $transaction_data->discount -
+                                                                        $Totalgiftamount;
+
+                                                                    // calculate tax rate
+                                                                    $taxRate = 0;
+                                                                    if ($taxableAmount > 0) {
+                                                                        $taxRate = ($taxAmount / $taxableAmount) * 100;
+                                                                    }
+
+                                                                    echo number_format($taxRate, 2) . '%';
+                                                                @endphp
+                                                            </span></td>
+                                                        <td
+                                                            class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
+                                                            + ${{ number_format($transaction_data->tax_amount, 2) }}
+                                                        </td>
+                                                    </tr>
+
+                                                    @php
+                                                        $payableAmount =
+                                                            $subtotal -
+                                                            ($transaction_data->discount ?? 0) -
+                                                            ($Totalgiftamount ?? 0) +
+                                                            $transaction_data->tax_amount;
+                                                    @endphp
+                                                    <tr class="tm_border_top tm_gray_bg tm_border_left tm_border_right">
+                                                        <td
+                                                            class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color">
+                                                            Grand Total</td>
+                                                        <td
+                                                            class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">
+                                                            ${{ number_format($payableAmount, 2) }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                             </div>
+
                         </div>
-                        <hr class="tm_mb20">
-                        <div class="tm_text_center">
-                            <p class="tm_mb5"><b class="tm_primary_color">Terms & Conditions:</b></p>
-                            <p class="tm_m0">Your use of the Website shall be deemed to constitute your understanding
-                                and
-                                approval of, and agreement <br class="tm_hide_print">to be bound by, the Privacy Policy
-                                and
-                                you
-                                consent to the collection.</p>
-                        </div><!-- .tm_note -->
                     </div>
                 </div>
-                <div class="tm_invoice_btns tm_hide_print">
-                    <a href="javascript:void(0)" onclick="printDiv('tm_download_section')"
-                        class="tm_invoice_btn tm_color1">
-                        <span class="tm_btn_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
-                                <path
-                                    d="M384 368h24a40.12 40.12 0 0040-40V168a40.12 40.12 0 00-40-40H104a40.12 40.12 0 00-40 40v160a40.12 40.12 0 0040 40h24"
-                                    fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" />
-                                <rect x="128" y="240" width="256" height="208" rx="24.32" ry="24.32"
-                                    fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" />
-                                <path d="M384 128v-24a40.12 40.12 0 00-40-40H168a40.12 40.12 0 00-40 40v24"
-                                    fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" />
-                                <circle cx="392" cy="184" r="24" fill='currentColor' />
-                            </svg>
-                        </span>
-                        <span class="tm_btn_text">Print</span>
-                    </a>
-
-                    <button id="tm_download_btn" class="tm_invoice_btn tm_color2">
-                        <span class="tm_btn_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
-                                <path
-                                    d="M320 336h76c55 0 100-21.21 100-75.6s-53-73.47-96-75.6C391.11 99.74 329 48 256 48c-69 0-113.44 45.79-128 91.2-60 5.7-112 35.88-112 98.4S70 336 136 336h56M192 400.1l64 63.9 64-63.9M256 224v224.03"
-                                    fill="none" stroke="currentColor" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="32" />
-                            </svg>
-                        </span>
-                        <span class="tm_btn_text">Download</span>
-                    </button>
-                    <a href="{{ url('/') }}" class="tm_invoice_btn tm_color2">
-                        <span class="tm_btn_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                <path
-                                    d="M575.8 255.5c0 18-15 32.1-32 32.1l-32 0 .7 160.2c0 2.7-.2 5.4-.5 8.1l0 16.2c0 22.1-17.9 40-40 40l-16 0c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1L416 512l-24 0c-22.1 0-40-17.9-40-40l0-24 0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32l0 64 0 24c0 22.1-17.9 40-40 40l-24 0-31.9 0c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2l-16 0c-22.1 0-40-17.9-40-40l0-112c0-.9 0-1.9 .1-2.8l0-69.7-32 0c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
-                            </svg>
-                        </span>
-                        <span class="tm_btn_text">HOME</span>
-                    </a>
-                </div>
+                <hr class="tm_mb20">
+                <div class="tm_text_center">
+                    <p class="tm_mb5"><b class="tm_primary_color">Terms & Conditions:</b></p>
+                    <p class="tm_m0">Your use of the Website shall be deemed to constitute your understanding
+                        and
+                        approval of, and agreement <br class="tm_hide_print">to be bound by, the Privacy Policy
+                        and
+                        you
+                        consent to the collection.</p>
+                </div><!-- .tm_note -->
             </div>
+        </div>
+        <div class="tm_invoice_btns tm_hide_print">
+            <a href="javascript:void(0)" onclick="printDiv('tm_download_section')" class="tm_invoice_btn tm_color1">
+                <span class="tm_btn_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                        <path
+                            d="M384 368h24a40.12 40.12 0 0040-40V168a40.12 40.12 0 00-40-40H104a40.12 40.12 0 00-40 40v160a40.12 40.12 0 0040 40h24"
+                            fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" />
+                        <rect x="128" y="240" width="256" height="208" rx="24.32" ry="24.32" fill="none"
+                            stroke="currentColor" stroke-linejoin="round" stroke-width="32" />
+                        <path d="M384 128v-24a40.12 40.12 0 00-40-40H168a40.12 40.12 0 00-40 40v24" fill="none"
+                            stroke="currentColor" stroke-linejoin="round" stroke-width="32" />
+                        <circle cx="392" cy="184" r="24" fill='currentColor' />
+                    </svg>
+                </span>
+                <span class="tm_btn_text">Print</span>
+            </a>
+
+            <button id="tm_download_btn" class="tm_invoice_btn tm_color2">
+                <span class="tm_btn_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                        <path
+                            d="M320 336h76c55 0 100-21.21 100-75.6s-53-73.47-96-75.6C391.11 99.74 329 48 256 48c-69 0-113.44 45.79-128 91.2-60 5.7-112 35.88-112 98.4S70 336 136 336h56M192 400.1l64 63.9 64-63.9M256 224v224.03"
+                            fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="32" />
+                    </svg>
+                </span>
+                <span class="tm_btn_text">Download</span>
+            </button>
+            <a href="{{ url('/') }}" class="tm_invoice_btn tm_color2">
+                <span class="tm_btn_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 576 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M575.8 255.5c0 18-15 32.1-32 32.1l-32 0 .7 160.2c0 2.7-.2 5.4-.5 8.1l0 16.2c0 22.1-17.9 40-40 40l-16 0c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1L416 512l-24 0c-22.1 0-40-17.9-40-40l0-24 0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32l0 64 0 24c0 22.1-17.9 40-40 40l-24 0-31.9 0c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2l-16 0c-22.1 0-40-17.9-40-40l0-112c0-.9 0-1.9 .1-2.8l0-69.7-32 0c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
+                    </svg>
+                </span>
+                <span class="tm_btn_text">HOME</span>
+            </a>
+        </div>
+        </div>
         </div>
         <script src="{{ url('/') }}/invoice_assets/assets/js/jquery.min.js"></script>
         <script src="{{ url('/') }}/invoice_assets/assets/js/jspdf.min.js"></script>
@@ -213,7 +255,7 @@
                 // You can include your CSS styles here
                 printWindow.document.write(
                     '<link rel="stylesheet" href="{{ url('/') }}/invoice_assets/assets/css/style.css" type="text/css" media="print">'
-                    );
+                );
                 printWindow.document.write('</head><body >');
                 printWindow.document.write(content);
                 printWindow.document.write('</body></html>');

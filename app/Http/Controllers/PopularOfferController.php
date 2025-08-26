@@ -127,17 +127,41 @@ class PopularOfferController extends Controller
     //  For Services Purchase
         if (!empty($request->type=='product')) {
 
-            $product_data = Product::find($request->id);
-            // Generate a unique key for each unit
-            $unitKey = 'unit_' . $request->id . '_' . time();
+            // $product_data = Product::find($request->id);
+            // // Generate a unique key for each unit
+            // $unitKey = 'unit_' . $request->id . '_' . time();
     
-            // Add the unit to the cart
-            $cart[$unitKey] = [
-                'type'      => 'product',
-                'quantity'  => $request->quantity ?? 1, // Default quantity to 1 if not provided
-                'unit_id'        => $request->unit_id,
-                'patient_id' => $request->patient_id ?? null,
-            ];
+            // // Add the unit to the cart
+            // $cart[$unitKey] = [
+            //     'type'      => 'product',
+            //     'quantity'  => $request->quantity ?? 1, // Default quantity to 1 if not provided
+            //     'unit_id'        => $request->unit_id,
+            //     'patient_id' => $request->patient_id ?? null,
+            // ];
+            $services_data = Product::find($request->unit_id);
+            if ($services_data) {
+                // Get the unit IDs associated with the program
+                $unit_in_program = explode('|', $services_data->unit_id);
+
+                foreach ($unit_in_program as $key=>$value) {
+                    // Generate a unique key for each unit
+                    $unitKey = 'unit_' . $value .$key. '_' . time();
+
+            //  For fetch Unittable data for minqty
+            $services_data = ServiceUnit::find($value);
+    
+                    // Add the unit to the cart
+                    $cart[$unitKey] = [
+                        'type'     => 'unit',
+                        'quantity' => 1,
+                        'unit_id'       => $value,
+                        'patient_id' => $request->patient_id ?? null,
+                    ];
+                }
+            } else {
+                // Handle the case where program data is not found
+                throw new \Exception("Program not found for ID: " . $request->program_id);
+            }
         }
 
         // For Unit Purchase

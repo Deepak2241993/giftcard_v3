@@ -496,7 +496,7 @@ class StripeController extends Controller
             session::pull('total_gift_applyed');
             session::pull('tax_amount');
             session::pull('totalValue');
-            session::pull('cart');
+            session::pull('front_cart');
         }
 
         //  For Purchase Confirmation Mail

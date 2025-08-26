@@ -372,10 +372,12 @@ $amount = 0;
                                     @php
                                     if($item['type']=='product')
                                     {
+                                       // dd('prasad');
                                        $cart_data = App\Models\Product::find($item['unit_id']);
 
                                     }
                                     else {
+                                       // dd('deepak');
                                         $cart_data = App\Models\ServiceUnit::find($item['unit_id']);
                                     }
                                     $subtotal = ($item['quantity'] * $cart_data->discounted_amount) ?? ($item['quantity'] * $cart_data->amount);
@@ -595,10 +597,74 @@ $amount = 0;
                               <div class="col-lg-6">
                                  <div class="cart-page-total shadow-lg p-4 rounded-3 bg-white">
                                     <h3 class="text-center mb-4 text-uppercase fw-bold" style="color: #333;">Billing Information</h3>
+                                    <div class="row mb-4">
+                                       <div class="col-md-12">
+                                          <table class="table table-bordered table-striped">
+                                       <tr>
+                                          <th class="cart-product-name">Product / Unit Name</th>
+                                          <th class="product-subtotal">Price</th>
+                                          <th class="product-subtotal">Discounted Price</th>
+                                          <th class="product-quantity">No.of Session</th>
+                                          <th class="product-quantity">Total</th>
+                                          {{-- <th class="product-remove">Action</th> --}}
+                                       </tr>
+                                    @foreach ($cart as $key => $item)
+                                    @php
+                                    if($item['type']=='product')
+                                    {
+                                       // dd('prasad');
+                                       $cart_data = App\Models\Product::find($item['unit_id']);
+
+                                    }
+                                    else {
+                                       // dd('deepak');
+                                        $cart_data = App\Models\ServiceUnit::find($item['unit_id']);
+                                    }
+                                    $subtotal = ($item['quantity'] * $cart_data->discounted_amount) ?? ($item['quantity'] * $cart_data->amount);
+
+                                    $total += $subtotal; // Add subtotal to total
+                                    @endphp
+                                    <tr id="cart-item-{{ $cart_data->id }}">
+                                       <td class="product-name">{{ $cart_data->product_name }}</td>
+                                       <td class="product-price"><span
+                                          class="amount">{{ "$" . number_format($cart_data->amount, 2) }}</span>
+                                       </td>
+                                       <td class="product-price"><span
+                                          class="amount">{{ "$" . number_format($cart_data->discounted_amount ?? 0, 2) }}</span>
+                                       </td>
+                                       <td class="product-price">{{ $item['quantity'] }}
+                                          {{-- <form action="#" class="update-cart-form"
+                                             data-id="{{ $item['unit_id'] }}">
+                                             <input class="cart-input form-control"
+                                             id="cart_qty_{{ $key }}"
+                                             type="number"
+                                             value="{{ $item['quantity'] }}"
+                                             data-id="{{ $item['unit_id'] }}"
+                                             min="{{ $cart_data->min_qty ?? 1 }}"
+                                             max="{{ $cart_data->max_qty ?? 1 }}"
+                                             onchange="updateCart('{{ $key }}')"
+                                             onkeyup="updateCart('{{ $key }}')">
+
+                                          </form> --}}
+                                       </td>
+                                       <td>{{ "$" . number_format($subtotal, 2) }}</td>
+                                       <!-- Subtotal -->
+                                       {{-- <td>
+                                          <a href="javascript:void(0)"
+                                             onclick="removeFromCart('{{ $key }}')"
+                                             class="btn btn-block btn-outline-danger">Remove</a>
+                                       </td> --}}
+                                    </tr>
+                                    @endforeach
+                                    </table>
+                                       </div>
+                                    </div>
+
+
                                     <ul class="list-unstyled border-top pt-3">
                                        <li class="d-flex justify-content-between py-2">
                                           <span>Cart Total:</span>
-                                          <span class="fw-bold">{{ "$" . number_format($total, 2) }}</span>
+                                          <span class="fw-bold text-dark" id="finalcart_total">{{ "$" . number_format($subtotal, 2) }}</span>
                                        </li>
                                        <li class="d-flex justify-content-between py-2">
                                           <span>Gift Cards Applied:</span>
@@ -993,6 +1059,7 @@ document.addEventListener("DOMContentLoaded", function () {
            // Update displayed cart total
            $('#cart-final-total').text('$' + cartTotal.toFixed(2));
            $('#cart_total').text('$' + cartTotal.toFixed(2));
+           $('#finalcart_total').text('$' + cartTotal.toFixed(2));
    
            // Calculate gift card, discount, tax, and grand total
            var giftCardTotal = calculateGiftCardTotal();

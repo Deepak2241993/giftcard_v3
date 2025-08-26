@@ -147,7 +147,7 @@ class AdminController extends Controller
         }
 
         // Return errors properly if login fails
-        return back()->withErrors(['patient_login_id' => 'Invalid credentials.'])->withInput();
+        // return back()->withErrors(['patient_login_id' => 'Invalid credentials.'])->withInput();
     }
 
 
