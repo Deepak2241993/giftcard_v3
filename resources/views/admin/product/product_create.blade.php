@@ -154,7 +154,7 @@
                                     multiple {{ isset($data) ? '' : 'required' }}>
                             </div> --}}
 
-                            <div class="mb-3 col-lg-6 mt-4 self mt-2 numberInputContainer">
+                            {{-- <div class="mb-3 col-lg-6 mt-4 self mt-2 numberInputContainer">
                                 <label for="amount" class="form-label">Service Original Price<span
                                         class="text-danger">*</span>
                                 </label>
@@ -179,7 +179,7 @@
                                 <input class="form-control" type="number" min="1" name="session_number"
                                     value="{{ isset($data) ? $data['session_number'] : '1' }}"
                                     placeholder="Number Of Session" required id="session_number">
-                            </div>
+                            </div> --}}
 
                             <div class="mb-3 col-lg-6 mt-4">
                                 <label for="status" class="form-label">Status</label>
@@ -253,17 +253,18 @@
         // For Input type Number Field is Hide
         $(document).ready(function() {
             // Function to toggle the number input visibility
-            function toggleNumberInput() {
-                if ($('.unit-checkbox:checked').length > 0) {
-                    // $('.numberInputContainer').hide();
-                    // $('.UnitHideShow').hide();
+            // function toggleNumberInput() {
+            //     if ($('.unit-checkbox:checked').length > 0) {
+            //         $('.numberInputContainer').hide();
+            //         $('.UnitHideShow').hide();
 
-                } else {
-                    $('.numberInputContainer').show();
-                    $('.UnitHideShow').show();
+            //     } else {
+            //         $('.numberInputContainer').show();
+            //         $('.UnitHideShow').show();
 
-                }
-            }
+            //     }
+            // }
+            
             // Initial check on page load
             toggleNumberInput();
             // Toggle visibility when any checkbox is clicked

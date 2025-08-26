@@ -72,9 +72,9 @@
                     </div>
                 @endif
 
-                
-                
-              
+
+
+
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">Upload and Download</h4>
@@ -92,138 +92,149 @@
                                     <button type="submit" class="btn btn-outline-primary w-100">Import</button>
                                 </form>
                             </div>
-                
+
                             <!-- Downloads Section -->
                             <div class="col-md-6 mb-4">
                                 <div class="d-flex flex-column">
                                     @if (collect($products)->isEmpty())
-                                        <a href="{{ url('/services.csv') }}" class="btn btn-outline-info mb-2" download="services.csv">
+                                        <a href="{{ url('/services.csv') }}" class="btn btn-outline-info mb-2"
+                                            download="services.csv">
                                             Download Service Template
                                         </a>
                                     @else
-                                        <a href="{{ url('/admin/export-services') }}" class="btn btn-outline-info mb-2" download="services.csv">
+                                        <a href="{{ url('/admin/export-services') }}" class="btn btn-outline-info mb-2"
+                                            download="services.csv">
                                             Download Service Template
                                         </a>
                                     @endif
-                                    <a href="{{ url('/admin/export-categories') }}" class="btn btn-outline-warning mb-2" download="deals.csv">
+                                    <a href="{{ url('/admin/export-categories') }}" class="btn btn-outline-warning mb-2"
+                                        download="deals.csv">
                                         Download Categories Data
                                     </a>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#media_modal">
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                        data-target="#media_modal">
                                         Media
                                     </button>
-                                    
-                                        <a href="{{ route('product.create') }}" class="btn btn-outline-dark mb-2 mt-2">Add More</a>
-                                  
+
+                                    <a href="{{ route('product.create') }}" class="btn btn-outline-dark mb-2 mt-2">Add
+                                        More</a>
+
                                 </div>
                             </div>
-                        </div>               
-                        
+                        </div>
+
                     </div>
                 </div>
-                
+
 
                 <table id="datatable-buttons" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Product Name">Product Name</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Image">Image</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Actual Price">Actual Price</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Deal Price">Deal Price</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Product Description">Product Description</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Type">Type</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
-
-                    </tr>
-                </thead>
-                <tbody id="data-table-body">
-                    
-                    @foreach ($products as $value)
+                    <thead>
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                @if(Session::has('internal_patient_id'))
-                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ Session::has('internal_patient_id') ?? Session::get('internal_patient_id') }})">Buy</a>
-                                @else
-                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
-                                @endif
-                            </td>
-                            <td>{{ $value['product_name'] ? $value['product_name'] : 'NULL' }}
-                            </td>
-                            <td>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="#">#</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Product Name">Product Name</th>
+                            {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Image">Image</th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Actual Price">Actual Price</th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Deal Price">Deal Price</th> --}}
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Product Description">Product Description
+                            </th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Type">Type</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body">
+
+                        @foreach ($products as $value)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    @if (Session::has('internal_patient_id'))
+                                        <a class="btn btn-sm btn-outline-primary"
+                                            onclick="addcart({{ $value['id'] }}, {{ Session::has('internal_patient_id') ?? Session::get('internal_patient_id') }})">Buy</a>
+                                    @else
+                                        <a class="btn btn-sm btn-outline-primary"
+                                            onclick="addcart({{ $value['id'] }})">Buy</a>
+                                    @endif
+                                </td>
+                                <td>{{ $value['product_name'] ? $value['product_name'] : 'NULL' }}
+                                </td>
+                                {{-- <td>
                                 @php
                                     $image = explode('|', $value['product_image']);
                                 @endphp
-                                {{-- @foreach ($image as $imagevalue)
+                                @foreach ($image as $imagevalue)
                                             <img src="{{ $imagevalue }}" style="height:30px; width:30px;"> |
-                    @endforeach --}}
+                    @endforeach
                                 <img src="{{ $image[0] }}" style="height:100px; width:100px;"
                                     onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
                             </td>
                             <td>{{ $value['amount'] }}</td>
-                            <td>{{ $value['discounted_amount'] }}</td>
-                            <td>{!! mb_strimwidth(
-                                htmlspecialchars(isset($value['short_description']) ? $value['short_description'] : 'NULL'),
-                                0,
-                                100,
-                                '...',
-                            ) !!}</td>
+                            <td>{{ $value['discounted_amount'] }}</td> --}}
+                                <td>{!! mb_strimwidth(
+                                    htmlspecialchars(isset($value['short_description']) ? $value['short_description'] : 'NULL'),
+                                    0,
+                                    100,
+                                    '...',
+                                ) !!}</td>
 
 
 
 
-                            <td>{{ $value['unit_id'] != null ? 'Unit Service' : 'Normal Deals & Service' }}
-                            </td>
-                          <td class="text-nowrap">
-                            <div class="d-flex justify-content-center align-items-center me-2">
-                                <a href="{{ route('product.edit', $value['id']) }}"
-                                class="btn btn-sm btn-outline-primary"
-                                title="Edit">
-                                    <i class="fa fa-edit"></i>
-                                </a>
+                                <td>{{ $value['unit_id'] != null ? 'Unit Service' : 'Normal Deals & Service' }}
+                                </td>
+                                <td class="text-nowrap">
+                                    <div class="d-flex justify-content-center align-items-center me-2">
+                                        <a href="{{ route('product.edit', $value['id']) }}"
+                                            class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
 
-                                <form action="{{ route('product.destroy', $value['id']) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="btn btn-sm btn-outline-danger"
-                                            title="Delete"
-                                            onclick="return confirm('Are you sure you want to delete this product?')">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+                                        <form action="{{ route('product.destroy', $value['id']) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
+                                                onclick="return confirm('Are you sure you want to delete this product?')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
 
 
 
 
 
 
-                            <!-- Button trigger modal -->
+                                <!-- Button trigger modal -->
 
 
 
 
-                        </tr>
-                    @endforeach
-                </tbody>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    {{-- {{ $paginator->links() }} --}}
+                </table>
                 {{-- {{ $paginator->links() }} --}}
-            </table>
-            {{-- {{ $paginator->links() }} --}}
-            <!--end::Row-->
-            <!-- /.Start col -->
-        </div>
-        <!-- /.row (main row) -->
+                <!--end::Row-->
+                <!-- /.Start col -->
+            </div>
+            <!-- /.row (main row) -->
         </div>
         <!--end::Container-->
     </section>
 
 
     <!-- Modal -->
-    <div class="modal fade deepak" id="staticBackdrop_" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade deepak" id="staticBackdrop_" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -347,7 +358,7 @@
         }
     </script>
     <script>
-        function addcart(id,patient_id) {
+        function addcart(id, patient_id) {
             $.ajax({
                 url: '{{ route('cart') }}',
                 method: "post",
@@ -466,41 +477,43 @@
                 console.error("Could not copy text: ", error);
             });
         }
-//  For Seacrh Function 
-function SearchView() {
-    var service_name = $('#service_name').val();
-    $.ajax({
-        url: '{{ route('service-search') }}', // API endpoint
-        method: "GET",
-        dataType: "json",
-        data: {
-            service_name: service_name,
-        },
-        success: function (response) {
-            if (response.status === 'success' && response.data.data.length > 0) {
-                var tableBody = $('#data-table-body'); // ID of your table body
-                tableBody.empty(); // Clear existing rows
+        //  For Seacrh Function 
+        function SearchView() {
+            var service_name = $('#service_name').val();
+            $.ajax({
+                url: '{{ route('service-search') }}', // API endpoint
+                method: "GET",
+                dataType: "json",
+                data: {
+                    service_name: service_name,
+                },
+                success: function(response) {
+                    if (response.status === 'success' && response.data.data.length > 0) {
+                        var tableBody = $('#data-table-body'); // ID of your table body
+                        tableBody.empty(); // Clear existing rows
 
-                // Loop through the response data and populate the table
-                $.each(response.data.data, function (key, value) {
-                    // Format date
-                    var updatedDate = value.updated_at
-                        ? new Date(value.updated_at).toLocaleString('en-US', {
-                              month: '2-digit',
-                              day: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit',
-                          })
-                        : 'N/A';
+                        // Loop through the response data and populate the table
+                        $.each(response.data.data, function(key, value) {
+                            // Format date
+                            var updatedDate = value.updated_at ?
+                                new Date(value.updated_at).toLocaleString('en-US', {
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                }) :
+                                'N/A';
 
-                    // Handle product images dynamically
-                    var productImages = value.product_image ? value.product_image.split('|') : [];
-                    var firstImage = productImages.length > 0 ? productImages[0] : '{{ url("/No_Image_Available.jpg") }}';
+                            // Handle product images dynamically
+                            var productImages = value.product_image ? value.product_image.split('|') :
+                            [];
+                            var firstImage = productImages.length > 0 ? productImages[0] :
+                                '{{ url('/No_Image_Available.jpg') }}';
 
-                    // Append rows
-                    tableBody.append(`
+                            // Append rows
+                            tableBody.append(`
                         <tr>
                             <td>${key + 1}</td>
                             <td><a class="btn btn-block btn-outline-primary" onclick="addcart(${value.id})">Buy</a></td>
@@ -514,8 +527,8 @@ function SearchView() {
                             <td>${value.short_description ? value.short_description.substring(0, 100) + '...' : 'N/A'}</td>
                             <td>${value.unit_id !== null ? 'Unit Service' : 'Normal Deals & Service'}</td>
                             <td>
-                                <a href="{{url('/')}}/admin/product/${value.id}/edit" class="btn btn-block btn-outline-primary">Edit</a>
-                                <form action="{{url('/')}}/admin/product/${value.id}" method="POST" style="display:inline;">
+                                <a href="{{ url('/') }}/admin/product/${value.id}/edit" class="btn btn-block btn-outline-primary">Edit</a>
+                                <form action="{{ url('/') }}/admin/product/${value.id}" method="POST" style="display:inline;">
                                     @method('DELETE')
                                     @csrf
                                     <button class="btn btn-block btn-outline-danger" type="submit">Delete</button>
@@ -523,38 +536,37 @@ function SearchView() {
                             </td>
                         </tr>
                     `);
-                });
-            } else {
-                // Handle empty results
-                $('#data-table-body').empty().append('<tr><td colspan="9">No results found.</td></tr>');
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-            alert('An error occurred while fetching data.');
-        },
-    });
-}
-
-
-
+                        });
+                    } else {
+                        // Handle empty results
+                        $('#data-table-body').empty().append('<tr><td colspan="9">No results found.</td></tr>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching data.');
+                },
+            });
+        }
     </script>
-{{-- For Data Table --}}
-<script>
-    $(function () {
-      $("#datatable-buttons").DataTable({
-        "responsive": true, "lengthChange": true, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-    });
-  </script>
+    {{-- For Data Table --}}
+    <script>
+        $(function() {
+            $("#datatable-buttons").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
 @endpush
