@@ -1331,6 +1331,16 @@
         }
         // Modal RElated Functions
         function closeLoginPromptModal() {
+            $.ajax({
+                    url: "{{ route('unset-amount') }}", // Create this route
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        document.getElementById('loginPromptModal').style.display = 'none';
+                    }
+                });
             document.getElementById('loginPromptModal').style.display = 'none';
         }
 

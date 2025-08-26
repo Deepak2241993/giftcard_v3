@@ -190,6 +190,7 @@ Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'
 
     //  Usefull Route
     Route::post('/store-amount', 'PatientController@storeAmount')->name('store-amount');
+    Route::post('/unset-amount', 'PatientController@unsetAmont')->name('unset-amount');
     Route::get('/remove-amount', 'PatientController@removeAmount')->name('remove-amount');
     Route::get('/patient-email-verify/{token}',[AdminController::class,'PatientEmailVerify'])->name('patient_email_verify');
     Route::get('/forgot-password',[AdminController::class,'ForgotPasswordView'])->name('forgot-password');

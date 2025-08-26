@@ -390,6 +390,18 @@ class PatientController extends Controller
         }
     }
 
+    public function unsetAmont(Request $request)
+    {
+        // Retrieve 'amount' from session
+        if(Session::has('amount')){
+           Session::pull('amount', $request->amount);
+            return response()->json([
+                'message' => 'Select Amount has been removed.',
+            ]);
+        }
+       
+    }
+
 
     public function removeAmount(Request $request)
     {
