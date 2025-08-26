@@ -120,47 +120,45 @@
                                                         </td>
                                                     </tr>
 
-                                                    @if ($transaction_data->gift_card_amount != null)
-                                                        @php
-                                                            $giftamount = explode(
-                                                                '|',
-                                                                $transaction_data->gift_card_amount,
-                                                            );
-                                                            $Totalgiftamount = array_sum($giftamount);
-                                                        @endphp
-                                                        <tr class="tm_gray_bg tm_border_left tm_border_right">
-                                                            <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0"
-                                                                style="color: #dc3545;">Giftcard Applied</td>
-                                                            <td class="tm_width_3 tm_text_right tm_border_none tm_pt0 tm_danger_color"
-                                                                style="color: #dc3545;">-
-                                                                ${{ number_format($Totalgiftamount, 2) }}</td>
-                                                        </tr>
-                                                    @endif
+                                                   @if ($transaction_data->gift_card_amount != null)
+    @php
+        $giftamount = explode('|', $transaction_data->gift_card_amount);
+        $Totalgiftamount = array_sum($giftamount);
+    @endphp
+    <tr class="tm_gray_bg tm_border_left tm_border_right">
+        <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0" style="color: #dc3545;">
+            Giftcard Applied
+        </td>
+        <td class="tm_width_3 tm_text_right tm_border_none tm_pt0 tm_danger_color" style="color: #dc3545;">
+            - ${{ number_format($Totalgiftamount, 2) }}
+        </td>
+    </tr>
+@endif
 
-                                                    <tr class="tm_gray_bg tm_border_left tm_border_right">
-                                                        <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">
-                                                            Tax <span class="tm_ternary_color">
-                                                                @php
-                                                                    $taxAmount = $transaction_data->tax_amount;
-                                                                    $taxableAmount =
-                                                                        $subtotal -
-                                                                        $transaction_data->discount -
-                                                                        $Totalgiftamount;
+<tr class="tm_gray_bg tm_border_left tm_border_right">
+    <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">
+        Tax <span class="tm_ternary_color">
+            @php
+                $taxAmount = $transaction_data->tax_amount ?? 0;
+                $Totalgiftamount = $Totalgiftamount ?? 0;
 
-                                                                    // calculate tax rate
-                                                                    $taxRate = 0;
-                                                                    if ($taxableAmount > 0) {
-                                                                        $taxRate = ($taxAmount / $taxableAmount) * 100;
-                                                                    }
+                $taxableAmount = ($subtotal - $transaction_data->discount - $Totalgiftamount);
 
-                                                                    echo number_format($taxRate, 2) . '%';
-                                                                @endphp
-                                                            </span></td>
-                                                        <td
-                                                            class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                                                            + ${{ number_format($transaction_data->tax_amount, 2) }}
-                                                        </td>
-                                                    </tr>
+                // calculate tax rate
+                $taxRate = 0;
+                if ($taxableAmount > 0) {
+                    $taxRate = ($taxAmount / $taxableAmount) * 100;
+                }
+
+                echo number_format($taxRate, 2) . '%';
+            @endphp
+        </span>
+    </td>
+    <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
+        + ${{ number_format($transaction_data->tax_amount, 2) }}
+    </td>
+</tr>
+
 
                                                     @php
                                                         $payableAmount =
