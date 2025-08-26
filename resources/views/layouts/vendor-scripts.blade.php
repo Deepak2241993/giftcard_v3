@@ -1,8 +1,8 @@
 <!-- JAVASCRIPT -->
 @if(route('email-template.create')!=url()->current() && Request::segment(2)!='email-template')
-{
+
 <script src="{{ URL::asset('/assets/libs/jquery/jquery.min.js') }}"></script> 
-}
+
 @endif
 
 <script src="{{ URL::asset('/assets/libs/bootstrap/bootstrap.min.js') }}"></script>
