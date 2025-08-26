@@ -205,7 +205,8 @@
                              data-parent="#accordionExample">
                             <ul class="list-group list-group-flush">
                                 @foreach ($services as $sKey => $service)
-                                    @if ($value->id == $service->cat_id)
+                                    @php $cat_array = explode('|',$service->cat_id)   @endphp
+                                    @if (in_array($value->id, $cat_array))
                                         <li class="list-group-item p-2">
                                             <a href="{{ route('category-list', $service->product_slug) }}" style="color:var(--text-primary) text-decoration: underline;">
                                                 {{ $service->product_name }}
