@@ -211,14 +211,14 @@
         <nav class="header-nav">
             <a href="https://forevermedspanj.com/" class="nav-link">Website</a>
             <a href="{{ url('/') }}" class="nav-link">Giftcards</a>
-            <a href="{{ route('services') }}" class="nav-link">Services</a>
+            {{-- <a href="{{ route('services') }}" class="nav-link">Services</a> --}}
             @if (Session::get('patient_details'))
                 <a class="nav-link"
                     href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
             @else
                 <a class="nav-link" href="{{ url('/patient-login') }}">Login</a>
             @endif
-            @php
+            {{-- @php
                 $cart = session()->get('front_cart', []);
                 $cartCount = count($cart);
             @endphp
@@ -228,7 +228,7 @@
                 <span class="cart-count {{ $cartCount === 0 ? 'hiddencount' : '' }}" id="cartCount">
                     {{ $cartCount }}
                 </span>
-            </div>
+            </div> --}}
 
             <!-- Hamburger Icon (mobile only) -->
             <div class="mobile-only-icon" id="hamburgerMenu">
@@ -242,7 +242,7 @@
         <div class="close-btn">&times;</div>
         <a href="https://forevermedspanj.com/">Website</a>
         <a href="{{ url('/') }}">Giftcards</a>
-        <a href="{{ route('services') }}">Services</a>
+        {{-- <a href="{{ route('services') }}">Services</a> --}}
         @if (Session::get('patient_details'))
         <a href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
         @else
