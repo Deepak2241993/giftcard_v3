@@ -212,13 +212,13 @@
             <a href="https://forevermedspanj.com/" class="nav-link">Website</a>
             <a href="{{ url('/') }}" class="nav-link">Giftcards</a>
             {{-- <a href="{{ route('services') }}" class="nav-link">Services</a> --}}
-            {{-- @if (Session::get('patient_details'))
+            @if (Session::get('patient_details'))
                 <a class="nav-link"
                     href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
             @else
                 <a class="nav-link" href="{{ url('/patient-login') }}">Login</a>
             @endif
-            @php
+            {{-- @php
                 $cart = session()->get('front_cart', []);
                 $cartCount = count($cart);
             @endphp
