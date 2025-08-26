@@ -129,6 +129,41 @@
 
     </style>
 
+
+    <style>
+        /* Radio options responsiveness */
+@media (max-width: 768px) {
+    .row .col-md-8,
+    .row .col-md-6 {
+        flex: 1 1 100%;
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .form-check-input {
+        transform: scale(1.3) !important; /* slightly smaller for mobile */
+        /* margin-right: 8px !important; */
+        margin-left: 0.65rem !important;
+    }
+
+    .form-check-label {
+        font-size: 16px !important;
+        line-height: 1.4;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .form-check-label {
+        font-size: 15px !important;
+    }
+
+    .form-check-input {
+        transform: scale(1.2) !important;
+    }
+}
+    </style>
+
     @endpush
 
     @push('csslink')
