@@ -218,7 +218,7 @@
             @else
                 <a class="nav-link" href="{{ url('/patient-login') }}">Login</a>
             @endif
-            @php
+            {{-- @php
                 $cart = session()->get('front_cart', []);
                 $cartCount = count($cart);
             @endphp
@@ -228,7 +228,7 @@
                 <span class="cart-count {{ $cartCount === 0 ? 'hiddencount' : '' }}" id="cartCount">
                     {{ $cartCount }}
                 </span>
-            </div>
+            </div> --}}
 
             <!-- Hamburger Icon (mobile only) -->
             <div class="mobile-only-icon" id="hamburgerMenu">
