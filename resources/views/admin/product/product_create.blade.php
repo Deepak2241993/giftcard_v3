@@ -103,13 +103,13 @@
                                 <textarea name="product_description" id="product_description" class="form-control summernote" onkeyup="calculate()">{{ isset($data) ? $data['product_description'] : '' }}</textarea>
                             </div>
                             {{-- <div class="mb-12 col-lg-12 self mt-3 UnitHideShow">
-                    <label for="prerequisites" class="form-label">Prerequisites</label>
-                    <textarea name="prerequisites" id="prerequisites"
-                        class="form-control summernote">{{ isset($data) ? $data['prerequisites'] : '' }}</textarea>
-                </div> --}}
+                                <label for="prerequisites" class="form-label">Prerequisites</label>
+                                <textarea name="prerequisites" id="prerequisites"
+                                    class="form-control summernote">{{ isset($data) ? $data['prerequisites'] : '' }}</textarea>
+                            </div> --}}
 
 
-                            @php
+                            {{-- @php
                                 if (isset($data)) {
                                     $image = explode('|', $data['product_image']);
                                 }
@@ -146,13 +146,13 @@
                                 </div>
                             @endif
 
-                            {{-- <div class="mb-3 col-lg-12 self" id="image_field"
-                    style="display:{{ isset($data['id']) ? 'none' : 'block' }}">
-                    <label for="product_image" class="form-label">Service Image<span
-                            class="text-danger">* 350 X 350 Px Size Should be between 10kb to 2mb</span></label><br>
-                    <input class="form-control" id="image" type="file" name="product_image[]" multiple
-                        {{ isset($data) ? '' : 'required' }}>
-                </div> --}}
+                            <div class="mb-3 col-lg-12 self" id="image_field"
+                                style="display:{{ isset($data['id']) ? 'none' : 'block' }}">
+                                <label for="product_image" class="form-label">Service Image<span class="text-danger">* 350
+                                        X 350 Px Size Should be between 10kb to 2mb</span></label><br>
+                                <input class="form-control" id="image" type="file" name="product_image[]"
+                                    multiple {{ isset($data) ? '' : 'required' }}>
+                            </div> --}}
 
                             <div class="mb-3 col-lg-6 mt-4 self mt-2 numberInputContainer">
                                 <label for="amount" class="form-label">Service Original Price<span
@@ -164,6 +164,7 @@
                                 <input class="form-control" type="hidden" min="0" name="id"
                                     value="{{ isset($data) ? $data['id'] : '' }}">
                             </div>
+
                             <div class="mb-3 col-lg-6 mt-4 self mt-2 numberInputContainer">
                                 <label for="discounted_amount" class="form-label">Service Price<span
                                         class="text-danger">*</span></label>
@@ -171,6 +172,7 @@
                                     name="discounted_amount" value="{{ isset($data) ? $data['discounted_amount'] : '' }}"
                                     placeholder="Service Price" step="0.01">
                             </div>
+
                             <div class="mb-3 col-lg-6 mt-4 self UnitHideShow">
                                 <label for="session_number" class="form-label">Number of session<span
                                         class="text-danger">*</span></label>
@@ -178,6 +180,7 @@
                                     value="{{ isset($data) ? $data['session_number'] : '1' }}"
                                     placeholder="Number Of Session" required id="session_number">
                             </div>
+
                             <div class="mb-3 col-lg-6 mt-4">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-control" name="status" id='status'>
@@ -231,17 +234,17 @@
                                         Yes</option>
                                 </select>
                             </div> --}}
-                            
-                                <div class="mb-3 col-lg-3 mt-4">
-                                    <button class="btn btn-block btn-outline-primary w-100" type="submit" id="submitBtn">
-                                        Submit
-                                    </button>
-                                </div>
+
+                            <div class="mb-3 col-lg-3 mt-4">
+                                <button class="btn btn-block btn-outline-primary w-100" type="submit" id="submitBtn">
+                                    Submit
+                                </button>
+                            </div>
                         </div>
                         </form>
                     </div>
                 </div>
-                    <!--end::Row-->
+                <!--end::Row-->
     </section>
 @endsection
 
@@ -252,8 +255,8 @@
             // Function to toggle the number input visibility
             function toggleNumberInput() {
                 if ($('.unit-checkbox:checked').length > 0) {
-                    $('.numberInputContainer').hide();
-                    $('.UnitHideShow').hide();
+                    // $('.numberInputContainer').hide();
+                    // $('.UnitHideShow').hide();
 
                 } else {
                     $('.numberInputContainer').show();
