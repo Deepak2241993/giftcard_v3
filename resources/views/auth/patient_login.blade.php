@@ -97,8 +97,11 @@
                                                         type="submit">Log In</button>
                                                     <button class="btn btn-primary waves-effect waves-light" type="button"
                                                         onclick="SignUp()">Signup</button>
-                                                    <a class="btn btn-dark waves-effect waves-light"
-                                                        href="{{ route('checkout') }}/?type=guest">Guest Buy</a>
+                                                        @if(session()->has('front_cart'))
+                                                            <a class="btn btn-dark waves-effect waves-light"
+                                                            href="{{ route('checkout') }}?type=guest">Guest Buy</a>
+                                                        @endif
+
                                                 </div>
                                                 <a href="{{ route('forgot-password') }}">Forgot Password</a>
                                             </form>

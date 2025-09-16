@@ -166,7 +166,6 @@ fieldset {
 }
 </style>
 
-
 <div id="myDiv" class="about-box" style="padding-bottom: 0;">
     <fieldset id="finishbox">
         <div class="form-card">
@@ -174,16 +173,22 @@ fieldset {
             <div class="row justify-content-center">
                 <div class="col-7">
                     <h4 class="tran">Payment Successful. Thank you for the payment</h4>
-                    <p>
-                        Transaction Id : {{$data->source->id}}<br>
-                        Order Amount : ${{$data->amount/100}}
-                    </p>
+                  <p>
+    Transaction Id : {{ isset($data->source->id) ? $data->source->id : '' }}<br>
+    Order Amount : ${{ isset($data->amount) ? $data->amount/100 : '' }}
+</p>
+
+                    {{-- <p>
+                        Transaction Id : TXN123456789<br>
+                        Order Amount : $100
+                    </p> --}}
                     <h5>Giftcard Sent Successfully</h5>
                 </div>
             </div>
         </div>
     </fieldset>
 </div>
+
 
 {{-- Redeem Process --}}
 <div class="container">
@@ -210,14 +215,34 @@ fieldset {
 @push('footerscript')
 <script>
 function printDiv() {
-    $('#logosuccess').css('display', 'block');
-    var divToPrint = document.getElementById('myDiv');
+    // Show logo in original div
+    var logo = document.getElementById('logosuccess');
+    logo.style.display = 'block';
+
+    // Copy content
+    var divToPrint = document.getElementById('myDiv').innerHTML;
     var newWin = window.open('', 'Print-Window');
+
     newWin.document.open();
-    newWin.document.write('<html><head><title>Print</title></head><body>' + divToPrint.innerHTML + '</body></html>');
+    newWin.document.write(`
+        <html>
+        <head>
+            <title>Print</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                img { display: block; margin: 0 auto 20px; }
+                .tran { color: green; }
+            </style>
+        </head>
+        <body onload="window.print(); window.close();">
+            ${divToPrint}
+        </body>
+        </html>
+    `);
     newWin.document.close();
-    $('#logosuccess').css('display', 'none');
-    newWin.print();
+
+    // Hide logo again in the original page
+    logo.style.display = 'none';
 }
 </script>
 @endpush

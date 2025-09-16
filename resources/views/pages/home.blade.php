@@ -308,7 +308,7 @@
                                                                             <input type="number" step="1"
                                                                                 min="25" max="2000"
                                                                                 id="customeamount" class="form-control"
-                                                                                placeholder="$30"
+                                                                                
                                                                                 onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"
                                                                                 aria-label="Custom amount"
                                                                                 style="margin-top: 25px;">
@@ -594,21 +594,7 @@
                                                                                 name="template_id">
                                                                         </div>
 
-                                                                        <div class="mb-3 col-12">
-                                                                            <div
-                                                                                class="button-group d-flex justify-content-between">
-                                                                                <button type="button"
-                                                                                    class="btn btn-block btn-light active"
-                                                                                    id="onemail"
-                                                                                    onclick="giftsend('onemail')">
-                                                                                    <i class="fa fa-envelope"
-                                                                                        aria-hidden="true"></i> By email
-                                                                                </button>
-                                                                                {{-- <button type="button" class="btn btn-block btn-light" id="onprint" onclick="giftsend('onprint')">
-                                                               <i class="fa fa-print" aria-hidden="true"></i> By Print
-                                                            </button> --}}
-                                                                            </div>
-                                                                        </div>
+                                                                        
 
                                                                         <div class="mb-3 col-12 mt-2"
                                                                             id="giftSendByEmail">

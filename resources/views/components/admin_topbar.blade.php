@@ -36,6 +36,7 @@
               <li><a href="{{ route('terms.index') }}" class="dropdown-item">Terms & Condition</a></li>  
               <li><a href="{{ route('coupon.index') }}" class="dropdown-item"> Giftcard Coupon</a></li>  
               <li><a href="{{ route('email-template.index') }}" class="dropdown-item"> Email Template</a></li>  
+              <li><a href="{{ route('static-content.index') }}" class="dropdown-item"> Static Content</a></li>  
               <li><a href="{{ route('banner.index') }}" class="dropdown-item"> Slider Management</a></li>  
               <li class="dropdown-divider"></li>
 

@@ -101,6 +101,7 @@ Route::post('/giftcards-redeem', 'GiftController@redeem_store')->name('giftcards
 Route::resource('/service-order-history', TransactionHistoryController::class);
 Route::post('/service-order-update', 'TransactionHistoryController@OrderUpdate')->name('service-order-update');
 Route::resource('/coupon', GiftCouponController::class);
+Route::resource('/static-content', StaticContentController::class);
 Route::resource('/medspa-gift', MedsapGiftController::class);
 Route::resource('/email-template', EmailTemplateController::class);
 Route::post('/ckeditor-image-post', 'CkeditorController@uploadImage')->name('ckeditor-image-upload');

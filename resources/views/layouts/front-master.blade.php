@@ -17,13 +17,13 @@
 
 <body>
     <!-- Page Header -->
-<//x-front_header/>
+<x-front_header/>
 
     <div class="background-pattern"></div>
     @yield('body')
     
     <!-- Website Footer -->
-<//x-footer/>
+<x-footer/>
 
   <script src="{{url('/medspatemplate/js')}}/script.js"></script>
     @stack('footerscript')
