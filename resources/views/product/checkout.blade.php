@@ -19,7 +19,13 @@
         .section-space {
             padding-top: 40px !important;
             padding-bottom: 10px !important;
+        }       
+
+        .your-order{
+            padding-right:0px !important;
         }
+
+        
     }
 </style>
 
