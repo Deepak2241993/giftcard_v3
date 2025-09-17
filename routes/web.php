@@ -36,7 +36,7 @@ Route::get('productdetails/{slug}','ProductController@productdetails')->name('pr
 Route::get('services','ServiceUnitController@ServicePage')->name('services');
 Route::get('category/{slug}','ProductCategoryController@categorytpage')->name('category-list');
 
-Route::post('create-unit-quickly','ServiceUnitController@CreateUnitQuickly')->name('create-unit-quickly');
+
 Route::get('services/{slug}','ServiceUnitController@UnitPageShow')->name('serviceunit');// This is  For Service Frontend and Backend Banner Service
 Route::get('services/{product_slug}/{unitslug}','ServiceUnitController@UnitPageDetails')->name('unit-details');
 Route::get('service/{slug}','ProductController@productdetails')->name('productdetails');
@@ -94,6 +94,7 @@ Route::get('/product-dashboard', 'HomeController@ProductDashboard')->name('produ
 Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
 Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
 Route::resource('/gift', GiftController::class);
+Route::post('create-unit-quickly','ServiceUnitController@CreateUnitQuickly')->name('create-unit-quickly');
 Route::post('/giftcards-history', 'GiftController@history')->name('giftcards-history');
 Route::get('/giftcards-view', 'GiftController@redeem_view')->name('giftcards-view');
 Route::get('/giftcards-redeem-view', 'GiftController@history_view')->name('giftcards-redeem-view');
@@ -151,7 +152,8 @@ Route::get('export-keywords','ProductController@ExportDate')->name('export_date'
 Route::get('service-cart','PopularOfferController@AdminCartview')->name('service-cart');
 Route::get('payment-process','PopularOfferController@AdminPaymentProcess')->name('payment-process');
 Route::post('servic-checkout-process','PopularOfferController@CheckoutProcess')->name('servic-checkout-process');
-
+Route::get('cart-cancel','InternalOrderController@CartCancel')->name('cart-cancel');
+Route::get('change-patient','InternalOrderController@ChangePatient')->name('change-patient');
 
 
 

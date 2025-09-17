@@ -142,7 +142,7 @@ $amount = 0;
                   Create Patient
                   </button>
                   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">
-                  Create Unit
+                  Create Unit And to Cart
                   </button>
                   <button type="button" class="btn btn-primary"
                      onclick="location.href='{{ route('program.index') }}';">
@@ -152,10 +152,14 @@ $amount = 0;
                      onclick="location.href='{{ route('unit.index') }}';">
                   Buy Unit
                   </button>
-                  {{-- <button type="button" class="btn btn-dark"
+                  <button type="button" class="btn btn-dark"
                      onclick="location.href='{{ route('product.index') }}';">
                   Buy Services
-                  </button> --}}
+                  </button>
+                  <button type="button" class="btn btn-danger"
+                     onclick="location.href='{{ route('cart-cancel') }}';">
+                  Cancel Order
+                  </button>
                </div>
             </div>
          </div>
@@ -179,14 +183,14 @@ $amount = 0;
                         <label for="product_name" class="form-label">Unit Name<span
                            class="text-danger">*</span></label>
                         <input class="form-control" id="product_name" required type="text"
-                           name="product_name" value="{{ isset($data) ? $data['product_name'] : '' }}"
+                           name="product_name"
                            placeholder="Product Name" onkeyup="slugCreate()">
                      </div>
                      <div class="mb-3 col-lg-6 self">
                         <label for="product_slug" class="form-label">Unit Slug<span
                            class="text-danger">*</span></label>
                         <input class="form-control" type="text" name="product_slug"
-                           value="{{ isset($data) ? $data['product_slug'] : '' }}" placeholder="Slug"
+                           placeholder="Slug"
                            id="product_slug">
                      </div>
                      <div class="mb-3 col-lg-6 self mt-2">
@@ -194,50 +198,47 @@ $amount = 0;
                            class="text-danger">*</span>
                         </label>
                         <input class="form-control" type="number" min="0" name="amount"
-                           value="{{ isset($data) ? $data['amount'] : '' }}" placeholder="Original Price"
+                           placeholder="Original Price"
                            required step="0.01">
-                        <input class="form-control" type="hidden" min="0" name="id"
-                           value="{{ isset($data) ? $data['id'] : '' }}">
+                       
                      </div>
                      <div class="mb-3 col-lg-6 self mt-2">
                         <label for="discounted_amount" class="form-label">Unit Discounted Price</label>
                         <input class="form-control" type="number" min="0" name="discounted_amount"
-                           value="{{ isset($data) ? $data['discounted_amount'] : '' }}"
+                           
                            placeholder="Discounted Price" step="0.01">
                      </div>
                      <div class="mb-3 col-lg-6 self">
                         <label for="min_qty" class="form-label">Min Qty<span
                            class="text-danger">*</span></label>
                         <input class="form-control" type="number" min="1" name="min_qty"
-                           value="{{ isset($data) ? $data['min_qty'] : '1' }}"
+                          
                            placeholder="Number Of Session" required>
                      </div>
                      <div class="mb-3 col-lg-6 self">
                         <label for="max_qty" class="form-label">Max Qty<span
                            class="text-danger">*</span></label>
                         <input class="form-control" type="number" min="1" name="max_qty"
-                           value="{{ isset($data) ? $data['max_qty'] : '1' }}"
+                           
                            placeholder="Number Of Session" required>
                      </div>
                      <div class="mb-3 col-lg-6">
                         <label for="status" class="form-label">Status</label>
                         <select class="form-control" name="status" id='status'>
                         <option
-                        value="1"{{ isset($data['status']) && $data['status'] == 1 ? 'selected' : '' }}>
+                        value="1">
                         Active</option>
                         <option
-                        value="0"{{ isset($data['status']) && $data['status'] == 0 ? 'selected' : '' }}>
+                        value="0">
                         Inactive</option>
                         </select>
                      </div>
                      <div class="mb-3 col-lg-6">
                         <label for="giftcard_redemption" class="form-label">Giftcard Redeem</label>
                         <select class="form-control" name="giftcard_redemption" id="from">
-                        <option value="1"
-                        {{ isset($data['giftcard_redemption']) && $data['giftcard_redemption'] == 1 ? 'selected' : '' }}>
+                        <option value="1">
                         Yes</option>
-                        <option value="0"
-                        {{ isset($data['giftcard_redemption']) && $data['giftcard_redemption'] == 0 ? 'selected' : '' }}>
+                        <option value="0">
                         No</option>
                         </select>
                      </div>
@@ -514,6 +515,7 @@ $amount = 0;
                                  <input type="text" class="form-control" value="{{$patient->phone??''}}" readonly id="phone" name="phone"
                                     Placeholder="Phone">
                               </div>
+                              <button type="button" class="btn btn-primary mt-4" onclick="location.href='{{ route('change-patient') }}';">Change Patient</button>
                            </div>
                            {{--  Table Data --}}
                            <h5 class="mb-4 mt-4">Patient Giftcards </h5>

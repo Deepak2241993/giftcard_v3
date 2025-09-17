@@ -246,6 +246,7 @@ public function ServicePage(Request $request)
 // Create Unit Quickly
 public function CreateUnitQuickly(Request $request,ServiceUnit $serviceUnit)
     {
+       
         $token = Auth::user()->user_token;
         $data = $request->except('_token');
         $data['user_token'] = $token;
@@ -259,8 +260,9 @@ public function CreateUnitQuickly(Request $request,ServiceUnit $serviceUnit)
             // Add the unit to the cart
             $cart[$unitKey] = [
                 'type'      => 'unit',
-                'id'        => $result->id,
                 'quantity'  => $result->min_qty,
+                'unit_id'        => $result->id,
+                'patient_id' => $request->patient_id ?? null,
             ];
         }
         session()->put('cart', $cart);
