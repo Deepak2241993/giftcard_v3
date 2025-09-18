@@ -72,6 +72,7 @@ public function logout(Request $request) {
     Auth::guard('admin')->logout();
     $request->session()->forget('adminlogin');
     $request->session()->regenerateToken();
+    $request->session()->invalidate();
 
     
     // Redirect to the login page
