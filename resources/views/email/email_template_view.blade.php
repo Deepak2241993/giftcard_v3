@@ -1,29 +1,39 @@
 @extends('layouts.admin_layout')
 @section('body')
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-              <h3 class="mb-0">Email Template Design</h3>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="mb-0">Email Template Design</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ url('admin-dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Email Template Design
+                        </li>
+                    </ol>
+                </div>
             </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ url('admin-dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                Email Template Design
-                            </li>
-                </ol>
+        </div><!-- /.container-fluid -->
+    </section>
+    <section class="content-header">
+        @if (session('message'))
+            <div class="alert alert-success mt-3">
+                {{ session('message') }}
             </div>
-        </div>
-    </div><!-- /.container-fluid -->
-</section>
-<section class="content-header">
+        @endif
 
+        @if (session('error'))
+            <div class="alert alert-danger mt-3">
+                {{ session('error') }}
+            </div>
+        @endif
         <!--end::App Content Header-->
         <!--begin::App Content-->
         <div class="app-content">
             <!--begin::Container-->
-            <div class="container-fluid">
+            <div class="container-fluid card">
                 <!--begin::Row-->
                 <div class="card-body p-4">
                     <form method="post" action="{{ route('resendmail') }}" enctype="multipart/form-data">
@@ -60,8 +70,8 @@
                             </textarea>
 
                             </div>
-                            <div class="mb-3 col-lg-10">
-                                <BUTTON  class="btn btn-block btn-outline-primary">Send</BUTTON>
+                            <div class="mb-3 col-lg-4 mt-4">
+                                <BUTTON class="btn btn-block btn-outline-primary">Send</BUTTON>
 
                             </div>
                         </div>

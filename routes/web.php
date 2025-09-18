@@ -26,8 +26,8 @@ use App\Http\Controllers\PatientController;
 
 
 Route::view('email','email.giftcard');
-Route::post('/checkusername',[AdminController::class,'CheckUserName'])->name('checkusername');
-Route::post('/patient-signup',[AdminController::class,'PatientSignup'])->name('patient-signup');
+Route::post('/checkusername',[PatientAuthController::class,'CheckUserName'])->name('checkusername');
+Route::post('/patient-signup',[PatientAuthController::class,'PatientSignup'])->name('patient-signup');
 // All Frontend Route Start
 Route::get('/',[App\Http\Controllers\GiftController::class,'HOME'])->name('home');
 Route::get('product-page/{token?}/{slug}', 'ProductController@productpage')->name('product_list');
@@ -78,11 +78,11 @@ Route::get('/failed', function () {
     Route::post('/store-amount', 'PatientController@storeAmount')->name('store-amount');
     Route::post('/unset-amount', 'PatientController@unsetAmont')->name('unset-amount');
     Route::get('/remove-amount', 'PatientController@removeAmount')->name('remove-amount');
-    Route::get('/patient-email-verify/{token}',[AdminController::class,'PatientEmailVerify'])->name('patient_email_verify');
-    Route::get('/forgot-password',[AdminController::class,'ForgotPasswordView'])->name('forgot-password');
-    Route::post('/password-reset',[AdminController::class,'ForgotPassword'])->name('password-reset');
-    Route::get('/reset-password/{token}',[AdminController::class,'ResetPassword'])->name('ResetPasswordView');
-    Route::post('/reset-password',[AdminController::class,'ResetPasswordPost'])->name('ResetPassword');
+    Route::get('/patient-email-verify/{token}',[PatientAuthController::class,'PatientEmailVerify'])->name('patient_email_verify');
+    Route::get('/forgot-password',[PatientAuthController::class,'ForgotPasswordView'])->name('forgot-password');
+    Route::post('/password-reset',[PatientAuthController::class,'ForgotPassword'])->name('password-reset');
+    Route::get('/reset-password/{token}',[PatientAuthController::class,'ResetPassword'])->name('ResetPasswordView');
+    Route::post('/reset-password',[PatientAuthController::class,'ResetPasswordPost'])->name('ResetPassword');
     Route::get('/email-suggestions', 'PatientController@emailSuggestions')->name('email-suggestions');
     Route::get('/name-suggestions', 'PatientController@nameSuggestions')->name('name-suggestions');
 

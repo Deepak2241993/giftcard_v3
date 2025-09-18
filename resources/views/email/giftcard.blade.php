@@ -1,13 +1,14 @@
 @php
-/*
+    /*
     $mail_data=['qty'=>1,'amount'=>25,'your_name'=>'deepak','recipient_name'=>'','message'=>'test','gift_send_to'=>'deepak@thetemz.com','receipt_email'=>'deepakprasad224@gmail.com','transaction_id'=>'card_1PWvpdHXhy3bfGAtfIzHmifj'];
     $mail_data = (object) $mail_data;
 */
 
     $cardnumber = App\Models\GiftcardsNumbers::where('transaction_id', $mail_data->transaction_id)->get();
     $template_data = App\Models\EmailTemplate::where('id', $mail_data->event_id)->get();
-    
+
     // $template_data = App\Models\EmailTemplate::where('id',5)->get();
+
 @endphp
 
 
@@ -198,8 +199,8 @@
                                             style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
                                             <div class="logo" style="background-color:#fca52a; padding:20px;">
                                                 <a class="navbar-brand" href="https://myforevermedspa.com"><img
-                                                        src="{{url('/images/gifts/logo.png')}}"
-                                                        alt="image" style="height:70px;"></a>
+                                                        src="{{ url('/images/gifts/logo.png') }}" alt="image"
+                                                        style="height:70px;"></a>
                                             </div>
                                             <table id="u_content_heading_3"
                                                 style="font-family:arial,helvetica,sans-serif;" role="presentation"
@@ -389,7 +390,7 @@
                                                                             {{ ucFirst($mail_data->your_name) }} sent
                                                                             you {{ $mail_data->qty }} x
                                                                             ${{ round($mail_data->amount) }}
-    
+
                                                                             gift card to use at <br><a
                                                                                 href="https://myforevermedspa.com/"
                                                                                 target="_blank"
@@ -460,7 +461,7 @@
                                                                                             <td style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;max-width:260px;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word"
                                                                                                 valign="top">
                                                                                                 {{ $mail_data->your_name }}
-                                                                                                
+
                                                                                             </td>
                                                                                         </tr>
                                                                                     </tbody>
@@ -500,7 +501,7 @@
                                                                                             <td style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;max-width:260px;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word"
                                                                                                 valign="top">
                                                                                                 {{ $mail_data->recipient_name }}
-                                                                                                
+
                                                                                             </td>
                                                                                         </tr>
                                                                                     </tbody>
@@ -569,7 +570,8 @@
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:30px 0px 0px;font-family:arial,helvetica,sans-serif;"
                                                             align="left">
                                                             <div style="text-align: center; margin-top: 20px;">
-                                                                <a href="{{route('patient-login')}}" target="_blank" 
+                                                                <a href="{{ route('patient-login') }}"
+                                                                    target="_blank"
                                                                     style="display: inline-block; background-color: #007bff; color: white; text-decoration: none; 
                                                                            padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 5px; 
                                                                            font-family: Arial, sans-serif;">
@@ -580,10 +582,166 @@
                                                                 style="margin: 0px; color: #000000; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Epilogue; font-size: 40px; font-weight: 700;">
                                                                 Giftcard Details:
                                                             </h1>
-                                                           
+
                                                         </td>
                                                     </tr>
-                                                    
+                                                    {{-- Gift Card Generate --}}
+                                                    <tr>
+                                                        <td>
+                                                            @foreach ($cardnumber as $value)
+                                                                <div class="u-row-container"
+                                                                    style="padding: 36px 0px;background-image: url('{{ url('/email_template') }}/giftcards_number_show.png');background-repeat: no-repeat;background-position: center center;background-color: transparent">
+                                                                    <div class="u-row"
+                                                                        style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                                                                        <div
+                                                                            style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+
+                                                                            <div class="u-col u-col-100"
+                                                                                style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                                                                <div
+                                                                                    style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+
+                                                                                    <div
+                                                                                        style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                                                                        <table id="u_content_button_3"
+                                                                                            style="font-family:arial,helvetica,sans-serif;"
+                                                                                            role="presentation"
+                                                                                            cellpadding="0"
+                                                                                            cellspacing="0"
+                                                                                            width="100%"
+                                                                                            border="0">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;"
+                                                                                                        align="left">
+
+                                                                                                        <div
+                                                                                                            align="center">
+
+                                                                                                            {{-- <a href="#" target="_blank" class="v-button v-size-width v-font-size" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #fca52a; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:45%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 21px;"> --}}
+                                                                                                            <span
+                                                                                                                class="v-line-height v-padding v-button v-size-width v-font-size"
+                                                                                                                style="display:block;padding:10px 20px;line-height:120%; box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #fca52a; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:45%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 21px;"><span
+                                                                                                                    style="line-height: 25.2px;">{{ $value->giftnumber }}</span></span>
+                                                                                                            {{-- </a> --}}
+                                                                                                        </div>
+
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </td>
+                                                    </tr>
+                                                    {{-- Gift Card Generate end --}}
+                                                    <tr>
+                                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:20px 50px 10px;font-family:arial,helvetica,sans-serif;"
+                                                            align="left">
+
+                                                            <div class="v-line-height v-font-size"
+                                                                style="font-size: 14px; color: #000000; line-height: 140%; text-align: center; word-wrap: break-word;">
+                                                                <p style="font-size: 14px; line-height: 140%;">
+                                                                    @if (!empty($template_data[0]['footer_message']))
+                                                                        {{ $template_data[0]['footer_message'] }}
+                                                                    @else
+                                                                        Happy Shopping!
+                                                                    @endif
+
+                                                                </p>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 60px;font-family:arial,helvetica,sans-serif;"
+                                                            align="left">
+
+                                                            <div align="center">
+                                                                <div style="display: table; max-width:187px;">
+
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
+                                                                        style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
+                                                                        <tbody>
+                                                                            <tr style="vertical-align: top">
+                                                                                <td align="left" valign="middle"
+                                                                                    style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+                                                                                    <a href="https://www.facebook.com/ForeverMedSpaNJ/"
+                                                                                        title="Facebook"
+                                                                                        target="_blank">
+                                                                                        <img src="{{ url('/') }}/email_template/facebook.png"
+                                                                                            alt="Facebook"
+                                                                                            title="Facebook"
+                                                                                            width="32"
+                                                                                            style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important"
+                                                                                            onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
+                                                                        style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
+                                                                        <tbody>
+                                                                            <tr style="vertical-align: top">
+                                                                                <td align="left" valign="middle"
+                                                                                    style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+                                                                                    <a href="https://x.com/ForeverMedSpaNJ"
+                                                                                        title="Twitter"
+                                                                                        target="_blank">
+                                                                                        <img src="{{ url('/') }}/email_template/twitter.png"
+                                                                                            alt="Twitter"
+                                                                                            title="Twitter"
+                                                                                            width="32"
+                                                                                            style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important"
+                                                                                            onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+
+
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
+                                                                        style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 0px">
+                                                                        <tbody>
+                                                                            <tr style="vertical-align: top">
+                                                                                <td align="left" valign="middle"
+                                                                                    style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+                                                                                    <a href="https://www.instagram.com/forevermedspa/?hl=en"
+                                                                                        title="Instagram"
+                                                                                        target="_blank">
+                                                                                        <img src="{{ url('/') }}/email_template/instagram.png"
+                                                                                            alt="Instagram"
+                                                                                            title="Instagram"
+                                                                                            width="32"
+                                                                                            style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important"
+                                                                                            onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                             {{-- for Gift card Hedding --}}
@@ -595,233 +753,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
-                    {{-- Gift Card Generate --}}
-                    @foreach ($cardnumber as $value)
-                        <div class="u-row-container"
-                            style="padding: 36px 0px;background-image: url('{{ url('/email_template') }}/giftcards_number_show.png');background-repeat: no-repeat;background-position: center center;background-color: transparent">
-                            <div class="u-row"
-                                style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                                <div
-                                    style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-
-                                    <div class="u-col u-col-100"
-                                        style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                        <div
-                                            style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-
-                                            <div
-                                                style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                                <table id="u_content_button_3"
-                                                    style="font-family:arial,helvetica,sans-serif;"
-                                                    role="presentation" cellpadding="0" cellspacing="0"
-                                                    width="100%" border="0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;"
-                                                                align="left">
-
-                                                                <div align="center">
-
-                                                                    {{-- <a href="#" target="_blank" class="v-button v-size-width v-font-size" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #fca52a; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:45%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 21px;"> --}}
-                                                                    <span
-                                                                        class="v-line-height v-padding v-button v-size-width v-font-size"
-                                                                        style="display:block;padding:10px 20px;line-height:120%; box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #fca52a; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:45%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 21px;"><span
-                                                                            style="line-height: 25.2px;">{{ $value->giftnumber }}</span></span>
-                                                                    {{-- </a> --}}
-                                                                </div>
-
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                    {{-- Gift Card Generate end --}}
-
-                    <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                        <div class="u-row"
-                            style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                            <div
-                                style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-
-                                <div class="u-col u-col-100"
-                                    style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                                    <div
-                                        style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-
-                                        <div
-                                            style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-
-
-                                            <table id="u_content_button_2"
-                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
-                                                cellpadding="0" cellspacing="0" width="100%" border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:30px 10px;font-family:arial,helvetica,sans-serif;"
-                                                            align="left">
-
-
-                                                            <div align="center">
-                                                                {{-- Footer start --}}
-
-                                                                <table style="font-family:arial,helvetica,sans-serif;"
-                                                                    role="presentation" cellpadding="0"
-                                                                    cellspacing="0" width="100%" border="0">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:20px 50px 10px;font-family:arial,helvetica,sans-serif;"
-                                                                                align="left">
-
-                                                                                <div class="v-line-height v-font-size"
-                                                                                    style="font-size: 14px; color: #000000; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                                                    <p
-                                                                                        style="font-size: 14px; line-height: 140%;">
-                                                                                        @if (!empty($template_data[0]['footer_message']))
-                                                                                            {{ $template_data[0]['footer_message'] }}
-                                                                                        @else
-                                                                                            Happy Shopping!
-                                                                                        @endif
-
-                                                                                    </p>
-                                                                                </div>
-
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-
-                                                                <table style="font-family:arial,helvetica,sans-serif;"
-                                                                    role="presentation" cellpadding="0"
-                                                                    cellspacing="0" width="100%" border="0">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 60px;font-family:arial,helvetica,sans-serif;"
-                                                                                align="left">
-
-                                                                                <div align="center">
-                                                                                    <div
-                                                                                        style="display: table; max-width:187px;">
-
-                                                                                        <table align="left"
-                                                                                            border="0"
-                                                                                            cellspacing="0"
-                                                                                            cellpadding="0"
-                                                                                            width="32"
-                                                                                            height="32"
-                                                                                            style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
-                                                                                            <tbody>
-                                                                                                <tr
-                                                                                                    style="vertical-align: top">
-                                                                                                    <td align="left"
-                                                                                                        valign="middle"
-                                                                                                        style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                                                                                        <a href="https://www.facebook.com/ForeverMedSpaNJ/"
-                                                                                                            title="Facebook"
-                                                                                                            target="_blank">
-                                                                                                            <img src="{{ url('/') }}/email_template/facebook.png"
-                                                                                                                alt="Facebook"
-                                                                                                                title="Facebook"
-                                                                                                                width="32"
-                                                                                                                style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
-                                                                                                        </a>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-
-                                                                                        <table align="left"
-                                                                                            border="0"
-                                                                                            cellspacing="0"
-                                                                                            cellpadding="0"
-                                                                                            width="32"
-                                                                                            height="32"
-                                                                                            style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
-                                                                                            <tbody>
-                                                                                                <tr
-                                                                                                    style="vertical-align: top">
-                                                                                                    <td align="left"
-                                                                                                        valign="middle"
-                                                                                                        style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                                                                                        <a href="https://x.com/ForeverMedSpaNJ"
-                                                                                                            title="Twitter"
-                                                                                                            target="_blank">
-                                                                                                            <img src="{{ url('/') }}/email_template/twitter.png"
-                                                                                                                alt="Twitter"
-                                                                                                                title="Twitter"
-                                                                                                                width="32"
-                                                                                                                style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
-                                                                                                        </a>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-
-
-
-                                                                                        <table align="left"
-                                                                                            border="0"
-                                                                                            cellspacing="0"
-                                                                                            cellpadding="0"
-                                                                                            width="32"
-                                                                                            height="32"
-                                                                                            style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 0px">
-                                                                                            <tbody>
-                                                                                                <tr
-                                                                                                    style="vertical-align: top">
-                                                                                                    <td align="left"
-                                                                                                        valign="middle"
-                                                                                                        style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                                                                                                        <a href="https://www.instagram.com/forevermedspa/?hl=en"
-                                                                                                            title="Instagram"
-                                                                                                            target="_blank">
-                                                                                                            <img src="{{ url('/') }}/email_template/instagram.png"
-                                                                                                                alt="Instagram"
-                                                                                                                title="Instagram"
-                                                                                                                width="32"
-                                                                                                                style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
-                                                                                                        </a>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                                {{-- footer End --}}
-                                                            </div>
-
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
 
 
                     <div class="u-row-container" style="padding: 5px 0px 0px;background-color: transparent">

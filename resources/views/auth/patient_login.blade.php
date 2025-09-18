@@ -195,13 +195,16 @@
                                                 </div>
 
                                                 <div class="d-flex justify-content-between gap-3 mt-4">
-                                                    <button class="btn btn-success btn-lg w-50" type="button"
-                                                        onclick="PatientSignIn(event)">Submit</button>
+                                                   <button id="submitBtn" class="btn btn-success btn-lg w-50" type="button" onclick="PatientSignIn(event)">
+                                                    <span class="spinner-border spinner-border-sm me-2 d-none" id="btnSpinner" role="status" aria-hidden="true"></span>
+                                                    <span id="btnText">Submit</span>
+                                                </button>
                                                     <button class="btn btn-primary btn-lg w-50" onclick="Login()"
                                                         type="button">Login</button>
                                                 </div>
 
                                             </form>
+                                            <div class="text-success showbalance" style="margin-top: 10px; display:none;" id="message"></div>
 
 
                                         </div>
@@ -351,63 +354,86 @@
 
         //  For SignUp Logic Code
         function PatientSignIn(event) {
-            event.preventDefault(); // Prevent form submission
+    event.preventDefault(); 
 
-            var firstName = $('#firstName').val();
-            var lastName = $('#lastName').val();
-            var emailAddress = $('#emailAddress').val();
-            var phoneNumber = $('#phoneNumber').val();
-            var User_name = $('#User_name').val();
-            var password = $('#password').val();
-            var cpassword = $('#cpassword').val();
+    var firstName = $('#firstName').val();
+    var lastName = $('#lastName').val();
+    var emailAddress = $('#emailAddress').val();
+    var phoneNumber = $('#phoneNumber').val();
+    var User_name = $('#User_name').val();
+    var password = $('#password').val();
+    var cpassword = $('#cpassword').val();
 
-            // Clear previous error messages
-            $('#error-fname').text('');
-            $('#error-email').text('');
-            $('#error-username').text('');
-            $('#error-password').text('');
-            $('#error-cpassword').text('');
-            $('.showbalance').hide(); // Hide previous messages
+    // Clear errors
+    $('#error-fname').text('');
+    $('#error-email').text('');
+    $('#error-username').text('');
+    $('#error-password').text('');
+    $('#error-cpassword').text('');
+    $('.showbalance').hide();
 
-            $.ajax({
-                url: '{{ route('patient-signup') }}',
-                method: 'post',
-                dataType: 'json',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    fname: firstName,
-                    lname: lastName,
-                    email: emailAddress,
-                    phone: phoneNumber,
-                    patient_login_id: User_name,
-                    password: password,
-                    cpassword: cpassword,
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Show success message
-                        alert(response.message);
-                        // Optionally, redirect to login or home page:
-                        window.location.href = '{{ route('patient-login') }}';
-                    } else {
-                        alert('Something went wrong!');
-                    }
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        if (errors.fname) $('#error-fname').text(errors.fname[0]).show();
-                        if (errors.email) $('#error-email').text(errors.email[0]).show();
-                        if (errors.email) $('#error-email').text(errors.email).show();
-                        if (errors.patient_login_id) $('#error-username').text(errors.patient_login_id[0])
-                        .show();
-                        if (errors.password) $('#error-password').text(errors.password[0]).show();
-                        if (errors.cpassword) $('#error-cpassword').text(errors.cpassword[0]).show();
-                    } else {
-                        console.log(xhr.responseText);
-                    }
-                }
-            });
+    $.ajax({
+        url: '{{ route('patient-signup') }}',
+        method: 'post',
+        dataType: 'json',
+        data: {
+            _token: '{{ csrf_token() }}',
+            fname: firstName,
+            lname: lastName,
+            email: emailAddress,
+            phone: phoneNumber,
+            patient_login_id: User_name,
+            password: password,
+            cpassword: cpassword,
+        },
+        beforeSend: function() {
+            // Disable button & show spinner
+            $('#submitBtn').prop('disabled', true);
+            $('#btnSpinner').removeClass('d-none');
+            $('#btnText').text('Processing...');
+        },
+        success: function(response) {
+    if (response.success) {
+        // Show success message in the div
+        $('#message')
+            .removeClass('text-danger')
+            .addClass('text-success')
+            .html(response.message)
+            .show();
+
+        // Optionally redirect after 2 sec
+        setTimeout(function() {
+            window.location.href = '{{ route('patient-login') }}';
+        }, 2000);
+    } else {
+        $('#message')
+            .removeClass('text-success')
+            .addClass('text-danger')
+            .html('Something went wrong!')
+            .show();
+    }
+},
+        error: function(xhr) {
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.errors;
+                if (errors.fname) $('#error-fname').text(errors.fname[0]).show();
+                if (errors.email) $('#error-email').text(errors.email[0]).show();
+                if (errors.patient_login_id) $('#error-username').text(errors.patient_login_id[0]).show();
+                if (errors.password) $('#error-password').text(errors.password[0]).show();
+                if (errors.cpassword) $('#error-cpassword').text(errors.cpassword[0]).show();
+            } else {
+                console.log(xhr.responseText);
+            }
+        },
+        complete: function() {
+            // Re-enable button & hide spinner
+            $('#submitBtn').prop('disabled', false);
+            $('#btnSpinner').addClass('d-none');
+            $('#btnText').text('Submit');
         }
+    });
+}
+
+
     </script>
 @endsection

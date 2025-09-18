@@ -79,7 +79,7 @@ class PatientAuthController extends Controller
 
             // Event Hit for Giftcard table update
             
-            event(new EventLogin($patient));
+            // event(new EventLogin($patient));
 
             // Check for amount in session and redirect accordingly
             if ($request->amount !=null) {
@@ -102,15 +102,29 @@ class PatientAuthController extends Controller
       //  for patient login
 public function PatientloginView()
 {
-        // Check if the patient is already logged in
-        if (Auth::check()) {
-            // Redirect to the patient dashboard if logged in
-            return redirect()->route('patient-dashboard');
-        } else {
-            // Otherwise, show the login page
-            return view('auth.patient_login');
+    // Debugging (optional): 
+    // dd(session()->all());
+
+    // Check if the patient is already logged in
+    if (Auth::guard('patient')->check()) {
+        // Redirect to the patient dashboard if logged in
+        if(session()->has('amount')){
+            $amount = Session::get('amount');
+            return redirect()->route('home')->with('amount', $amount);
         }
+        else if (session()->has('front_cart')) {
+            return redirect()->route('checkout_view');
+        }
+        else
+        {
+            return redirect()->route('patient-dashboard');
+        }
+    }
+
+    // Otherwise, show the login page
+    return view('auth.patient_login');
 }
+
 
 
 
@@ -124,11 +138,8 @@ public function Patientlogout(Request $request) {
     $request->session()->forget('patientlogin');
     $request->session()->forget('patient_details');
     $request->session()->forget('front_cart');
+    $request->session()->invalidate();
     $request->session()->regenerateToken();
-
-    // Fire the event with the patient's data (optional)
-    event(new EventPatientLogout($patient->patient_login_id));
-
     // Redirect to the patient login page
     return redirect(route('patient-login'));
 }
@@ -160,6 +171,7 @@ public function Patientlogout(Request $request) {
     
     public function PatientSignup(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'fname' => 'required|string|max:255',
             'email' => 'required|email|max:255',

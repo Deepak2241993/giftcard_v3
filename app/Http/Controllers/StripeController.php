@@ -201,15 +201,58 @@ class StripeController extends Controller
             
             // This section handles the email sending logic based on user type
 
-                if (in_array($giftsend->usertype, ['regular', 'guest'])) {
+                // if (in_array($giftsend->usertype, ['regular', 'guest'])) {
 
-                    $receipt_email = Patient::where('patient_login_id', $giftsend->receipt_email)
-                    ->value('email') ?? $giftsend->receipt_email;
-                    $gift_send_to = $giftsend->gift_send_to;
-                    $giftcard_receiver_email_id = Patient::where('email', $giftsend->gift_send_to)
-                    ->value('patient_login_id') ?? $giftsend->gift_send_to;
-                    $giftsend->update(['gift_send_to' => $giftcard_receiver_email_id]);
-                }
+                //     $receipt_email = Patient::where('patient_login_id', $giftsend->receipt_email)
+                //     ->value('email') ?? $giftsend->receipt_email;
+                //     $gift_send_to = $giftsend->gift_send_to;
+                    
+                //     $giftcard_receiver_email_id = Patient::where('email', $giftsend->gift_send_to)
+                //     ->value('patient_login_id') ?? $giftsend->gift_send_to;
+                //     $giftsend->update(['gift_send_to' => $giftcard_receiver_email_id]);
+                // }
+
+
+                
+if (in_array($giftsend->usertype, ['regular', 'guest'])) {
+
+    // 📌 Check or map receipt_email to patient_login_id
+    $receipt_email = Patient::where('patient_login_id', $giftsend->receipt_email)
+        ->value('email') ?? $giftsend->receipt_email;
+
+    $gift_send_to = $giftsend->gift_send_to;
+    if($giftsend->recipient_name!=null){
+        $patient_name = $giftsend->recipient_name;
+    }
+    else{
+       $patient_name = $giftsend->your_name;
+    }
+
+    // 📌 Try to find patient by recipient email
+    $existingPatient = Patient::where('email', $gift_send_to)->first();
+
+    if (!$existingPatient && $giftsend->usertype === 'guest') {
+        // 🚀 Create new patient for guest
+        $newPatient = Patient::create([
+            'fname'             => $patient_name, // default or get from request
+            'lname'             => '(Guest User)',  // default or get from request
+            'email'             => $gift_send_to,
+            'status'          =>0, // random password
+            'user_token'          =>'FOREVER-MEDSPA', // random password
+        ]);
+
+        $giftcard_receiver_email_id = $newPatient->email;
+    } else {
+        // 📌 Use existing patient_login_id or fallback to email
+        $giftcard_receiver_email_id = $existingPatient->email ?? $gift_send_to;
+    }
+
+    // 📌 Update gift_send_to with patient_login_id
+    $giftsend->update([
+        'gift_send_to' => $giftcard_receiver_email_id
+    ]);
+}
+
             
     // This Section Send Email To (Giftcard Sender)  For Future Date and receipt get to current date
 

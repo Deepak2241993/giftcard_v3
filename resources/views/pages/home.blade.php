@@ -893,151 +893,132 @@
     <script>
         //  Send for Someone Else
         function sendsomeOneElse() {
-            //  For Validation code 
-            $("#someoneform").validate({
-                rules: {
-                    qty: {
-                        required: true,
-                    },
-                    your_name: {
-                        required: true,
-                        minlength: 3,
-                    },
-                    recipient_name: {
-                        required: true,
-                        minlength: 3,
-                    },
-                    message: {
-                        required: true,
-                        minlength: 10,
-                        maxlength: 255,
-                    },
-                    gift_send_to: {
-                        required: true,
-                        email: true,
-                        maxlength: 60,
-                    },
-                    recipient_email: {
-                        required: true,
-                        email: true,
-                        maxlength: 60,
-                    },
+    let toEmail = document.getElementById('gift_send_to').value.trim();
+    let fromEmail = document.getElementById('recipient_email').value.trim();
+
+    // Clear any old error
+    document.getElementById('email-error')?.remove();
+
+    // 🚫 Check if emails are the same
+    if (toEmail !== "" && fromEmail !== "" && toEmail === fromEmail) {
+        let errorDiv = document.createElement("div");
+        errorDiv.id = "email-error";
+        errorDiv.className = "text-danger mt-2";
+        errorDiv.innerText = "Sender and recipient email cannot be the same!";
+        document.getElementById('couponaply').insertAdjacentElement("afterend", errorDiv);
+        return false; // ❌ stop execution here
+    }
+
+    // ✅ Run validation only if emails are different
+    $("#someoneform").validate({
+        rules: {
+            qty: { required: true },
+            your_name: { required: true, minlength: 3, maxlength: 60 },
+            recipient_name: { required: true, minlength: 3, maxlength: 60 },
+            message: { required: true, minlength: 10, maxlength: 255 },
+            gift_send_to: { required: true, email: true, maxlength: 60 },
+            recipient_email: { required: true, email: true, maxlength: 60 }
+        },
+        messages: {
+            qty: { required: "Please select quantity" },
+            your_name: {
+                required: "Please enter your name",
+                maxlength: "Your name must not exceed 60 characters.",
+                minlength: "Please enter at least 3 characters"
+            },
+            recipient_name: {
+                required: "Recipient name is required",
+                minlength: "Please enter at least 3 characters",
+                maxlength: "Recipient name must not exceed 60 characters."
+            },
+            message: {
+                required: "Message is required",
+                minlength: "Please enter at least 10 characters",
+                maxlength: "Message must not exceed 255 characters."
+            },
+            gift_send_to: {
+                required: "Recipient email is required",
+                maxlength: "Email must not exceed 60 characters."
+            },
+            recipient_email: {
+                required: "Sender email is required",
+                maxlength: "Email must not exceed 60 characters."
+            }
+        },
+        submitHandler: function(form) {
+            $.ajaxSetup({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+            });
+
+            var couponapplystatus = $('#coupon_code').attr('message');
+            var getcouponValue = $('#coupon_code').val();
+            if (getcouponValue != '' && couponapplystatus != 1) {
+                alert('Please Press Apply Code Button');
+                return false;
+            }
+
+            var amount = $('#amountdisplay').attr('finalamount');
+            var discount = $('#amountdisplay').attr('coupondiscount');
+            var qty = $('#qty').val();
+            var gift_send_to = $('#gift_send_to').val();
+            var your_name = $('#your_name').val();
+            var recipient_name = $('#recipient_name').val();
+            var message = $('#message').val();
+            var event = $('#Event_id').val();
+            var gift_card_send_type = $('#gift_other').val();
+            var receipt_email = $('#recipient_email').val();
+
+            var in_future = $('#in_future').val() || null;
+            var coupon_code = $('#coupon_code').val() || null;
+
+            $.ajax({
+                url: '{{ route('sendgift') }}',
+                method: "post",
+                dataType: "json",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    amount: amount,
+                    qty: qty,
+                    your_name: your_name,
+                    recipient_name: recipient_name,
+                    receipt_email: receipt_email,
+                    message: message,
+                    gift_card_send_type: gift_card_send_type,
+                    in_future: in_future,
+                    user_token: $('#user_token').val(),
+                    coupon_code: coupon_code,
+                    discount: discount,
+                    gift_send_to: gift_send_to,
+                    event_id: event,
+                    patient_login_id: "{{ session('patient_details')['patient_login_id'] ?? '' }}",
                 },
-                messages: {
-                    qty: {
-                        required: "Please select quantity",
-                    },
-                    your_name: {
-                        required: "Please enter your name",
-                        maxlength: "Your name length should be not more than 60 characters long.",
-                        minlength: "Please enter at least 3 characters",
-                    },
-                    recipient_name: {
-                        required: "Recipient name is requires",
-                        minlength: "Please enter at least 3 characters",
-                        maxlength: "Recipient name length should be not more than 60 characters long.",
-                    },
-                    message: {
-                        required: "Message is Required",
-                        minlength: "Please enter at least 10 characters",
-                        maxlength: "Message length should be not more than 255 characters long.",
-                    },
-                    gift_send_to: {
-                        required: "This Fields is required",
-                        maxlength: "email length should be not more than 60 characters long.",
-                    },
-                    recipient_email: {
-                        required: "This Fields is required",
-                        maxlength: "Message length should be not more than 60 characters long.",
-                    },
-                },
-                submitHandler: function(form) {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    var couponapplystatus = $('#coupon_code').attr('message');
-                    var getcouponValue = $('#coupon_code').val();
-                    if (getcouponValue != '' && couponapplystatus != 1) {
-                        alert('Please Press Apply Code Button');
-                        return false;
+                success: function(response) {
+                    if (response.success) {
+                        $('#payment').addClass('active');
+                        $('#Coupon_error').hide();
+                        $('#Coupon_success').html(response.success).show();
+                        $('#firstbox').hide();
+                        $('#secondbox').hide();
+                        $('#paymentdbox').show();
+                        $('#paymentresult').html(response.result).show();
+                        $('#paymentscript').html(response.paymentscript).show();
+                        $("#giftqty").html(qty + ' x $' + (amount / qty) + ' gift card');
                     }
-
-                    var amount = $('#amountdisplay').attr('finalamount');
-                    var discount = $('#amountdisplay').attr('coupondiscount');
-                    var qty = $('#qty').val();
-                    var gift_send_to = $('#gift_send_to').val();
-                    var your_name = $('#your_name').val();
-                    var recipient_name = $('#recipient_name').val();
-                    var message = $('#message').val();
-                    var event = $('#Event_id').val();
-                    var gift_card_send_type = $('#gift_other').val();
-                    var receipt_email = $('#recipient_email').val();
-
-
-                    if ($('#in_future').val() != '') {
-                        var in_future = $('#in_future').val();
-                    } else {
-                        var in_future = null;
+                    if (response.error) {
+                        $('#Coupon_success').hide();
+                        $('#Coupon_error').html(response.error).show();
                     }
-                    if ($('#coupon_code').val() != '') {
-                        var coupon_code = $('#coupon_code').val();
-                    } else {
-                        var coupon_code = null;
-                    }
-
-                    $.ajax({
-                        url: '{{ route('sendgift') }}',
-                        method: "post",
-                        dataType: "json",
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            amount: amount,
-                            qty: qty,
-                            your_name: your_name,
-                            recipient_name: recipient_name,
-                            receipt_email: receipt_email,
-                            message: message,
-                            gift_card_send_type: gift_card_send_type,
-                            in_future: in_future,
-                            user_token: $('#user_token').val(),
-                            coupon_code: coupon_code,
-                            discount: discount,
-                            gift_send_to: gift_send_to,
-                            event_id: event,
-                            event_id: event,
-                            patient_login_id: "{{ session('patient_details')['patient_login_id'] ?? '' }}",
-
-                        },
-                        success: function(response) {
-                            console.log(response.success);
-                            if (response.success) {
-                                $('#payment').addClass('active');
-                                $('#Coupon_error').hide();
-                                $('#Coupon_success').html(response.success).show();
-                                // nextClick();
-                                $('#firstbox').hide();
-                                $('#secondbox').hide();
-                                $('#paymentdbox').show();
-                                $('#paymentresult').html(response.result).show();
-                                $('#paymentscript').html(response.paymentscript).show();
-                                $("#giftqty").html(qty + ' x $' + (amount / qty) + ' gift card');
-                            }
-                            if (response.error) {
-                                $('#Coupon_success').hide();
-                                $('#Coupon_error').html(response.error).show();
-                            }
-
-                        }
-                    });
                 }
             });
-            // Trigger form validation
-            if ($("#someoneform").valid()) {
-                $("#someoneform").submit();
-            }
         }
+    });
+
+    // 🚀 Trigger form validation
+    if ($("#someoneform").valid()) {
+        $("#someoneform").submit();
+    }
+}
+
 
         // for Coupon Validate 
         $('#Coupon_success').hide();
