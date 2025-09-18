@@ -1,12 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route; 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PatientAuthController;
 use App\Http\Controllers\ProductCategoryImportController;
 use App\Http\Controllers\ProductImportController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\CategoryExportController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\PatientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +21,7 @@ use App\Http\Controllers\PDFController;
 |
 */
 
-// Auth::routes();
-Route::get('/login',[AdminController::class,'login'])->name('login');
-Route::post('/login',[AdminController::class,'login_post'])->name('login-post');
-Route::post('/logout',[AdminController::class,'logout'])->name('logout');
+
 
 
 
@@ -35,8 +34,6 @@ Route::get('product-page/{token?}/{slug}', 'ProductController@productpage')->nam
 Route::get('productdetails/{slug}','ProductController@productdetails')->name('productdetails');
 Route::get('services','ServiceUnitController@ServicePage')->name('services');
 Route::get('category/{slug}','ProductCategoryController@categorytpage')->name('category-list');
-
-
 Route::get('services/{slug}','ServiceUnitController@UnitPageShow')->name('serviceunit');// This is  For Service Frontend and Backend Banner Service
 Route::get('services/{product_slug}/{unitslug}','ServiceUnitController@UnitPageDetails')->name('unit-details');
 Route::get('service/{slug}','ProductController@productdetails')->name('productdetails');
@@ -65,13 +62,9 @@ Route::post('/giftcardpayment',[App\Http\Controllers\StripeController::class,'gi
 Route::post('/balance-check','GiftsendController@knowbalance')->name('balance-check');
 Route::post('/payment_cnf','GiftsendController@payment_confirmation')->name('payment_cnf');
 Route::post('/cart/clear', 'PopularOfferController@clearCart')->name('cart.clear');
-
-
 // Route::get('services/{slug}','ProductController@productpage')->name('product');
-
 route::get('/db','GiftController@DBview')->name('dbview');
 //  For Payment Route
-
 Route::post('/send-gift-cards','GiftController@store')->name('send-gift-cards');
 Route::get('/strip_form',[App\Http\Controllers\StripeController::class,'formview']);
 Route::post('/payment',[App\Http\Controllers\StripeController::class,'makepayment']);
@@ -81,12 +74,25 @@ Route::get('/success', function () {
 Route::get('/failed', function () {
     return view('stripe.failed');
 });
-//  For Payment Route End 
-// Frond End Route End 
+//  Usefull Route
+    Route::post('/store-amount', 'PatientController@storeAmount')->name('store-amount');
+    Route::post('/unset-amount', 'PatientController@unsetAmont')->name('unset-amount');
+    Route::get('/remove-amount', 'PatientController@removeAmount')->name('remove-amount');
+    Route::get('/patient-email-verify/{token}',[AdminController::class,'PatientEmailVerify'])->name('patient_email_verify');
+    Route::get('/forgot-password',[AdminController::class,'ForgotPasswordView'])->name('forgot-password');
+    Route::post('/password-reset',[AdminController::class,'ForgotPassword'])->name('password-reset');
+    Route::get('/reset-password/{token}',[AdminController::class,'ResetPassword'])->name('ResetPasswordView');
+    Route::post('/reset-password',[AdminController::class,'ResetPasswordPost'])->name('ResetPassword');
+    Route::get('/email-suggestions', 'PatientController@emailSuggestions')->name('email-suggestions');
+    Route::get('/name-suggestions', 'PatientController@nameSuggestions')->name('name-suggestions');
+
+    Route::view('new_template','layouts.front_new');
 
 
-
-
+// Auth::routes();
+Route::get('/login',[AdminController::class,'login'])->name('login');
+Route::post('/login',[AdminController::class,'login_post'])->name('login-post');
+Route::post('/logout',[AdminController::class,'logout'])->name('logout');
 //For All Backend Route
 Route::prefix('admin')->middleware('login')->group(function () {
 Route::get('/admin-dashboard', 'HomeController@root')->name('root');
@@ -174,36 +180,25 @@ Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'
 
 
 
+
+
+// Patient Login Form
+Route::get('/patient-login',[PatientAuthController::class,'PatientloginView'])->name('patient-login');
+Route::post('/patient-login', [PatientAuthController::class, 'PatientLoginPost'])->name('patient-login');
+Route::post('/patient-logout', [PatientAuthController::class, 'Patientlogout'])->name('patient-logout');
 // For All Patient Route
-    Route::prefix('My-patient')->middleware('patientlogin')->group(function () {
-    Route::get('/dashboard', 'PatientController@PatientDashboard')->name('patient-dashboard');
-    Route::get('/patient-profile', 'PatientController@PatientProfile')->name('patient-profile');
-    Route::get('/my-giftcards', 'PatientController@Mygiftcards')->name('my-giftcards');
-    Route::get('/giftcards-statement/{id}', 'PatientController@GiftcardsStatement')->name('giftcards-statement');
+Route::prefix('My-patient')->middleware('PatientLogin')->group(function () {
+    Route::get('/dashboard', [PatientController::class, 'PatientDashboard'])->name('patient-dashboard');
+    Route::get('/patient-profile', [PatientController::class, 'PatientProfile'])->name('patient-profile');
+    Route::get('/my-giftcards', [PatientController::class, 'Mygiftcards'])->name('my-giftcards');
+    Route::get('/giftcards-statement/{id}', [PatientController::class, 'GiftcardsStatement'])->name('giftcards-statement');
+    Route::get('/my-services', [PatientController::class, 'Myservices'])->name('my-services');
+    Route::get('/patient-invoice/{transaction_data}', [PatientController::class, 'Patientinvoice'])->name('patient-invoice');
+});
+
+
+
     
-    Route::get('/my-services', 'PatientController@Myservices')->name('my-services');
-    Route::get('/patient-invoice/{transaction_data}', 'PatientController@Patientinvoice')->name('patient-invoice');
-    });
-
-
-    // Patient Login Form
-    Route::get('/patient-login',[AdminController::class,'Patientlogin'])->name('patient-login');
-    Route::post('/patient-login', [AdminController::class, 'PatientLoginPost'])->name('patient-login');
-    Route::post('/patient-logout', [AdminController::class, 'Patientlogout'])->name('patient-logout');
-
-    //  Usefull Route
-    Route::post('/store-amount', 'PatientController@storeAmount')->name('store-amount');
-    Route::post('/unset-amount', 'PatientController@unsetAmont')->name('unset-amount');
-    Route::get('/remove-amount', 'PatientController@removeAmount')->name('remove-amount');
-    Route::get('/patient-email-verify/{token}',[AdminController::class,'PatientEmailVerify'])->name('patient_email_verify');
-    Route::get('/forgot-password',[AdminController::class,'ForgotPasswordView'])->name('forgot-password');
-    Route::post('/password-reset',[AdminController::class,'ForgotPassword'])->name('password-reset');
-    Route::get('/reset-password/{token}',[AdminController::class,'ResetPassword'])->name('ResetPasswordView');
-    Route::post('/reset-password',[AdminController::class,'ResetPasswordPost'])->name('ResetPassword');
-    Route::get('/email-suggestions', 'PatientController@emailSuggestions')->name('email-suggestions');
-    Route::get('/name-suggestions', 'PatientController@nameSuggestions')->name('name-suggestions');
-
-    Route::view('new_template','layouts.front_new');
 // For Cache Clear
 Route::get('/clear', function() {
     Artisan::call('cache:clear ');

@@ -36,15 +36,21 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-        'patient' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+
+    'admin' => [
+        'driver' => 'session',
+        'provider' => 'admins',
+    ],
+
+    'patient' => [
         'driver' => 'session',
         'provider' => 'patients',
-        ],
     ],
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -72,8 +78,12 @@ return [
         'patients' => [
         'driver' => 'eloquent',
         'model' => App\Models\Patient::class,
-        'patient_login_id' => 'patient_login_id',
         ],
+        
+        'admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class, // Replace if needed
+]
     ],
 
     /*
@@ -92,19 +102,27 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'patients' => [
-            'provider' => 'patients',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
+    'users' => [
+        'provider' => 'users',
+        'table' => 'password_resets',
+        'expire' => 60,
+        'throttle' => 60,
     ],
+
+    'patients' => [
+        'provider' => 'patients',
+        'table' => 'password_resets',
+        'expire' => 60,
+        'throttle' => 60,
+    ],
+
+    'admins' => [
+        'provider' => 'admins',
+        'table' => 'password_resets',
+        'expire' => 60,
+        'throttle' => 60,
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------

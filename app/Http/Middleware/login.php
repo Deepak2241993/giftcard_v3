@@ -17,7 +17,7 @@ class login
      */
     public function handle(Request $request, Closure $next)
     {
-        if(empty(Session::get('result')))
+        if(empty(Session::get('adminlogin')))
         {
             return redirect('/login');
         }

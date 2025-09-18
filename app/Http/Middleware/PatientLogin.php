@@ -17,10 +17,12 @@ class PatientLogin
      */
     public function handle(Request $request, Closure $next)
     {
-         //  For Patient Login
-         if (empty(Session::get('result.name'))) {
-            return redirect('/patient-login');
+        // Check if patient is logged in
+        if (empty(Session::get('patientlogin'))) {
+            return redirect()->route('patient-login');  // Redirect using route
         }
+
         return $next($request);
     }
+
 }

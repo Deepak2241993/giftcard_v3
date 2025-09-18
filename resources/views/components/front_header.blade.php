@@ -214,7 +214,9 @@
             {{-- <a href="{{ route('services') }}" class="nav-link">Services</a> --}}
             @if (Session::get('patient_details'))
                 <a class="nav-link"
-                    href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
+                    href="{{ route('patient-dashboard') }}">{{ Session::has('patient_details') ? Session::get('patient_details')->fname : '' }}
+
+</a>
             @else
                 <a class="nav-link" href="{{ url('/patient-login') }}">Login</a>
             @endif
@@ -244,7 +246,7 @@
         <a href="{{ url('/') }}">Giftcards</a>
         {{-- <a href="{{ route('services') }}">Services</a> --}}
         @if (Session::get('patient_details'))
-        <a href="{{ route('patient-dashboard') }}">{{ Auth::guard('patient')->user()->fname }}</a>
+        <a href="{{ route('patient-dashboard') }}">{{ optional(Auth::guard('patient')->user())->fname }}</a>
         @else
         <a href="{{ url('/patient-login') }}">Login</a>
         @endif

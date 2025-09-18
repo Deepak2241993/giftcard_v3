@@ -61,6 +61,7 @@
     border-radius: 12px;
     box-shadow: 0 3px 12px rgba(0,0,0,0.08);
   }
+
   .main_box_coupon {
     display: block;
     width: 100%;
@@ -74,6 +75,7 @@
     background-size: cover;
     flex-direction: column !important;
   }
+
   .main_box_coupon .box_coupon, .main_box_coupon .single-coupon-content {
     flex-direction: column !important;
     width: 100%;
@@ -115,7 +117,7 @@
   .table th{
     max-width: 100px !important;
 }
-
+}
 @media (max-width: 350px) {
   .card, .main_box_coupon {
     min-width: 95vw;
@@ -371,7 +373,7 @@
                                                                                 @endfor
                                                                             </select>
                                                                         </div>
-
+                                                                           {{-- {{ dd(session()->all()) }} --}}
                                                                         <!-- Your Name Field -->
                                                                         <div class="mb-3 col-lg-12 col-md-12 self">
                                                                             <label for="your_name" class="form-label">Your
@@ -379,7 +381,9 @@
                                                                                     class="text-danger">*</span></label>
                                                                             <input class="form-control" type="text"
                                                                                 name="your_name"
-                                                                                value="{{ Session::get('patient_details') ? Auth::guard('patient')->user()->fname . ' ' . Auth::guard('patient')->user()->lname : '' }}"
+                                                                            value="{{ Session::has('patient_details') ? Session::get('patient_details')->fname . ' ' . Session::get('patient_details')->lname : '' }}"
+
+"
                                                                                 placeholder="From Name" id="your_name"
                                                                                 autocomplete="off" required>
                                                                             <input type="hidden" value="0"
@@ -431,7 +435,8 @@
                                                                                             class="text-danger">*</span></b></label>
                                                                                 <input class="form-control" type="email"
                                                                                     name="from_email"
-                                                                                    value="{{ Session::get('patient_details') ? Auth::guard('patient')->user()->email : '' }}"
+                                                                                    value="{{ optional(Session::get('patient_details'))->email }}"
+
                                                                                     placeholder="Sender's Email address (for the receipt)"
                                                                                     id="recipient_email"
                                                                                     autocomplete="off" required>
@@ -587,7 +592,8 @@
                                                                                     class="text-danger">*</span></label>
                                                                             <input class="form-control" type="text"
                                                                                 name="from_name"
-                                                                                value="{{ Session::get('patient_details') ? Auth::guard('patient')->user()->fname . ' ' . Auth::guard('patient')->user()->lname : '' }}"
+                                                                                value="{{ Session::has('patient_details') ? Session::get('patient_details')->fname . ' ' . Session::get('patient_details')->lname : '' }}"
+
                                                                                 placeholder="From Name" id="syour_name"
                                                                                 required autocomplete="off">
                                                                             <input type="hidden" value="0"
@@ -606,7 +612,8 @@
                                                                                 name="to_email"
                                                                                 placeholder="Enter Your Email"
                                                                                 id="sto_email" autocomplete="off"
-                                                                                value="{{ Session::get('patient_details') ? Auth::guard('patient')->user()->email : '' }}"
+                                                                                value="{{ Auth::guard('patient')->check() ? Auth::guard('patient')->user()->email : '' }}"
+
                                                                                 required>
                                                                         </div>
 
@@ -1303,7 +1310,10 @@
                             $("#amountdisplay").attr('amount', amount);
                             $("#amountdisplay").attr('finalAmount', amount);
                         } else {
-                            window.location.href = "{{ route('patient-login') }}";
+                            // Show login modal
+                            document.getElementById('loginPromptModal').style.display = 'block';
+                            // Store amount in data attribute for use in redirect
+                            document.getElementById('loginPromptModal').setAttribute('data-amount', amount);
                         }
                     }
                 });

@@ -46,6 +46,7 @@ class HomeController extends Controller
 
     public function root(GiftcardRedeem $redeem,User $user,GiftcardsNumbers $number,Giftsend $giftsend)
     {
+        // dd(session()->all());
         if(Auth::user()->user_type==1)
         {
             $cardnumbers = GiftcardsNumbers::distinct('giftnumber')->count();
@@ -64,12 +65,12 @@ class HomeController extends Controller
 
             return view('admin.admin_dashboad',compact('cancel_deals','TotalServiceSale','cardnumbers','alltransaction','user','successTransaction','faildTransaction','processingTransaction','giftCoupon','ProductCategory','Product','search_keyword'));
         }
-        else{
-            $user_email=Auth::user()->email;
-            $user_data=User::where('email',$user_email)->first();
-            $gift_buy=Giftsend::where('user_id',$user_data->id)->count();
-            return redirect(route('dashboard'));
-        }
+        // else{
+        //     $user_email=Auth::user()->email;
+        //     $user_data=User::where('email',$user_email)->first();
+        //     $gift_buy=Giftsend::where('user_id',$user_data->id)->count();
+        //     return redirect(route('dashboard'));
+        // }
     }
 
 
