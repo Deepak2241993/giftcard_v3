@@ -121,6 +121,8 @@
                                                         onclick="cardview({{ $value['id'] }},'{{ $value['transaction_id'] }}')">
                                                         View Card
                                                     </a>
+                                                      <a href="{{ route('redeem-giftcard',['transaction_id'=> $value['transaction_id'],'user_id'=> $value['id']]) }}" class="btn btn-block btn-outline-success">Redeem Giftcard</a>
+
                                                     @else
                                                     <a type="button"  class="btn btn-block btn-outline-danger">
                                                     Transaction Failed
@@ -133,7 +135,7 @@
                                                         <a href="{{ route('Resendmail_view', ['id' => $value['id']]) }}"
                                                              class="btn btn-block btn-outline-dark" id="mailsend_{{ $value['id'] }}">Mail
                                                             Resend</a>
-                                                        {{-- <button  class="btn btn-block btn-outline-warning" type="button" id="mailsend_{{$value['id']}}" onclick="sendmail({{$value['id']}}, '{{$value['transaction_id']}}')"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span> Send</button> --}}
+                                                        
                                                     @endif
                                                 </td>
                                                 <td>

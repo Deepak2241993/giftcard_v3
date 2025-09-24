@@ -304,54 +304,111 @@ else{
 
     //  giftcard redeem from patient list
     public function giftcardredeemPatientList(Request $request, $id)
-{
-    $token = Auth::user()->user_token;
+    {
+        $token = Auth::user()->user_token;
 
-    // Get patient info
-    $patient = Patient::findOrFail($id);
-    $patient_email = $patient->email;
-    $patient_username = $patient->patient_login_id;
-    $patient_full_name = $patient->fname ." ".$patient->lname;
+        // Get patient info
+        $patient = Patient::findOrFail($id);
+        $patient_email = $patient->email;
+        $patient_username = $patient->patient_login_id;
+        $patient_full_name = $patient->fname ." ".$patient->lname;
 
-    // Find related giftcard transactions
-    $giftcard_transaction = Giftsend::where(function ($query) use ($patient_username, $patient_email) {
-        $query->where('gift_send_to', $patient_username)
-              ->orWhere('gift_send_to', $patient_email);
-    })->get();
-    // Extract IDs from giftcard_transaction collection
-    $giftsendIds = $giftcard_transaction->pluck('id')->toArray();
+        // Find related giftcard transactions
+        $giftcard_transaction = Giftsend::where(function ($query) use ($patient_username, $patient_email) {
+            $query->where('gift_send_to', $patient_username)
+                ->orWhere('gift_send_to', $patient_email);
+        })->get();
+        // Extract IDs from giftcard_transaction collection
+        $giftsendIds = $giftcard_transaction->pluck('id')->toArray();
 
-    // Query giftcard details
-    $getdata = DB::table('giftsends')
-        ->join('giftcards_numbers', 'giftcards_numbers.user_id', '=', 'giftsends.id')
-        ->select(
-            'giftsends.recipient_name',
-            'giftsends.your_name',
-            'giftsends.gift_send_to',
-            'giftsends.user_token',
-            'giftcards_numbers.giftnumber',
-            'giftcards_numbers.user_id',
-            'giftcards_numbers.status',
-            DB::raw('SUM(giftcards_numbers.amount) as total_amount')
-        )
-        ->whereIn('giftcards_numbers.user_id', $giftsendIds)
-        ->where('giftcards_numbers.user_token', $token)
-        ->groupBy(
-            'giftsends.recipient_name',
-            'giftsends.your_name',
-            'giftsends.gift_send_to',
-            'giftsends.user_token',
-            'giftcards_numbers.giftnumber',
-            'giftcards_numbers.user_id',
-            'giftcards_numbers.status'
-        )
-        ->get();
-        $getdata = json_decode(json_encode($getdata), true); // array of arrays
+        // Query giftcard details
+        $getdata = DB::table('giftsends')
+            ->join('giftcards_numbers', 'giftcards_numbers.user_id', '=', 'giftsends.id')
+            ->select(
+                'giftsends.recipient_name',
+                'giftsends.your_name',
+                'giftsends.gift_send_to',
+                'giftsends.user_token',
+                'giftcards_numbers.giftnumber',
+                'giftcards_numbers.user_id',
+                'giftcards_numbers.status',
+                DB::raw('SUM(giftcards_numbers.amount) as total_amount')
+            )
+            ->whereIn('giftcards_numbers.user_id', $giftsendIds)
+            ->where('giftcards_numbers.user_token', $token)
+            ->groupBy(
+                'giftsends.recipient_name',
+                'giftsends.your_name',
+                'giftsends.gift_send_to',
+                'giftsends.user_token',
+                'giftcards_numbers.giftnumber',
+                'giftcards_numbers.user_id',
+                'giftcards_numbers.status'
+            )
+            ->get();
+            $getdata = json_decode(json_encode($getdata), true); // array of arrays
 
-    // Return view with data
-    return view('admin.patient.patientlist-redeem_view', compact('getdata','patient'));
-}
+        // Return view with data
+        return view('admin.patient.patientlist-redeem_view', compact('getdata','patient'));
+    }
 
+    public function RedeemGiftcard(Request $request,$transaction_id ,$user_id)
+    {
+        $token = Auth::user()->user_token;
+
+        // Get patient info
+        $giftcard = Giftsend::findOrFail($user_id);
+        $patient_email = $giftcard->gift_send_to;
+        if($giftcard->recipient_name != null)
+        {
+            $patient_name = $giftcard->recipient_name;
+        }
+        else
+        {
+            $patient_name = $giftcard->your_name;
+        }
+        $patient =[];
+        $patient['email'] = $patient_email;
+        $patient['patient_name'] = $patient_name;
+
+        // Find related giftcard transactions
+        $giftcard_transaction = Giftsend::where(function ($query) use ($patient_email) {
+            $query->where('gift_send_to', $patient_email);
+
+        })->get();
+        // Extract IDs from giftcard_transaction collection
+        $giftsendIds = $giftcard_transaction->pluck('id')->toArray();
+
+        // Query giftcard details
+        $getdata = DB::table('giftsends')
+            ->join('giftcards_numbers', 'giftcards_numbers.user_id', '=', 'giftsends.id')
+            ->select(
+                'giftsends.recipient_name',
+                'giftsends.your_name',
+                'giftsends.gift_send_to',
+                'giftsends.user_token',
+                'giftcards_numbers.giftnumber',
+                'giftcards_numbers.user_id',
+                'giftcards_numbers.status',
+                DB::raw('SUM(giftcards_numbers.amount) as total_amount')
+            )
+            ->whereIn('giftcards_numbers.user_id', $giftsendIds)
+            ->where('giftcards_numbers.user_token', $token)
+            ->groupBy(
+                'giftsends.recipient_name',
+                'giftsends.your_name',
+                'giftsends.gift_send_to',
+                'giftsends.user_token',
+                'giftcards_numbers.giftnumber',
+                'giftcards_numbers.user_id',
+                'giftcards_numbers.status'
+            )
+            ->get();
+            $getdata = json_decode(json_encode($getdata), true); // array of arrays
+
+        // Return view with data
+        return view('admin.redeem.giftcard_redeem_view', compact('getdata','patient'));
+    }
 
 
     public function GiftCardSearch(Request $request)
