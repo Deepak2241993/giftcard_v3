@@ -20,6 +20,9 @@
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#createPatient">
         Create Patient
     </button>
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#importPatient">
+        Import Patient
+    </button>
 </div>
 <section class="content-header">
     <!--begin::App Content-->
@@ -209,6 +212,44 @@
 </div>
 {{-- Create Patient Code End --}}
 
+
+
+{{-- Import Patient  --}}
+<div class="modal fade" id="importPatient">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Upload Patient From CSV</h4>
+                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                
+            </div>
+            <span class="p-4"><a href="{{ url('/PatientDummy.csv') }}" download>Download Sample Data</a></span>
+            <div class="modal-body">
+                  <form action="{{ route('patients.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label>Select CSV File</label>
+            <input type="file" name="file" class="form-control" required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+                
+                <!-- Success & Error Messages -->
+                <div id="success-message" class="alert alert-success d-none"></div>
+                <div id="error-message" class="alert alert-danger d-none"></div>
+                
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+{{-- Import Patient --}}
 @endsection
 
 @push('script')

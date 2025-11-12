@@ -1,0 +1,12 @@
+fname,lname,city,country,zip_code,phone,address,email,status,user_token,created_at,updated_at,patient_login_id,password,tokenverify,image,is_deleted,updated_by
+John,Doe,Delhi,India,11001,9999999999,123 Green Street,john@example.com,1,,12-11-2025,12-11-2025,John@123,123456,,,0,
+Jane,Smith,Mumbai,India,11002,8888888888,45 Blue Avenue,jane@example.com,1,,12-11-2025,12-11-2025,jane_123,123456,,,0,
+Amit,Sharma,Pune,India,11003,7777777777,22 Lake View,amit@example.com,1,,12-11-2025,12-11-2025,amit@example.com,123456,,,0,
+Priya,Patel,Ahmedabad,India,11004,6666666666,9 Hill Road,priya@example.com,1,,12-11-2025,12-11-2025,,123456,,,0,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,

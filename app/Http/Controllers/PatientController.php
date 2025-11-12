@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TimelineEvent;
+use App\Imports\PatientsImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use Auth;
 use Carbon\Carbon;
 
@@ -526,6 +529,22 @@ class PatientController extends Controller
         ]
     ]);
 
+    }
+
+
+     public function importPatients(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,txt'
+        ]);
+
+        $import = new PatientsImport();
+        Excel::import($import, $request->file('file'));
+
+        // Get skipped data to show in view
+        $skippedData = $import->skipped;
+
+        return view('admin.patient.import_result', compact('skippedData'));
     }
 
 }
