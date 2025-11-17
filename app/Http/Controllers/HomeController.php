@@ -172,6 +172,34 @@ class HomeController extends Controller
         $lastYearData    = collect(range(1, 12))->map(fn($m) => $lastYearSales[$m] ?? 0);
 
 
+
+        // -------------------------------------------------------------
+// SERVICE SALES – YEAR OVER YEAR COMPARISON (NEW CHART)
+// -------------------------------------------------------------
+$currentYear = now()->year;
+$lastYear = now()->subYear()->year;
+
+// Current Year Monthly Service Sales
+$currentYearServiceSales = TransactionHistory::selectRaw("SUM(transaction_amount) as total, MONTH(created_at) as month")
+    ->where('payment_status', 'paid')
+    ->whereYear('created_at', $currentYear)
+    ->groupBy('month')
+    ->pluck('total', 'month');
+
+// Last Year Monthly Service Sales
+$lastYearServiceSales = TransactionHistory::selectRaw("SUM(transaction_amount) as total, MONTH(created_at) as month")
+    ->where('payment_status', 'paid')
+    ->whereYear('created_at', $lastYear)
+    ->groupBy('month')
+    ->pluck('total', 'month');
+
+// Month labels Jan–Dec
+$serviceMonthsList = collect(range(1, 12))->map(fn($m) => date("M", mktime(0, 0, 0, $m, 1)));
+
+$serviceCurrentYearData = collect(range(1, 12))->map(fn($m) => $currentYearServiceSales[$m] ?? 0);
+$serviceLastYearData    = collect(range(1, 12))->map(fn($m) => $lastYearServiceSales[$m] ?? 0);
+
+
         // -----------------------------------------
         // RETURN VIEW
         // -----------------------------------------
@@ -197,6 +225,12 @@ class HomeController extends Controller
 
                 // NEW Comparison Chart
                 'monthsList', 'currentYearData', 'lastYearData'
+
+                // For Service Sales Chart
+                ,'serviceMonthsList',
+'serviceCurrentYearData',
+'serviceLastYearData',
+
             )
         );
     }
