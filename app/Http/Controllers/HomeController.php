@@ -78,39 +78,37 @@ class HomeController extends Controller
         $yesterdayGiftcards = Giftsend::where('payment_status','succeeded')->whereDate('created_at', today()->subDay())->count();
         $last7DaysGiftcards = Giftsend::where('payment_status','succeeded')->where('created_at', '>=', now()->subDays(7))->count();
 
-        // FIXED: Last Month Giftcards
         $lastMonthGiftcards = Giftsend::where('payment_status','succeeded')
             ->whereMonth('created_at', now()->subMonth()->month)
             ->whereYear('created_at', now()->subMonth()->year)
             ->count();
 
         $thisMonthGiftcards = Giftsend::where('payment_status','succeeded')
-                                ->whereMonth('created_at', now()->month)
-                                ->whereYear('created_at', now()->year)
-                                ->count();
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
 
         // -----------------------------
-        // SERVICE SALES (TRANSACTION HISTORY)
+        // SERVICE SALES COUNTS
         // -----------------------------
         $todayServiceSales      = TransactionHistory::where('payment_status', 'paid')->whereDate('created_at', today())->count();
         $yesterdayServiceSales  = TransactionHistory::where('payment_status', 'paid')->whereDate('created_at', today()->subDay())->count();
         $last7DaysServiceSales  = TransactionHistory::where('payment_status', 'paid')->where('created_at', '>=', now()->subDays(7))->count();
 
-        // FIXED: Last Month Service Sales
         $lastMonthServiceSales = TransactionHistory::where('payment_status', 'paid')
             ->whereMonth('created_at', now()->subMonth()->month)
             ->whereYear('created_at', now()->subMonth()->year)
             ->count();
 
         $thisMonthServiceSales  = TransactionHistory::where('payment_status', 'paid')
-                                        ->whereMonth('created_at', now()->month)
-                                        ->whereYear('created_at', now()->year)
-                                        ->count();
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
 
         // -----------------------------------------
-        // GIFT CARD SALES AMOUNT (DYNAMIC)
+        // GIFT CARD SALES AMOUNT
         // -----------------------------------------
         $totalGiftcardSales = Giftsend::where('payment_status','succeeded')->sum('amount');
 
@@ -124,14 +122,13 @@ class HomeController extends Controller
             ->whereYear('created_at', now()->subMonth()->year)
             ->sum('amount');
 
-        // % Growth
         $giftcardSalesGrowth = $lastMonthGiftcardSales > 0
             ? (($thisMonthGiftcardSales - $lastMonthGiftcardSales) / $lastMonthGiftcardSales) * 100
             : 100;
 
 
         // -----------------------------------------
-        // MONTH-WISE GIFT CARD SALES (CHART.JS)
+        // MONTH-WISE GIFT CARD SALES (OLD CHART)
         // -----------------------------------------
         $giftcardSalesMonthly = Giftsend::selectRaw("SUM(amount) as total, MONTH(created_at) as month")
             ->where('payment_status', 'succeeded')
@@ -144,6 +141,35 @@ class HomeController extends Controller
         });
 
         $monthWiseSales = $giftcardSalesMonthly->pluck('total');
+
+
+        // -----------------------------------------
+        // NEW: LAST YEAR vs CURRENT YEAR COMPARISON
+        // -----------------------------------------
+        $currentYear = now()->year;
+        $lastYear = now()->subYear()->year;
+
+        // Current Year Monthly
+        $currentYearSales = Giftsend::selectRaw("SUM(amount) as total, MONTH(created_at) as month")
+            ->where('payment_status', 'succeeded')
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
+        // Last Year Monthly
+        $lastYearSales = Giftsend::selectRaw("SUM(amount) as total, MONTH(created_at) as month")
+            ->where('payment_status', 'succeeded')
+            ->whereYear('created_at', $lastYear)
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
+        // Build aligned 12-month arrays (Jan–Dec)
+        $monthsList = collect(range(1, 12))->map(function ($m) {
+            return date("M", mktime(0, 0, 0, $m, 1));
+        });
+
+        $currentYearData = collect(range(1, 12))->map(fn($m) => $currentYearSales[$m] ?? 0);
+        $lastYearData    = collect(range(1, 12))->map(fn($m) => $lastYearSales[$m] ?? 0);
 
 
         // -----------------------------------------
@@ -166,8 +192,11 @@ class HomeController extends Controller
                 // Giftcard Revenue
                 'totalGiftcardSales','thisMonthGiftcardSales','lastMonthGiftcardSales','giftcardSalesGrowth',
 
-                // Chart Data
-                'months','monthWiseSales'
+                // Old Chart
+                'months','monthWiseSales',
+
+                // NEW Comparison Chart
+                'monthsList', 'currentYearData', 'lastYearData'
             )
         );
     }

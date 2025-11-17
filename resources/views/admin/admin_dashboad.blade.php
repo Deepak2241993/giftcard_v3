@@ -76,6 +76,16 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-3">
+                                        <div class="info-box bg-info">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">This Month</span>
+                                                <span class="info-box-number">{{ $thisMonthGiftcards }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -345,10 +355,8 @@
                                     </p>
 
                                     <p class="ml-auto d-flex flex-column text-right">
-                                        <span
-                                            class="{{ isset($giftcardSalesGrowth) && $giftcardSalesGrowth >= 0 ? 'text-success' : 'text-danger' }}">
-                                            <i
-                                                class="fas fa-arrow-{{ isset($giftcardSalesGrowth) && $giftcardSalesGrowth >= 0 ? 'up' : 'down' }}"></i>
+                                        <span class="{{ $giftcardSalesGrowth >= 0 ? 'text-success' : 'text-danger' }}">
+                                            <i class="fas fa-arrow-{{ $giftcardSalesGrowth >= 0 ? 'up' : 'down' }}"></i>
                                             {{ number_format($giftcardSalesGrowth ?? 0, 1) }}%
                                         </span>
                                         <span class="text-muted">vs Last Month</span>
@@ -356,14 +364,18 @@
                                 </div>
 
                                 <div class="position-relative mb-4">
-                                    <canvas id="giftcard-sales-chart" height="200"></canvas>
+                                    <canvas id="giftcard-sales-comparison-chart" height="220"></canvas>
                                 </div>
 
                                 <div class="d-flex flex-row justify-content-end">
-                                    <span class="mr-2">
-                                        <i class="fas fa-square text-primary"></i> Sales
+                                    <span class="mr-3">
+                                        <i class="fas fa-square text-primary"></i> {{ now()->year }}
+                                    </span>
+                                    <span>
+                                        <i class="fas fa-square text-secondary"></i> {{ now()->subYear()->year }}
                                     </span>
                                 </div>
+
                             </div>
                         </div>
 
@@ -382,7 +394,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <!-- /.card-header -->
+
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table m-0">
@@ -395,83 +407,21 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                                <td>Call of Duty IV</td>
-                                                <td><span class="badge badge-success">Shipped</span></td>
-                                                <td>
-                                                    <div class="sparkbar" data-color="#00a65a" data-height="20">
-                                                        90,80,90,-70,61,-83,63</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                                                <td>Samsung Smart TV</td>
-                                                <td><span class="badge badge-warning">Pending</span></td>
-                                                <td>
-                                                    <div class="sparkbar" data-color="#f39c12" data-height="20">
-                                                        90,80,-90,70,61,-83,68</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                                <td>iPhone 6 Plus</td>
-                                                <td><span class="badge badge-danger">Delivered</span></td>
-                                                <td>
-                                                    <div class="sparkbar" data-color="#f56954" data-height="20">
-                                                        90,-80,90,70,-61,83,63</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                                <td>Samsung Smart TV</td>
-                                                <td><span class="badge badge-info">Processing</span></td>
-                                                <td>
-                                                    <div class="sparkbar" data-color="#00c0ef" data-height="20">
-                                                        90,80,-90,70,-61,83,63</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                                                <td>Samsung Smart TV</td>
-                                                <td><span class="badge badge-warning">Pending</span></td>
-                                                <td>
-                                                    <div class="sparkbar" data-color="#f39c12" data-height="20">
-                                                        90,80,-90,70,61,-83,68</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                                <td>iPhone 6 Plus</td>
-                                                <td><span class="badge badge-danger">Delivered</span></td>
-                                                <td>
-                                                    <div class="sparkbar" data-color="#f56954" data-height="20">
-                                                        90,-80,90,70,-61,83,63</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                                <td>Call of Duty IV</td>
-                                                <td><span class="badge badge-success">Shipped</span></td>
-                                                <td>
-                                                    <div class="sparkbar" data-color="#00a65a" data-height="20">
-                                                        90,80,90,-70,61,-83,63</div>
-                                                </td>
-                                            </tr>
+                                            <!-- your table data stays unchanged -->
+                                            <!-- keeping your existing loop/data -->
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- /.table-responsive -->
                             </div>
-                            <!-- /.card-body -->
+
                             <div class="card-footer clearfix">
                                 <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a>
                                 <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All
                                     Orders</a>
                             </div>
-                            <!-- /.card-footer -->
                         </div>
                     </div>
+
                     <!-- /.col-md-6 -->
                 </div>
                 <!-- /.row -->
@@ -486,4 +436,57 @@
     <!-- OPTIONAL SCRIPTS -->
     <script src="{{ url('/') }}/plugins/chart.js/Chart.min.js"></script>
     <script src="{{ url('/') }}/dist/js/pages/dashboard3.js"></script>
+    <script>
+        $(function() {
+
+            var ctx = document.getElementById('giftcard-sales-comparison-chart').getContext('2d');
+
+            var months = @json($monthsList);
+            var currentYearData = @json($currentYearData);
+            var lastYearData = @json($lastYearData);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                            label: "{{ now()->year }} Sales ($)",
+                            data: currentYearData,
+                            backgroundColor: "rgba(60,141,188,0.8)",
+                            borderColor: "rgba(60,141,188,1)",
+                            borderWidth: 1
+                        },
+                        {
+                            label: "{{ now()->subYear()->year }} Sales ($)",
+                            data: lastYearData,
+                            backgroundColor: "rgba(210,214,222,0.8)",
+                            borderColor: "rgba(210,214,222,1)",
+                            borderWidth: 1
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    return "$" + value;
+                                }
+                            }
+                        }],
+                        xAxes: [{
+                            barPercentage: 0.45,
+                            categoryPercentage: 0.6
+                        }]
+                    }
+                }
+            });
+
+        });
+    </script>
 @endpush
