@@ -44,34 +44,136 @@ class HomeController extends Controller
         return abort(404);
     }
 
-    public function root(GiftcardRedeem $redeem,User $user,GiftcardsNumbers $number,Giftsend $giftsend)
-    {
-        // dd(session()->all());
-        if(Auth::user()->user_type==1)
-        {
-            $cardnumbers = GiftcardsNumbers::distinct('giftnumber')->count();
-            $alltransaction = Giftsend::count();
-            $successTransaction = Giftsend::where('payment_status','succeeded')->count();
-            $faildTransaction = Giftsend::where('payment_status','payment_failed')->orWhere('payment_status',null)->count();
-            $processingTransaction = Giftsend::where('payment_status','processing')->count();
-            $giftCoupon = GiftCoupon::count();
-            $ProductCategory = ProductCategory::count();
-            $Product = Product::count();
-            $user=User::where('user_type',1)->count();
-            $search_keyword=Search_keyword::all()->count();
-            $cancel_deals=ServiceRedeem::where('status',0)->count();
-            $TotalServiceSale=TransactionHistory::where('payment_status','paid')->count();
-            
+    public function root(
+    GiftcardRedeem $redeem,
+    User $user,
+    GiftcardsNumbers $number,
+    Giftsend $giftsend
+) {
+    if (Auth::user()->user_type == 1) {
 
-            return view('admin.admin_dashboad',compact('cancel_deals','TotalServiceSale','cardnumbers','alltransaction','user','successTransaction','faildTransaction','processingTransaction','giftCoupon','ProductCategory','Product','search_keyword'));
-        }
-        // else{
-        //     $user_email=Auth::user()->email;
-        //     $user_data=User::where('email',$user_email)->first();
-        //     $gift_buy=Giftsend::where('user_id',$user_data->id)->count();
-        //     return redirect(route('dashboard'));
-        // }
+        // -----------------------------
+        // BASIC DASHBOARD NUMBERS
+        // -----------------------------
+        $cardnumbers            = GiftcardsNumbers::distinct('giftnumber')->count();
+        $alltransaction         = Giftsend::count();
+        $successTransaction     = Giftsend::where('payment_status', 'succeeded')->count();
+        $faildTransaction       = Giftsend::where('payment_status', 'payment_failed')
+                                    ->orWhereNull('payment_status')
+                                    ->count();
+        $processingTransaction  = Giftsend::where('payment_status', 'processing')->count();
+        $giftCoupon             = GiftCoupon::count();
+        $ProductCategory        = ProductCategory::count();
+        $Product                = Product::count();
+        $user                   = User::where('user_type', 1)->count();
+        $search_keyword         = Search_keyword::count();
+        $cancel_deals           = ServiceRedeem::where('status', 0)->count();
+        $TotalServiceSale       = TransactionHistory::where('payment_status', 'paid')->count();
+
+
+        // -----------------------------
+        // GIFT CARD TRANSACTION COUNTS
+        // -----------------------------
+        $todayGiftcards     = Giftsend::where('payment_status','succeeded')->whereDate('created_at', today())->count();
+        $yesterdayGiftcards = Giftsend::where('payment_status','succeeded')->whereDate('created_at', today()->subDay())->count();
+        $last7DaysGiftcards = Giftsend::where('payment_status','succeeded')->where('created_at', '>=', now()->subDays(7))->count();
+
+        // FIXED: Last Month Giftcards
+        $lastMonthGiftcards = Giftsend::where('payment_status','succeeded')
+            ->whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->count();
+
+        $thisMonthGiftcards = Giftsend::where('payment_status','succeeded')
+                                ->whereMonth('created_at', now()->month)
+                                ->whereYear('created_at', now()->year)
+                                ->count();
+
+
+        // -----------------------------
+        // SERVICE SALES (TRANSACTION HISTORY)
+        // -----------------------------
+        $todayServiceSales      = TransactionHistory::where('payment_status', 'paid')->whereDate('created_at', today())->count();
+        $yesterdayServiceSales  = TransactionHistory::where('payment_status', 'paid')->whereDate('created_at', today()->subDay())->count();
+        $last7DaysServiceSales  = TransactionHistory::where('payment_status', 'paid')->where('created_at', '>=', now()->subDays(7))->count();
+
+        // FIXED: Last Month Service Sales
+        $lastMonthServiceSales = TransactionHistory::where('payment_status', 'paid')
+            ->whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->count();
+
+        $thisMonthServiceSales  = TransactionHistory::where('payment_status', 'paid')
+                                        ->whereMonth('created_at', now()->month)
+                                        ->whereYear('created_at', now()->year)
+                                        ->count();
+
+
+        // -----------------------------------------
+        // GIFT CARD SALES AMOUNT (DYNAMIC)
+        // -----------------------------------------
+        $totalGiftcardSales = Giftsend::where('payment_status','succeeded')->sum('amount');
+
+        $thisMonthGiftcardSales = Giftsend::where('payment_status', 'succeeded')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('amount');
+
+        $lastMonthGiftcardSales = Giftsend::where('payment_status', 'succeeded')
+            ->whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->sum('amount');
+
+        // % Growth
+        $giftcardSalesGrowth = $lastMonthGiftcardSales > 0
+            ? (($thisMonthGiftcardSales - $lastMonthGiftcardSales) / $lastMonthGiftcardSales) * 100
+            : 100;
+
+
+        // -----------------------------------------
+        // MONTH-WISE GIFT CARD SALES (CHART.JS)
+        // -----------------------------------------
+        $giftcardSalesMonthly = Giftsend::selectRaw("SUM(amount) as total, MONTH(created_at) as month")
+            ->where('payment_status', 'succeeded')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $months = $giftcardSalesMonthly->pluck('month')->map(function ($m) {
+            return date("M", mktime(0, 0, 0, $m, 1));
+        });
+
+        $monthWiseSales = $giftcardSalesMonthly->pluck('total');
+
+
+        // -----------------------------------------
+        // RETURN VIEW
+        // -----------------------------------------
+        return view(
+            'admin.admin_dashboad',
+            compact(
+                // Basic Counts
+                'cancel_deals', 'TotalServiceSale', 'cardnumbers', 'alltransaction', 'user',
+                'successTransaction', 'faildTransaction', 'processingTransaction', 'giftCoupon',
+                'ProductCategory', 'Product', 'search_keyword',
+
+                // Giftcard Counts
+                'todayGiftcards','yesterdayGiftcards','last7DaysGiftcards','lastMonthGiftcards','thisMonthGiftcards',
+
+                // Service Sales Counts
+                'todayServiceSales','yesterdayServiceSales','last7DaysServiceSales','lastMonthServiceSales','thisMonthServiceSales',
+
+                // Giftcard Revenue
+                'totalGiftcardSales','thisMonthGiftcardSales','lastMonthGiftcardSales','giftcardSalesGrowth',
+
+                // Chart Data
+                'months','monthWiseSales'
+            )
+        );
     }
+}
+
+
 
 
    
