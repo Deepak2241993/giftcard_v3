@@ -246,6 +246,171 @@
 
         </div>
 
+        <div class="row">
+            {{-- For Most Sold Products --}}
+            <div class="col-lg-6 mt-4">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Most Sold Products</h3>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <table class="table table-striped m-0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Qty Sold</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach($topProducts as $item)
+                                <tr>
+                                    <td>{{ $item->product_name }}</td>
+                                    <td>{{ $item->cat_name ?? 'N/A' }}</td>
+                                    <td><strong>{{ $item->total_qty }}</strong></td>
+                                    <td>${{ number_format($item->total_revenue, 2) }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{-- For Category Wise --}}
+            <div class="col-lg-6 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Campaign-wise Revenue</h3>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <table class="table table-hover m-0">
+                            <thead>
+                                <tr>
+                                    <th>Campaign</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($campaignRevenue as $c)
+                                    <tr>
+                                        <td>{{ $c->cat_name ?? 'Uncategorized' }}</td>
+                                        <td>${{ number_format($c->total_revenue, 2) }}</td>
+                                    </tr>
+                                @endforeach
+
+                                <tr class="bg-light font-weight-bold">
+                                    <td>Total Deals Revenue</td>
+                                    <td>${{ number_format($totalDealsRevenue, 2) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-4">
+            <!-- Giftcard Pie Chart -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header border-0 d-flex justify-content-between">
+                        <h3 class="card-title">Giftcard Order Status</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div style="height:300px;">
+                            <canvas id="giftcard-order-pie"></canvas>
+                        </div>
+
+                        <ul class="mt-3 list-group">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Total Orders</span>
+                                <strong>{{ $giftcardTotalOrders }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Completed</span>
+                                <strong>{{ $giftcardCompletedOrders }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Pending / In-progress</span>
+                                <strong>{{ $giftcardPendingOrders }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Cancelled / Refunded</span>
+                                <strong>{{ $giftcardCancelledOrders }}</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Order Pie Chart -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header border-0 d-flex justify-content-between">
+                        <h3 class="card-title">Service Order Status</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div style="height:300px;">
+                            <canvas id="service-order-pie"></canvas>
+                        </div>
+
+                        <ul class="mt-3 list-group">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Total Orders</span>
+                                <strong>{{ $serviceTotalOrders }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Completed</span>
+                                <strong>{{ $serviceCompletedOrders }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Pending / In-progress</span>
+                                <strong>{{ $servicePendingOrders }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Cancelled / Refunded</span>
+                                <strong>{{ $serviceCancelledOrders }}</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+{{-- GIftCard Metrix --}}
+        <div class="row mt-4">
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Giftcard Status Overview</h3>
+                </div>
+
+                <div class="card-body">
+                    <canvas id="giftcard-pie-chart" height="200"></canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3 class="card-title">Last 12 Months Redemption Trend</h3>
+            </div>
+
+            <div class="card-body">
+                <canvas id="giftcard-redemption-trend-chart" height="200"></canvas>
+            </div>
+        </div>
+
+
+
+
     </div>
 </div>
 
@@ -358,4 +523,112 @@
 
         });
     </script>
+
+    {{-- PI Cahrt Script --}}
+    <script>
+$(function () {
+
+    // -----------------------------
+    // Giftcard Order Pie Chart
+    // -----------------------------
+    new Chart(document.getElementById("giftcard-order-pie"), {
+        type: 'pie',
+        data: {
+            labels: ["Completed", "Pending", "Cancelled"],
+            datasets: [{
+                data: [
+                    {{ $giftcardCompletedOrders }},
+                    {{ $giftcardPendingOrders }},
+                    {{ $giftcardCancelledOrders }}
+                ],
+                backgroundColor: [
+                    "rgba(40, 167, 69, 0.8)",   // green
+                    "rgba(255, 193, 7, 0.8)",   // yellow
+                    "rgba(220, 53, 69, 0.8)"    // red
+                ],
+                borderColor: [
+                    "rgba(40, 167, 69, 1)",
+                    "rgba(255, 193, 7, 1)",
+                    "rgba(220, 53, 69, 1)"
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+
+    // -----------------------------
+    // Service Order Pie Chart
+    // -----------------------------
+    new Chart(document.getElementById("service-order-pie"), {
+        type: 'pie',
+        data: {
+            labels: ["Completed", "Pending", "Cancelled"],
+            datasets: [{
+                data: [
+                    {{ $serviceCompletedOrders }},
+                    {{ $servicePendingOrders }},
+                    {{ $serviceCancelledOrders }}
+                ],
+                backgroundColor: [
+                    "rgba(40, 167, 69, 0.8)",   // green
+                    "rgba(255, 193, 7, 0.8)",   // yellow
+                    "rgba(220, 53, 69, 0.8)"    // red
+                ],
+                borderColor: [
+                    "rgba(40, 167, 69, 1)",
+                    "rgba(255, 193, 7, 1)",
+                    "rgba(220, 53, 69, 1)"
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+});
+</script>
+
+{{-- For Giftcard Metrix --}}
+<script>
+    var gcPie = new Chart(document.getElementById('giftcard-pie-chart').getContext('2d'), {
+    type: "pie",
+    data: {
+        labels: ["Sold", "Redeemed", "Cancelled"],
+        datasets: [{
+            data: [
+                {{ $totalGiftcardsSold }},
+                {{ $totalGiftcardsRedeemed }},
+                {{ $totalGiftcardsCancelled }}
+            ],
+            backgroundColor: ["#007bff", "#28a745", "#dc3545"]
+        }]
+    }
+});
+
+
+
+new Chart(document.getElementById('giftcard-redemption-trend-chart'), {
+    type: "line",
+    data: {
+        labels: @json($trendMonths),
+        datasets: [{
+            label: "Redeemed",
+            data: @json($trendCount),
+            borderColor: "#28a745",
+            fill: false,
+            borderWidth: 2
+        }]
+    }
+});
+
+</script>
+
 @endpush
