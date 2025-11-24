@@ -33,7 +33,7 @@ Route::get('/',[App\Http\Controllers\GiftController::class,'HOME'])->name('home'
 Route::get('product-page/{token?}/{slug}', 'ProductController@productpage')->name('product_list');
 Route::get('productdetails/{slug}','ProductController@productdetails')->name('productdetails');
 Route::get('services','ServiceUnitController@ServicePage')->name('services');
-Route::get('category/{slug}','ProductCategoryController@categorytpage')->name('category-list');
+Route::get('category/{slug}','ProductCategoryController@categorytpage')->name('treatment-categories');
 Route::get('services/{slug}','ServiceUnitController@UnitPageShow')->name('serviceunit');// This is  For Service Frontend and Backend Banner Service
 Route::get('services/{product_slug}/{unitslug}','ServiceUnitController@UnitPageDetails')->name('unit-details');
 Route::get('service/{slug}','ProductController@productdetails')->name('productdetails');
