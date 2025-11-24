@@ -246,7 +246,6 @@
 
             <div class="service-options">
                 <!-- Service Option 1 -->
-                {{-- {{ dd($services) }} --}}
                 @if (isset($units) && $units->count() > 0)
                     @foreach ($units as $value)
                         <div class="service-card">
@@ -280,11 +279,11 @@
                                     </div>
                                 </div>
                                 <div class="quantity-controls" style="display: none;">
-                                    <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
+                                    <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1,{{$value['min_qty']}})">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <span class="quantity-display">1</span>
-                                    <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
+                                    <span class="quantity-display">{{$value['min_qty']}}</span>
+                                    <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1,{{$value['max_qty']}})">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>

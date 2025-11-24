@@ -595,36 +595,45 @@ function toggleQuantityControls(button) {
   }
 }
 
+//Min and Man Value for Quantity Button
+function updateQuantity(button, change, limit) {
+  const serviceFooter = button.closest(".service-footer");
+  const quantityDisplay = serviceFooter.querySelector(".quantity-display");
+  const minusBtn = serviceFooter.querySelector(".minus-btn");
 
-function updateQuantity(button, change) {
-  const serviceFooter = button.closest(".service-footer")
-  const quantityDisplay = serviceFooter.querySelector(".quantity-display")
-  const minusBtn = serviceFooter.querySelector(".minus-btn")
+  const currentQuantity = Number.parseInt(quantityDisplay.textContent);
 
-  const currentQuantity = Number.parseInt(quantityDisplay.textContent)
-  let newQuantity = currentQuantity + change
+  // Extract min & max from the button HTML call
+  const minQty = parseInt(button.getAttribute("data-min")) || 1;
+  const maxQty = parseInt(button.getAttribute("data-max")) || limit || 9999;
 
-  if (newQuantity < 1) {
-    newQuantity = 1
-  }
+  let newQuantity = currentQuantity + change;
 
-  quantityDisplay.textContent = newQuantity
+  // 🔒 Apply limits
+  if (newQuantity < minQty) newQuantity = minQty;
+  if (newQuantity > maxQty) newQuantity = maxQty;
 
-  if (newQuantity <= 1) {
-    minusBtn.classList.add("disabled")
+  quantityDisplay.textContent = newQuantity;
+
+  // Disable minus if at min
+  if (newQuantity <= minQty) {
+    minusBtn.classList.add("disabled");
   } else {
-    minusBtn.classList.remove("disabled")
+    minusBtn.classList.remove("disabled");
   }
 
-  updatePriceDisplay(serviceFooter, newQuantity)
+  updatePriceDisplay(serviceFooter, newQuantity);
 
-  quantityDisplay.style.transform = "scale(1.2)"
+  // Animation
+  quantityDisplay.style.transform = "scale(1.2)";
   setTimeout(() => {
-    quantityDisplay.style.transform = "scale(1)"
-  }, 150)
+    quantityDisplay.style.transform = "scale(1)";
+  }, 150);
 
-  createRipple(button)
+  createRipple(button);
 }
+//Min and Man Value for Quantity Button
+
 
 // For updating price When clicking plus or minus button
 function updatePriceDisplay(serviceFooter, quantity) {
