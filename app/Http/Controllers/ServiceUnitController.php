@@ -224,7 +224,6 @@ public function ServicePage(Request $request)
                 'product_name' => $service->product_name,
                 'amount' => $service->amount,
                 'discounted_amount' => $service->discounted_amount,
-                'discounted_amount' => $service->discounted_amount,
                 'product_description' => $service->product_description,
                 'product_image' => $service->product_image,
                 'product_fetured' => $service->product_fetured,

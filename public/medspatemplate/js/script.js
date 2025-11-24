@@ -557,7 +557,7 @@ function toggleQuantityControls(button) {
     }, 50)
   } else {
     const quantity = Number.parseInt(serviceFooter.querySelector(".quantity-display").textContent)
-    const basePrice = Number.parseInt(button.dataset.basePrice)
+    const basePrice = parseFloat(button.dataset.basePrice).toFixed(2);
     const totalPrice = basePrice * quantity
     const serviceName = serviceFooter.closest(".service-card").querySelector("h3").textContent
     const productId = button.dataset.id
@@ -626,25 +626,32 @@ function updateQuantity(button, change) {
   createRipple(button)
 }
 
+// For updating price When clicking plus or minus button
 function updatePriceDisplay(serviceFooter, quantity) {
-  const bookButton = serviceFooter.querySelector(".book-now-btn")
-  const basePrice = Number.parseInt(bookButton.dataset.basePrice)
-  const totalPrice = basePrice * quantity
+  const bookButton = serviceFooter.querySelector(".book-now-btn");
 
-  const footerPriceDisplays = serviceFooter.querySelectorAll(".price-display")
+  // Base price → float → rounded to 2 decimals → number type
+  const basePrice = Number(parseFloat(bookButton.dataset.basePrice).toFixed(2));
+
+  // Total price → also rounded to 2 decimals
+  const totalPrice = Number((basePrice * quantity).toFixed(2));
+  const footerPriceDisplays = serviceFooter.querySelectorAll(".price-display");
 
   footerPriceDisplays.forEach((display) => {
     if (quantity === 1) {
-      display.textContent = `From $${basePrice}`
+      display.textContent = `From $${basePrice.toFixed(2)}`;
     } else {
-      display.textContent = `$${totalPrice} (${quantity}x $${basePrice})`
+      display.textContent = `$${totalPrice.toFixed(2)} (${quantity}x $${basePrice.toFixed(2)})`;
     }
-    display.classList.add("updated")
+
+    display.classList.add("updated");
     setTimeout(() => {
-      display.classList.remove("updated")
-    }, 300)
-  })
+      display.classList.remove("updated");
+    }, 300);
+  });
 }
+
+// For updating price When clicking plus or minus button
 
 
 function showCartNotification(serviceName, quantity, totalPrice) {
