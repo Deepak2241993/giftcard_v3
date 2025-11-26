@@ -367,82 +367,83 @@ cellpadding="0" cellspacing="0">
                             </table>
 
                             {{-- For Terms & Condition --}}
-                        <div style="width: 100%; overflow-x: auto; margin: 20px 0;">
-                            <h2>Terms & Conditions</h2>
-                            {{-- <table style="width: 100%; border-collapse: collapse; font-family: arial, helvetica, sans-serif;">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 25%; padding: 10px; font-weight: 200; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;">Service Name</th>
-                                        <th style="width: 35%; padding: 10px; font-weight: 200; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;" colspan="2">Terms & Conditions</th>
-                                    </tr>
-                                </thead>
-                                <tbody> --}}
-                                    {{-- @php
-                                    // Fetch all service orders related to the mail data
-                                    $orderdata = \App\Models\ServiceOrder::where('order_id', $maildata->order_id)->get();
-                                    $descriptions = [];
-                                @endphp
-                                
-                                @foreach ($orderdata as $value)
-                                    @php
-                                        $ServiceData = null;
-                                        $description = 'No description available';
-                                
-                                        if ($value->service_type == 'product') {
-                                            // Fetch product data
-                                            $ServiceData = \App\Models\Product::find($value->service_id);
-                                
-                                            // Fetch the related terms description for product
-                                            $term = \DB::table('terms')
-                                                ->where('status', 1)
-                                                ->whereRaw("FIND_IN_SET(?, REPLACE(service_id, '|', ','))", [$value->service_id])
-                                                ->first();
-                                
-                                            $description = $term->description ?? $description;
-                                        } elseif ($value->service_type == 'unit') {
-                                            // Fetch service unit data
-                                            $ServiceData = \App\Models\ServiceUnit::find($value->service_id);
-                                
-                                            // Fetch the related terms description for service unit
-                                            $term = \DB::table('terms')
-                                                ->where('status', 1)
-                                                ->whereRaw("FIND_IN_SET(?, REPLACE(unit_id, '|', ','))", [$value->service_id])
-                                                ->first();
-                                
-                                            $description = $term->description ?? $description;
-                                        }
-                                
-                                        // Group service names by description
-                                        if ($ServiceData && isset($ServiceData->product_name)) {
-                                            $descriptions[$description][] = $ServiceData->product_name;
-                                        }
-                                    @endphp
-                                @endforeach
-                                
-                                @foreach ($descriptions as $description => $serviceNames)
-                                {!! $description !!}
-                                    {{-- <tr>
-                                        <td style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc;">
-                                            {{ implode(' | ', $serviceNames) }}
-                                        </td>
-                                        <td style="width: 35%; padding: 10px; color: #333; border: 1px solid #ccc;" colspan="2">
-                                            {!! $description !!}
-                                        </td>
-                                    </tr> 
-                                @endforeach --}}
-                                <ul>
-                                    <li>Bank Your Botox/Dysport/Xeomin: Pay the discounted rate upfront to secure units, which must be redeemed within the validity period.</li>
-                                    <li>Laser Hair Reduction Packages: Pay $100 upfront to secure the deal and enjoy 20% off up to $2,500 worth of treatments.</li>
-                                    <li>15% Off Services: Pay $100-$300 upfront to lock in 15% off treatments or packages up to $2,500 Redeemed within 1 year from the date of purchase</li>
-                                    <li>Deals can be redeemed for one service, package, or session and must be used in a single transaction.</li>
-                                    <li>Unused Services: If the purchased service is not redeemed, the monetary value paid can be transferred to another treatment at Forever MedSpa & Wellness Center.</li>
-                                    <li>Payments made for Black Friday deals are non-refundable.</li>
-                                    <li>If deemed unsuitable for a specific treatment during consultation, the monetary value paid can be applied to other services offered at the clinic.</li>
-                                </ul>
-                                
-                                {{-- </tbody>
-                            </table> --}}
-                        </div>
+                        <div style="width: 100%; margin: 20px 0; font-family: Arial, Helvetica, sans-serif;">
+    <h2 style="margin-bottom: 10px;">Terms & Conditions</h2>
+
+    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+        <thead>
+            <tr>
+                <th style="padding: 10px; background: #f7f7f7; border: 1px solid #ddd; text-align: left;">Service Name</th>
+                <th style="padding: 10px; background: #f7f7f7; border: 1px solid #ddd; text-align: left;">Terms & Conditions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @php
+                $orders = \App\Models\ServiceOrder::where('order_id', $maildata->order_id)->get();
+                $grouped = [];
+            @endphp
+
+            @foreach ($orders as $item)
+
+                @php
+                    $service = null;
+                    $desc = 'No terms available.';
+
+                    if ($item->service_type === 'product') {
+                        $service = \App\Models\Product::find($item->service_id);
+
+                        $term = \DB::table('terms')
+                            ->where('status', 1)
+                            ->whereRaw("FIND_IN_SET(?, REPLACE(service_id, '|', ','))", [$item->service_id])
+                            ->first();
+
+                        $desc = $term->description ?? $desc;
+
+                    } elseif ($item->service_type === 'unit') {
+                        $service = \App\Models\ServiceUnit::find($item->service_id);
+
+                        $term = \DB::table('terms')
+                            ->where('status', 1)
+                            ->whereRaw("FIND_IN_SET(?, REPLACE(unit_id, '|', ','))", [$item->service_id])
+                            ->first();
+
+                        $desc = $term->description ?? $desc;
+                    }
+
+                    if ($service && $service->product_name) {
+                        $grouped[$desc][] = $service->product_name;
+                    }
+                @endphp
+
+            @endforeach
+
+            {{-- Render grouped rows --}}
+            @foreach ($grouped as $description => $names)
+                <tr>
+
+                    {{-- 📌 READABLE SERVICE NAME UI (Bullet List) --}}
+                    <td style="padding: 10px; border: 1px solid #ddd; width: 35%; line-height: 1.6;">
+                        <ul style="margin: 0; padding-left: 18px;">
+                            @foreach ($names as $sname)
+                                <li style="margin-bottom: 4px;">{{ $sname }}</li>
+                            @endforeach
+                        </ul>
+                    </td>
+
+                    <td style="padding: 10px; border: 1px solid #ddd; width: 65%; line-height: 1.6;">
+                        {!! $description !!}
+                    </td>
+
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+</div>
+
+
                         {{-- End Terms And Conditions --}}
                         </div>
                         
