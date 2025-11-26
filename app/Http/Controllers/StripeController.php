@@ -602,7 +602,9 @@ public function invoice()
                 $discount = $request->discount ?? 0;
                 $cartTotal = $request->cart_total ?? 0;
                 $giftApply = $request->giftapply ?? 0;
-
+                $subtotal = $request->subtotal ?? 0;
+                
+                // {{dd($cartTotal, $discount, $giftApply, $taxAmount, );}}
                 // Get patient details
                 $patient = Patient::find($request->patient_id);
                 $patientLoginId = $patient ? $patient->patient_login_id : null;
@@ -618,9 +620,7 @@ public function invoice()
                     }
                 }
 
-                // Calculate amounts
-                $subAmount = ($cartTotal - $discount) + $giftApply;
-                $totalAmount = $subAmount + $taxAmount;
+
 
                 // Create transaction record
                 $transaction = TransactionHistory::create([
@@ -630,16 +630,16 @@ public function invoice()
                     'phone' => $patient->phone,
                     'gift_card_applyed' => $giftNumbers ? implode('|', $giftNumbers) : null,
                     'gift_card_amount' => $giftAmounts ? implode('|', $giftAmounts) : null,
-                    'sub_amount' => $subAmount,
-                    'final_amount' => $totalAmount,
-                    'transaction_amount' => $totalAmount,
+                    'sub_amount' => $subtotal,
+                    'final_amount' => $cartTotal,
+                    'transaction_amount' => $cartTotal,
                     'tax_amount' => $taxAmount,
                     'discount' => $discount,
                     'user_token' => 'FOREVER-MEDSPA',
                     'payment_mode' => 'store',
                     'patient_login_id' => $patientLoginId,
                 ]);
-
+                
                 // Update order ID after transaction is created
                 if ($transaction) {
                     $updatedOrderId = $orderId . $transaction->id;
@@ -654,6 +654,7 @@ public function invoice()
                         'status' => $request->payment_status =='paid' ? 1:0,
                         'payment_intent' => $paymentIntent,
                     ]);
+               
                 }
 
                 // Process Cart Items
@@ -671,7 +672,7 @@ public function invoice()
 
                     if ($cartData) {
                         $discountedAmount = $cartData->discounted_amount ?? $cartData->amount;
-                        $totalAmount += $item['quantity'] * $discountedAmount;
+                        $cartTotal += $item['quantity'] * $discountedAmount;
 
                         $orderData = [
                             'order_id' => $updatedOrderId,
@@ -727,6 +728,8 @@ public function invoice()
                 session()->forget('cart'); // Clear cart session
                 session()->forget('patient_id'); // Clear cart session
                 DB::commit(); // Commit transaction
+                    //  dd($transaction);
+                Mail::to($transaction->email)->send(new ServicePurchaseConfirmation($transaction));
 
                 return response()->json([
                     'message' => 'Order placed successfully',

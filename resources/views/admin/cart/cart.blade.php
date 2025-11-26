@@ -868,20 +868,33 @@ $amount = 0;
        }
    
        // Function to calculate the total amount
-       function calculateTotal() {
-           const discount = parseFloat(discountInput?.value) || 0;
-           const tax = parseFloat(taxSelect?.value) || 0;
-           const giftCardTotal = calculateGiftCardTotal();
+         function calculateTotal() {
+         const discount = parseFloat(discountInput?.value) || 0;
+         const tax = parseFloat(taxSelect?.value) || 0;
+         const giftCardTotal = calculateGiftCardTotal();
 
-           const subtotal = Math.max(cartTotal - giftCardTotal - discount, 0);
-           const taxAmount = (subtotal * tax) / 100;
-           const total = subtotal + taxAmount;  
+         let subtotalBeforeAdjustments = cartTotal;
+
+         // ---- Apply gift card first ----
+         let subtotalAfterGiftCard = Math.max(subtotalBeforeAdjustments - giftCardTotal, 0);
+
+         // ---- Apply discount next ----
+         let subtotal = Math.max(subtotalAfterGiftCard - discount, 0);
+
+         // ---- Calculate Tax ----
+         const taxAmount = (subtotal * tax) / 100;
+
+         // ---- Final Total ----
+         const total = subtotal + taxAmount;
+
+         // ---- Update UI ----
          $('#finalcart_total').text(`$${cartTotal.toFixed(2)}`);
-           totalValue.textContent = `$${total.toFixed(2)}`;
-           totalValuePayment.textContent = `$${total.toFixed(2)}`;
-           discountDisplay.textContent = `-$${discount.toFixed(2)}`;
-           taxDisplay.textContent = `$${taxAmount.toFixed(2)}`;
-       }
+         totalValue.textContent = `$${total.toFixed(2)}`;
+         totalValuePayment.textContent = `$${total.toFixed(2)}`;
+         discountDisplay.textContent = `-$${discount.toFixed(2)}`;
+         taxDisplay.textContent = `$${taxAmount.toFixed(2)}`;
+      }
+
    
        // Function to add a gift card row
        window.addGiftCardRow = function (card_number, gift_card_amount) {
@@ -960,20 +973,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Build form data
         let formData = {
-            cart_total: {!! json_encode($total) !!},
-            discount: document.getElementById("discount")?.value || 0,
-            tax: $("#tax_amount_payment").text().replace("$", "").trim() || 0,
-            gift_cards: giftCards.length > 0 ? giftCards : [],
-            pay_amount: document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim() || 0,
-            payment_status: document.getElementById("payment_status")?.value || "",
-            _token: "{{ csrf_token() }}",
-            patient_id:patient_id?.value.trim() || "",
-            fname: fnameField?.value.trim() || "",
-            lname: lnameField?.value.trim() || "",
-            email: emailField?.value.trim() || "",
-            phone: phoneField?.value.trim() || "",
-            giftapply: $("#giftcard_amount_payment").text().replace("$", "").trim() || 0
-        };
+    cart_total: parseFloat(
+        document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim()
+    ) || 0,
+
+       subtotal: parseFloat(
+        document.getElementById("cart_total")?.textContent.replace("$", "").trim()
+    ) || 0,
+
+    discount: document.getElementById("discount")?.value || 0,
+
+    tax: $("#tax_amount_payment").text().replace("$", "").trim() || 0,
+
+    gift_cards: giftCards.length > 0 ? giftCards : [],
+
+    pay_amount: parseFloat(
+        document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim()
+    ) || 0,
+
+    payment_status: document.getElementById("payment_status")?.value || "",
+
+    _token: "{{ csrf_token() }}",
+
+    patient_id: patient_id?.value.trim() || "",
+
+    fname: fnameField?.value.trim() || "",
+    lname: lnameField?.value.trim() || "",
+    email: emailField?.value.trim() || "",
+    phone: phoneField?.value.trim() || "",
+
+    giftapply: $("#giftcard_amount_payment").text().replace("$", "").trim() || 0
+};
+
 
         // Clear previous errors
         errorMessagesDiv.style.display = "none";

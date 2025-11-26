@@ -300,6 +300,7 @@ public function updateCart(Request $request)
                       ->whereNotNull('recipient_name')
                       ->where('gift_send_to', $patient->email);
             })
+
             ->orderBy('id', 'DESC')
             ->get();
     

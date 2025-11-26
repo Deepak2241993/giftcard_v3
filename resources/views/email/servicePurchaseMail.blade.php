@@ -278,7 +278,9 @@ cellpadding="0" cellspacing="0">
                                     <tbody>
                                         @php
                                             $orderdata = \App\Models\ServiceOrder::where('order_id', $maildata->order_id)->get();
+                                            
                                         @endphp
+                                        {{-- {{ dd($maildata->order_id ); }} --}}
                                         @foreach ($orderdata as $key => $value)
                                         @php
                                         if($value->service_type=='product')
@@ -291,18 +293,31 @@ cellpadding="0" cellspacing="0">
                                         }
                                                 
                                             @endphp
-                                            <tr>
-                                                <td style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc;">{{ $ServiceData->product_name }}</td>
-                                                <td style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">${{ $ServiceData->discounted_amount ? $ServiceData->discounted_amount : $ServiceData->amount }}</td>
-                                                <td style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">{{ $value->qty }}</td>
-                                                <td style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc; text-align: right;">${{ $ServiceData->discounted_amount ? $value->qty*$ServiceData->discounted_amount : $value->qty*$ServiceData->amount }}</td>
-                                            </tr>
+                                        <tr>
+                                            <td style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc;">
+                                                {{ $ServiceData->product_name }}
+                                            </td>
+
+                                            <td style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">
+                                                ${{ number_format($ServiceData->discounted_amount ?? $ServiceData->amount, 2) }}
+                                            </td>
+
+                                            <td style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">
+                                                {{ $value->qty }}
+                                            </td>
+
+                                            <td style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc; text-align: right;">
+                                                ${{ number_format(($value->qty * ($ServiceData->discounted_amount ?? $ServiceData->amount)), 2) }}
+                                            </td>
+                                        </tr>
+
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
                             
                             {{-- Services Details End --}}
+                            {{-- {{ dd($maildata->sub_amount); }} --}}
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tbody>
                                     <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
