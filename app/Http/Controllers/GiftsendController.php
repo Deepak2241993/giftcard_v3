@@ -518,9 +518,14 @@ else{
          $data_arr = $request->except('_token');
          $data_arr['transaction_id'] = 'FEMS-' . time();
          $data_arr['payment_mode'] = 'From Forever Medspa Center';
-     
+         $data_arr['payment_mode'] = 'From Forever Medspa Center';
+         if($data_arr['recipient_name'] == null)
+         {
+             $data_arr['receipt_email'] = $data_arr['gift_send_to'];
+         }
          // Convert data to JSON for API
          $data = json_encode($data_arr);
+        //  dd($data_arr);
      
          try {
              // Call the API

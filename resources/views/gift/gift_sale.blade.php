@@ -580,6 +580,9 @@
                                         <span class="error_message"></span>
                                     </section>
                                 </form>
+
+
+
                                 {{-- For Self Purchase Form --}}
                                 <form id="msform" class="self_div" Method="post"
                                     action="{{ route('giftcard-purchase') }}">
@@ -740,7 +743,8 @@
 
 
                                         </div>
-
+                                        <input type="hidden" name="recipient_name" 
+                                            value="" />
                                         <button type="button" class="previous btn btn-dark action-button-previous">Go
                                             Back</button>
                                         <input type="submit" name="cok" value="Submit"  class="btn btn-success" style="width: 50%;

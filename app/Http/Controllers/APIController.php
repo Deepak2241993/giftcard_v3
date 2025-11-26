@@ -855,7 +855,6 @@ public function statment(Request $request, Giftsend $giftsend, GiftcardsNumbers 
 public function gift_purchase(Request $request, Giftsend $giftsend, GiftCoupon $coupon, GiftcardsNumbers $cardnumber)
 {
     $data = $request->all();
-    
     if (!empty($request->recipient_name)) {
         $data['receipt_email'] = $request->receipt_email;
     }
