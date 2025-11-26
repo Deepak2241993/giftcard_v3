@@ -29,7 +29,11 @@ class TermController extends Controller
      */
     public function create()
     {
-        $services = Product:: where('status',1)->where('user_token','FOREVER-MEDSPA')->where('product_is_deleted',0)->where('unit_id',null)->get();
+        $services = Product::where('status', 1)
+    ->where('user_token', 'FOREVER-MEDSPA')
+    ->where('product_is_deleted', 0)
+    ->whereNotNull('unit_id')
+    ->get();
         $units = ServiceUnit:: where('status',1)->where('user_token','FOREVER-MEDSPA')->where('product_is_deleted',0)->get();
         return view('admin.terms.terms_create',compact('services','units'));
     }
@@ -81,15 +85,27 @@ class TermController extends Controller
      * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
-    public function edit(Term $term)
-    {
-        $services = Product:: where('status',1)->where('user_token','FOREVER-MEDSPA')->where('product_is_deleted',0)->where('unit_id',null)->get();
-        $units = ServiceUnit:: where('status',1)->where('user_token','FOREVER-MEDSPA')->where('product_is_deleted',0)->get();
+ public function edit(Term $term)
+{
+    // Same query as create()
+    $services = Product::where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->where('product_is_deleted', 0)
+        ->whereNotNull('unit_id')  // FIXED
+        ->get();
 
-        $term['service_id']=explode('|',$term['service_id']);
-        $term['unit_id']=explode('|',$term['unit_id']);
-        return view('admin.terms.terms_create',compact('services','term','units'));
-    }
+    $units = ServiceUnit::where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->where('product_is_deleted', 0)
+        ->get();
+
+    // Convert stored string to array
+    $term['service_id'] = explode('|', $term['service_id']);
+    $term['unit_id'] = explode('|', $term['unit_id']);
+
+    return view('admin.terms.terms_create', compact('services', 'term', 'units'));
+}
+
 
     /**
      * Update the specified resource in storage.
@@ -133,4 +149,47 @@ class TermController extends Controller
         $term->update(['is_deleted'=>1]);
         return back()->with('message', 'Terms & Condition Deleted Successfully');
     }
+
+// AJAX to get units based on selected services
+    public function getUnitsByService(Request $request)
+{
+    $serviceIds = $request->service_ids;
+
+    if (!is_array($serviceIds) || empty($serviceIds)) {
+        return response()->json(['units' => []]);
+    }
+
+    // Fetch products for selected services
+    $products = Product::whereIn('id', $serviceIds)
+        ->where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->get();
+
+    $unitIds = [];
+
+    // Collect all unit IDs from each product (explode "|" format)
+    foreach ($products as $product) {
+        if (!empty($product->unit_id)) {
+            $units = explode('|', $product->unit_id);
+            $unitIds = array_merge($unitIds, $units);
+        }
+    }
+
+    // Remove duplicates
+    $unitIds = array_unique($unitIds);
+
+    if (empty($unitIds)) {
+        return response()->json(['units' => []]);
+    }
+
+    // Fetch actual unit records
+    $units = ServiceUnit::whereIn('id', $unitIds)
+        ->where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->get();
+
+    return response()->json(['units' => $units]);
+}
+
+
 }

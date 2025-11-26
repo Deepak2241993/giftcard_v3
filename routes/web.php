@@ -169,6 +169,8 @@ Route::post('internal-service-purchase','StripeController@InternalServicePurchas
 Route::get('/invoice/{transaction_data}', 'PopularOfferController@invoice')->name('service-invoice');
 Route::get('/giftcards-statement-admin-view/{id}', 'PatientController@GiftcardsStatementAdminView')->name('giftcards-statement-admin-view');
 Route::resource('/terms', TermController::class);
+Route::post('/get-units-by-service', "TermController@getUnitsByService")->name('get-units-by-service');
+
 Route::resource('/program', ProgramController::class);
 Route::Get('/program-sale/{id}', 'ProgramController@PatientProgramBuy')->name('program-sale');
 Route::resource('/product', ProductController::class);
