@@ -349,7 +349,7 @@ cellpadding="0" cellspacing="0">
                         
                                     <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
                                         <td style="width: 50%; padding: 10px; color: #333; border: none;">
-                                            Tax <span style="color: #666;">(0%)</span>
+                                            Tax <span style="color: #666;">({{ $maildata->taxrate ?? 0 }}%)</span>
                                         </td>
                                         <td style="width: 50%; text-align: right; padding: 10px; color: #333; border: none;">
                                             +${{ $maildata->tax_amount }}

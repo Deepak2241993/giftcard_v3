@@ -955,10 +955,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const patient_id = document.getElementById("patient_id");
     const submitButton = document.getElementById("submitPayment");
     const errorMessagesDiv = document.getElementById("errorMessages");
-
     submitButton.addEventListener("click", function (e) {
         e.preventDefault();
-
+const taxrate = document.getElementById("tax")?.value || 0;
         // Collect gift cards
         let giftCards = [];
         const cardNumbers = document.querySelectorAll("input[name='card_number[]']");
@@ -985,6 +984,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     tax: $("#tax_amount_payment").text().replace("$", "").trim() || 0,
 
+    taxrate: taxrate,
+   
     gift_cards: giftCards.length > 0 ? giftCards : [],
 
     pay_amount: parseFloat(

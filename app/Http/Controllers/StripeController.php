@@ -603,8 +603,9 @@ public function invoice()
                 $cartTotal = $request->cart_total ?? 0;
                 $giftApply = $request->giftapply ?? 0;
                 $subtotal = $request->subtotal ?? 0;
+                $taxrate = $request->taxrate ?? 0;
                 
-                // {{dd($cartTotal, $discount, $giftApply, $taxAmount, );}}
+                // {{dd($cartTotal, $discount, $giftApply, $taxAmount, $taxrate );}}
                 // Get patient details
                 $patient = Patient::find($request->patient_id);
                 $patientLoginId = $patient ? $patient->patient_login_id : null;
@@ -729,6 +730,7 @@ public function invoice()
                 session()->forget('patient_id'); // Clear cart session
                 DB::commit(); // Commit transaction
                     //  dd($transaction);
+                $transaction['taxrate'] = $taxrate;
                 Mail::to($transaction->email)->send(new ServicePurchaseConfirmation($transaction));
 
                 return response()->json([
