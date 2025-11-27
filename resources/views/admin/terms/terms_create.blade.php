@@ -75,7 +75,7 @@
                         <!-- Description -->
                         <div class="mb-3 col-12">
                             <label for="description" class="form-label">Short Description
-                                <span class="text-danger"> (Text Limit 50 words)</span>
+                                {{-- <span class="text-danger"> (Text Limit 50 words)</span> --}}
                             </label>
                             <textarea name="description" id="description" class="form-control summernote" required>{{ old('description', isset($term) ? $term['description'] : '') }}</textarea>
                             <small id="count" class="form-text text-danger mt-1"></small>
@@ -128,32 +128,32 @@
             }
         });
 
-        const maxWords = 50;
+        // const maxWords = 50;
         const $desc = $('#description');
         const $count = $('#count');
         const $submitBtn = $('#submitBtn');
         const $serviceCheckboxes = $('.service-checkbox');
         const $unitCheckboxes = $('.unit-checkbox');
 
-        function updateWordCount() {
-            // get text from summernote if initialized
-            let text = '';
-            if ($desc.summernote) {
-                text = $desc.summernote('isEmpty') ? '' : $desc.summernote('code').replace(/<\/?[^>]+(>|$)/g, " ");
-            } else {
-                text = $desc.val();
-            }
-            // normalize whitespace and count words
-            text = text.replace(/\s+/g, ' ').trim();
-            const words = text === '' ? 0 : text.split(' ').filter(Boolean).length;
-            $count.text(words + ' / ' + maxWords + ' words');
-            if (words > maxWords) {
-                $count.addClass('text-danger');
-            } else {
-                $count.removeClass('text-danger');
-            }
-            validateSubmit();
-        }
+        // function updateWordCount() {
+        //     // get text from summernote if initialized
+        //     let text = '';
+        //     if ($desc.summernote) {
+        //         text = $desc.summernote('isEmpty') ? '' : $desc.summernote('code').replace(/<\/?[^>]+(>|$)/g, " ");
+        //     } else {
+        //         text = $desc.val();
+        //     }
+        //     // normalize whitespace and count words
+        //     text = text.replace(/\s+/g, ' ').trim();
+        //     const words = text === '' ? 0 : text.split(' ').filter(Boolean).length;
+        //     $count.text(words + ' / ' + maxWords + ' words');
+        //     if (words > maxWords) {
+        //         $count.addClass('text-danger');
+        //     } else {
+        //         $count.removeClass('text-danger');
+        //     }
+        //     validateSubmit();
+        // }
 
         // Enable submit only if at least one service/unit checked AND word count <= max
         function anyChecked() {
