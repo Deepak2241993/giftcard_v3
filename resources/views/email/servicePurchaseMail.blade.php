@@ -648,6 +648,25 @@ cellpadding="0" cellspacing="0">
                                                 </tbody>
                                             </table>
                                             <p> Have questions? Call or text us at <a href="tel:+12013404809">(201)&nbsp;340‑4809</a> and our team will be happy to assist you.</p>
+                                            <p>
+  <a href="https://forevermedspanj.com/services/book-appointments/" target="_blank"
+     style="
+       display:inline-block;
+       padding:12px 28px;
+       background:#fca52a;
+       color:#ffffff;
+       font-family:Arial, sans-serif;
+       font-size:16px;
+       font-weight:600;
+       text-decoration:none;
+       border-radius:30px;
+       box-shadow:0 4px 10px rgba(0,0,0,0.2);
+       letter-spacing:0.5px;
+     ">
+    Book your Appointment
+  </a>
+</p>
+
                                         </div>
                                     </td>
                                 </tr>
