@@ -546,6 +546,33 @@ cellpadding="0" cellspacing="0">
                                                                                 <td align="left"
                                                                                     valign="middle"
                                                                                     style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
+                                                                                    <a href="https://forevermedspanj.com/"
+                                                                                        title="Twitter"
+                                                                                        target="_blank">
+                                                                                        <img src="{{ url('/') }}/email_template/globe.png"
+                                                                                            alt="Twitter"
+                                                                                            title="Twitter"
+                                                                                            width="32"
+                                                                                            style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                    <table align="left"
+                                                                        border="0"
+                                                                        cellspacing="0"
+                                                                        cellpadding="0"
+                                                                        width="32"
+                                                                        height="32"
+                                                                        style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
+                                                                        <tbody>
+                                                                            <tr
+                                                                                style="vertical-align: top">
+                                                                                <td align="left"
+                                                                                    valign="middle"
+                                                                                    style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
                                                                                     <a href="https://www.facebook.com/ForeverMedSpaNJ/"
                                                                                         title="Facebook"
                                                                                         target="_blank">
@@ -611,13 +638,16 @@ cellpadding="0" cellspacing="0">
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
+
                                                                 </div>
+
+                                                                
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-
+                                            <p> Have questions? Call or text us at <a href="tel:+12013404809">(201)&nbsp;340‑4809</a> and our team will be happy to assist you.</p>
                                         </div>
                                     </td>
                                 </tr>
