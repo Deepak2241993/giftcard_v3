@@ -547,7 +547,7 @@ cellpadding="0" cellspacing="0">
                                                                                     valign="middle"
                                                                                     style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
                                                                                     <a href="https://forevermedspanj.com/"
-                                                                                        title="Twitter"
+                                                                                        title="Website"
                                                                                         target="_blank">
                                                                                         <img src="{{ url('/') }}/email_template/globe.png"
                                                                                             alt="Twitter"
