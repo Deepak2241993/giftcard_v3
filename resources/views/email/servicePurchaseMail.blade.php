@@ -662,6 +662,7 @@ cellpadding="0" cellspacing="0">
        border-radius:30px;
        box-shadow:0 4px 10px rgba(0,0,0,0.2);
        letter-spacing:0.5px;
+       margin-top:20px;
      ">
     Book your Appointment
   </a>
