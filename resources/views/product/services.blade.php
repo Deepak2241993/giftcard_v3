@@ -260,7 +260,7 @@
                                 @endif
                             </div>
 
-                            <div class="service-description">
+                            {{-- <div class="service-description">
                                 <p>{!! $value['short_description'] !!}</p>
 
                                 <button class="read-more-btn" onclick="toggleReadMore(this)">
@@ -272,7 +272,25 @@
                                 <div class="hidden-content">
                                     <p>{!! $value['product_description'] !!}</p>
                                 </div>
-                            </div>
+                            </div> --}}
+                            <div class="service-description">
+    <p>{!! $value['short_description'] !!}</p>
+
+    <div class="hidden-content">
+        <p>{!! $value['product_description'] !!}</p>
+
+        <!-- Move the button here -->
+        <button class="read-more-btn" onclick="toggleReadMore(this)">
+            <span>Read Less</span>
+            <i class="fas fa-chevron-up"></i>
+        </button>
+    </div>
+
+    <button class="read-more-btn top-btn" onclick="toggleReadMore(this)">
+        <span>Read More</span>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+</div>
 
                             <div class="service-footer">
                                 <div class="service-info">
@@ -475,7 +493,12 @@
         <div class="service-card">
             <div class="service-card-header">
                 <h3>${service.product_name}</h3>
-                <div class="service-price">From $${service.amount}</div>
+                ${
+                service.fetures_original_price == 1
+                    ? `<div class="service-price">From $<del>${service.amount}</del></div>`
+                    : ``
+            }
+              
                 ${popularBadge}
             </div>
 
@@ -526,6 +549,7 @@
     {{-- For Service Search --}}
     <script>
         const allServices = @json($ServiceUnit);
+        
 
         document.addEventListener('DOMContentLoaded', function() {
             const serviceContainer = document.querySelector('.service-options');
@@ -644,7 +668,14 @@ if (clearBtn) {
             <div class="service-card">
                 <div class="service-card-header">
                     <h3>${service.product_name}</h3>
-                    <div class="service-price">From $${service.amount}</div>
+
+                ${
+                service.fetures_original_price == 1
+                    ? `<div class="service-price">From $<del>${service.amount}</del></div>`
+                    : ``
+            }
+
+
                     ${popularBadge}
                 </div>
 

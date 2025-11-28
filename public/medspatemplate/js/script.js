@@ -35,28 +35,50 @@ function navigateWeek(direction) {
 }
 
 
+// function toggleReadMore(button) {
+//   const serviceCard = button.closest(".service-card")
+//   const hiddenContent = serviceCard.querySelector(".hidden-content")
+//   const icon = button.querySelector("i")
+//   const span = button.querySelector("span")
+
+//   if (hiddenContent.classList.contains("expanded")) {
+    
+//     hiddenContent.classList.remove("expanded")
+//     button.classList.remove("expanded")
+//     span.textContent = "Read More"
+//     icon.style.transform = "rotate(0deg)"
+//   } else {
+//     hiddenContent.classList.add("expanded")
+//     button.classList.add("expanded")
+//     span.textContent = "Read Less"
+//     icon.style.transform = "rotate(180deg)"
+//   }
+
+//   createRipple(button)
+// }
+
 function toggleReadMore(button) {
-  const serviceCard = button.closest(".service-card")
-  const hiddenContent = serviceCard.querySelector(".hidden-content")
-  const icon = button.querySelector("i")
-  const span = button.querySelector("span")
+  const serviceCard = button.closest(".service-card");
+  const hiddenContent = serviceCard.querySelector(".hidden-content");
+
+  const topButton = serviceCard.querySelector(".top-btn");   // Read More button
+  const bottomButton = hiddenContent.querySelector(".read-more-btn"); // Read Less button
 
   if (hiddenContent.classList.contains("expanded")) {
-    
-    hiddenContent.classList.remove("expanded")
-    button.classList.remove("expanded")
-    span.textContent = "Read More"
-    icon.style.transform = "rotate(0deg)"
+      hiddenContent.classList.remove("expanded");
+
+      // Show only Read More button
+      topButton.style.display = "inline-block";
+      bottomButton.style.display = "none";
+
   } else {
-    hiddenContent.classList.add("expanded")
-    button.classList.add("expanded")
-    span.textContent = "Read Less"
-    icon.style.transform = "rotate(180deg)"
+      hiddenContent.classList.add("expanded");
+
+      // Show only Read Less button
+      topButton.style.display = "none";
+      bottomButton.style.display = "inline-block";
   }
-
-  createRipple(button)
 }
-
 function createRipple(element) {
   const ripple = document.createElement("span")
   const rect = element.getBoundingClientRect()
