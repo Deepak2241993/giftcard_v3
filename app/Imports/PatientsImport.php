@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Carbon\Carbon;
+use DB;
 
 class PatientsImport implements ToCollection, WithHeadingRow
 {
@@ -14,8 +15,11 @@ class PatientsImport implements ToCollection, WithHeadingRow
 
     public function collection(Collection $rows)
     {
+        $insertData = [];
+        $now = Carbon::now();
+
         foreach ($rows as $row) {
-            // Skip empty rows
+
             if (!$row['email'] && !$row['phone']) continue;
 
             $exists = Patient::where('email', $row['email'])
@@ -23,7 +27,6 @@ class PatientsImport implements ToCollection, WithHeadingRow
                 ->exists();
 
             if ($exists) {
-                // Keep skipped record for later display
                 $this->skipped[] = [
                     'fname' => $row['fname'],
                     'lname' => $row['lname'],
@@ -34,8 +37,8 @@ class PatientsImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            // Create new patient record
-            Patient::create([
+            // Add to batch array
+            $insertData[] = [
                 'fname'             => $row['fname'],
                 'lname'             => $row['lname'],
                 'city'              => $row['city'],
@@ -47,14 +50,19 @@ class PatientsImport implements ToCollection, WithHeadingRow
                 'status'            => $row['status'] ?? 1,
                 'user_token'        => $row['user_token'] ?? null,
                 'patient_login_id'  => $row['patient_login_id'] ?? null,
-                'password'          => bcrypt($row['password'] ?? '12345678'),
+                'password'          => null, // <-- FIXED
                 'tokenverify'       => $row['tokenverify'] ?? null,
                 'image'             => $row['image'] ?? null,
                 'is_deleted'        => $row['is_deleted'] ?? 0,
                 'updated_by'        => $row['updated_by'] ?? 2,
-                'created_at'        => Carbon::now(),
-                'updated_at'        => Carbon::now(),
-            ]);
+                'created_at'        => $now,
+                'updated_at'        => $now,
+            ];
+        }
+
+        // Insert in chunks of 500 rows for speed
+        foreach (array_chunk($insertData, 500) as $chunk) {
+            Patient::insert($chunk);
         }
     }
 }

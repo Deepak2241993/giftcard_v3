@@ -532,19 +532,21 @@ class PatientController extends Controller
     }
 
 
-     public function importPatients(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:csv,txt'
-        ]);
+ public function importPatients(Request $request)
+{
+    ini_set('max_execution_time', 300);
 
-        $import = new PatientsImport();
-        Excel::import($import, $request->file('file'));
+    $request->validate([
+        'file' => 'required|mimes:csv,txt'
+    ]);
 
-        // Get skipped data to show in view
-        $skippedData = $import->skipped;
+    $import = new PatientsImport();
+    Excel::import($import, $request->file('file'));
 
-        return view('admin.patient.import_result', compact('skippedData'));
-    }
+    $skippedData = $import->skipped;
+
+    return view('admin.patient.import_result', compact('skippedData'));
+}
+
 
 }
