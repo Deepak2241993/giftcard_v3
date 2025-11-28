@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\TimelineEvent;
 use App\Imports\PatientsImport;
 use Maatwebsite\Excel\Facades\Excel;
-
 use Auth;
 use Carbon\Carbon;
-
+use Yajra\DataTables\DataTables;
 use DB;
 use Session;
 
@@ -27,12 +26,43 @@ class PatientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-       
-        $data = Patient::where('is_deleted',0)->orderBy('id', 'DESC')->get();
-    
-        return view('admin.patient.index', compact('data'));
-    }
+{
+    return view('admin.patient.index'); // No data loaded here
+}
+
+
+
+
+public function patientTableData(Request $request)
+{
+    $query = Patient::where('is_deleted', 0)
+        ->select(['id','fname','lname','email','phone','status'])
+        ->orderBy('id', 'DESC');
+
+    return DataTables::of($query)
+        ->addIndexColumn()
+        ->addColumn('patient_name', function ($row) {
+            return $row->fname . ' ' . $row->lname;
+        })
+        ->addColumn('action', function ($row) {
+            return '
+                <div class="btn-group mb-2" role="group">
+                    <a href="'.route('patient.edit', $row->id).'?patient_id='.$row->id.'" class="btn btn-outline-primary btn-sm"><i class="fa fa-user"></i></a>
+                    <a href="'.route('giftcards-sale').'?patient_id='.$row->id.'" class="btn btn-outline-success btn-sm"><i class="fa fa-gift"></i></a>
+                    <a href="'.route('product.index').'?patient_id='.$row->id.'" class="btn btn-outline-info btn-sm"><i class="fa fa-dna"></i></a>
+                    <a href="'.route('program.index').'?patient_id='.$row->id.'" class="btn btn-outline-warning btn-sm"><i class="fa fa-stethoscope"></i></a>
+                </div>
+            ';
+        })
+        ->addColumn('status_badge', function ($row) {
+            return $row->status == 1
+                ? '<span class="badge bg-success">Active</span>'
+                : '<span class="badge bg-danger">Inactive</span>';
+        })
+        ->rawColumns(['action', 'status_badge'])
+        ->make(true);
+}
+
 
     /**
      * Show the form for creating a new resource.

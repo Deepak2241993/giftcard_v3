@@ -178,6 +178,10 @@ Route::resource('/patient', PatientController::class);
 
 Route::post('/patient-data','PatientController@PatientData')->name('patient-data');
 
+// NEW DataTables route (for patient list table)
+Route::get('/admin/patient/table-data', [PatientController::class, 'patientTableData'])->name('patient.table.data');
+
+
 // Quick PAtient Create
 Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'])->name('patient-quick-create');
 });
