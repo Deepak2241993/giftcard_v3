@@ -315,12 +315,12 @@ $amount = 0;
                     <div class="cart-item-details">
                         <div class="cart-item-quantity">
                             <div class="cart-quantity-controls">
-                                <button class="cart-quantity-btn" onclick="updateCartItemQuantity('{{ $key }}', {{ $item['quantity'] - 1 }})" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
+                                <button class="cart-quantity-btn" onclick="updateCartItemQuantity('{{ $key }}', {{ $item['quantity'] - 1 }})" {{ $item['quantity'] <= 1 ? 'disabled' : '' }} {{ $item['quantity'] <= $units['min_qty'] ? 'disabled' : '' }}>
                                     <i class="fas fa-minus"></i>
                                 </button>
                                 <span class="cart-quantity-display" id="qty_{{ $key }}">{{ $item['quantity'] }}</span>
 
-                                <button class="cart-quantity-btn" onclick="updateCartItemQuantity('{{ $key }}', {{ $item['quantity'] + 1 }})">
+                                <button class="cart-quantity-btn" onclick="updateCartItemQuantity('{{ $key }}', {{ $item['quantity'] + 1 }}) {{ $item['quantity'] >= $units['max_qty'] ? 'disabled' : '' }}">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>

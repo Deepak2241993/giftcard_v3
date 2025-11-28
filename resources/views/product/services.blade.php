@@ -521,11 +521,11 @@
                     </div>
                 </div>
                 <div class="quantity-controls" style="display: none;">
-                    <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
+                    <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1,${service.min_qty})">
                         <i class="fas fa-minus"></i>
                     </button>
                     <span class="quantity-display">1</span>
-                    <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
+                    <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1,${service.max_qty})">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -698,11 +698,11 @@ if (clearBtn) {
                         </div>
                     </div>
                     <div class="quantity-controls" style="display: none;">
-                        <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
+                        <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1, ${service.min_qty})">
                             <i class="fas fa-minus"></i>
                         </button>
                         <span class="quantity-display">1</span>
-                        <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
+                        <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1, ${service.max_qty})">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>

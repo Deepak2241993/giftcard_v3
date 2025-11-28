@@ -230,7 +230,9 @@ public function ServicePage(Request $request)
                 'cat_id' => $service->cat_id,
                 'short_description' => $service->short_description,
                 'popular_service' => $service->popular_service,
-                'fetures_original_price' => $service->fetures_original_price
+                'fetures_original_price' => $service->fetures_original_price,
+                'max_qty' => $service->max_qty,
+                'min_qty' => $service->min_qty
             ];
         });
     return view('product.services', compact(
