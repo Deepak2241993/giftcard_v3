@@ -251,7 +251,10 @@
                         <div class="service-card">
                             <div class="service-card-header">
                                 <h3>{{ $value['product_name'] }}</h3>
+                                @if($value['fetures_original_price'] == 1)
                                 <div class="service-price">From $<del>{{ $value['amount'] }}</del></div>
+                                @endif
+
                                 @if ($value['popular_service'] != null && $value['popular_service'] == 1)
                                     <div class="service-badge">Popular</div>
                                 @endif

@@ -123,6 +123,17 @@
                     <input class="form-control" type="hidden" min="0" name="id"
                         value="{{ isset($data) ? $data['id'] : '' }}">
                 </div>
+                <div class="mb-3 col-lg-6 mt-2">
+                    <label for="fetures_original_price" class="form-label">Original Price Show on Website</label>
+                    <select class="form-control" name="fetures_original_price" id='fetures_original_price'>
+                        <option
+                            value="1"{{ isset($data['fetures_original_price']) && $data['fetures_original_price'] == 1 ? 'selected' : '' }}>
+                            Show</option>
+                        <option
+                            value="0"{{ isset($data['fetures_original_price']) && $data['fetures_original_price'] == 0 ? 'selected' : '' }}>
+                            Dont'Show</option>
+                    </select>
+                </div>
                 <div class="mb-3 col-lg-6 self mt-2">
                     <label for="discounted_amount" class="form-label">Unit Discounted Price<span class="text-danger">*</span></label>
                     <input 
