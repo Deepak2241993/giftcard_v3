@@ -17,665 +17,360 @@ $newString = str_replace($search, $replace, $string);
 @if (isset($string))
 {!! $newString !!}
 @else --}}
+
 @php
- $patient = App\Models\Patient::where('patient_login_id', $mail_data->gift_send_to)->first();
-
+    $patient = App\Models\Patient::where('patient_login_id', $mail_data->gift_send_to)->first();
 @endphp
-<table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="table-layout:fixed">
-    <tbody>
-        <tr>
-            <td align="center" valign="top">
-                <table class="m_4043362051198468644pc-email-container" width="100%" align="center" border="0"
-                    cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;max-width:620px">
-                    <tbody>
-                        <tr>
-                            <td align="left" valign="top" style="padding:0 10px">
-                                <table width="100%" border="0" cellpadding="0" cellspacing="0"
-                                    role="presentation">
-                                    <tbody>
-                                        <tr>
-                                            <td height="20" style="font-size:1px;line-height:1px">&nbsp;</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <table width="100%" border="0" cellspacing="0" cellpadding="0"
-                                    role="presentation">
-                                    <tbody>
-                                        <tr>
-                                            <td valign="top">
-                                                <table border="0" cellpadding="0" cellspacing="0"
-                                                    role="presentation" width="100%">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="m_4043362051198468644pc-sm-p-30-10 m_4043362051198468644pc-xs-p-25-0"
-                                                                bgcolor="#ffffff"
-                                                                style="padding:40px 20px;background:#ffffff;border-radius:8px"
-                                                                valign="top">
-                                                                <table border="0" cellpadding="0" cellspacing="0"
-                                                                    role="presentation" width="100%">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td bgcolor="#ffffff" valign="middle"
-                                                                                style="padding:0 20px;background-color:#ffffff;font-size:0">
-                                                                                <div class="m_4043362051198468644pc-sm-mw-100pc"
-                                                                                    style="width:100%;vertical-align:middle">
-                                                                                    <table width="100%" border="0"
-                                                                                        cellpadding="0" cellspacing="0"
-                                                                                        role="presentation">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td valign="top"
-                                                                                                    style="padding:0"
-                                                                                                    align="left">
-                                                                                                    <a
-                                                                                                        style="text-decoration:none">
-                                                                                                        <img src="{{ url('/images/gifts/logo.png') }}"
-                                                                                                            width="150"
-                                                                                                            height=""
-                                                                                                            alt="Forever Medspa"
-                                                                                                            style="max-width:100%;height:auto;border:0;line-height:100%;outline:0;font-size:14px;color:#1b1b1b"
-                                                                                                            class="CToWUd a6T"
-                                                                                                            data-bit="iit"
-                                                                                                            tabindex="0"
-                                                                                                            onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
-                                                                                                        <div class="a6S"
-                                                                                                            dir="ltr"
-                                                                                                            style="opacity: 0.01; left: 344.984px; top: 178px;">
-                                                                                                            <span
-                                                                                                                data-is-tooltip-wrapper="true"
-                                                                                                                class="a5q"
-                                                                                                                jsaction="JIbuQc:.CLIENT">
-                                                                                                                <button
-                                                                                                                    class="VYBDae-JX-I VYBDae-JX-I-ql-ay5-ays CgzRE"
-                                                                                                                    jscontroller="PIVayb"
-                                                                                                                    jsaction="click:h5M12e;clickmod:h5M12e; pointerdown:FEiYhc; pointerup:mF5Elf; pointerenter:EX0mI; pointerleave:vpvbp; pointercancel:xyn4sd; contextmenu:xexox;focus:h06R8; blur:zjh6rb;mlnRJb:fLiPzd;"
-                                                                                                                    data-idom-class="CgzRE"
-                                                                                                                    jsname="hRZeKc"
-                                                                                                                    aria-label="Download attachment "
-                                                                                                                    data-tooltip-enabled="true"
-                                                                                                                    data-tooltip-id="tt-c31"
-                                                                                                                    data-tooltip-classes="AZPksf"
-                                                                                                                    id=""
-                                                                                                                    jslog="91252; u014N:cOuCgd,Kr2w4b,xr6bB; 4:WyIjbXNnLWY6MTc5MTEyMTUwMTgwODg2ODQ5MSJd; 43:WyJpbWFnZS9qcGVnIl0.">
-                                                                                                                    <span
-                                                                                                                        class="OiePBf-zPjgPe VYBDae-JX-UHGRz"></span><span
-                                                                                                                        class="bHC-Q"
-                                                                                                                        data-unbounded="false"
-                                                                                                                        jscontroller="LBaJxb"
-                                                                                                                        jsname="m9ZlFb"
-                                                                                                                        soy-skip=""
-                                                                                                                        ssk="6:RWVI5c"></span>
-                                                                                                                    <span
-                                                                                                                        class="VYBDae-JX-ank-Rtc0Jf"
-                                                                                                                        jsname="S5tZuc"
-                                                                                                                        aria-hidden="true">
-                                                                                                                        <span
-                                                                                                                            class="bzc-ank"
-                                                                                                                            aria-hidden="true">
-                                                                                                                            <svg height="20"
-                                                                                                                                viewBox="0 -960 960 960"
-                                                                                                                                width="20"
-                                                                                                                                focusable="false"
-                                                                                                                                class=" aoH">
-                                                                                                                                <path
-                                                                                                                                    d="M480-336 288-528l51-51 105 105v-342h72v342l105-105 51 51-192 192ZM263.717-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.162 50.85Q725.676-192 695.96-192H263.717Z">
-                                                                                                                                </path>
-                                                                                                                            </svg>
-                                                                                                                        </span>
-                                                                                                                    </span>
-                                                                                                                    <div
-                                                                                                                        class="VYBDae-JX-ano">
-                                                                                                                    </div>
-                                                                                                                </button>
-                                                                                                                <div class="ne2Ple-oshW8e-J9"
-                                                                                                                    id="tt-c31"
-                                                                                                                    role="tooltip"
-                                                                                                                    aria-hidden="true">
-                                                                                                                    Download
-                                                                                                                </div>
-                                                                                                            </span>
-                                                                                                        </div>
-                                                                                                    </a>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="line-height:1px;font-size:1px"
-                                                                                height="40">&nbsp;</td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td class="m_4043362051198468644pc-sm-fs-30"
-                                                                                style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:36px;font-weight:800;line-height:46px;letter-spacing:-0.6px;color:#151515;padding:0 20px;vertical-align:top"
-                                                                                valign="top"
-                                                                                id="m_4043362051198468644intro-title">
-                                                                                Thank you for your order
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="line-height:1px;font-size:1px"
-                                                                                height="30">&nbsp;</td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td class="m_4043362051198468644pc-sm-fs-18 m_4043362051198468644pc-xs-fs-16"
-                                                                                style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:18px;line-height:30px;letter-spacing:-0.2px;color:#9b9b9b;padding:0 20px"
-                                                                                valign="top"
-                                                                                id="m_4043362051198468644intro-text">
-                                                                                We really appreciate you buying this
-                                                                                gift card and hope that the recipient
-                                                                                loves our giftcard!<br>
 
-                                                                                <br><img
-                                                                                    src="{{ url('/images/gifts/logo.png') }}"
-                                                                                    width="100" height="50"
-                                                                                    class="CToWUd"
-                                                                                    data-bit="iit"><br><br>From:
-                                                                                Forever Medspa<br>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td style="font-size:0" valign="top">
-                                                                                <div class="m_1192176901181685102pc-sm-mw-100pc"
-                                                                                    style="display:inline-block;max-width:280px;width:100%;vertical-align:top;overflow:hidden">
-                                                                                    <table border="0"
-                                                                                        cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        width="100%">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td style="padding:10px 20px"
-                                                                                                    valign="top">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        width="100%">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="border-bottom:1px solid #e5e5e5;padding:0 0 10px;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515"
-                                                                                                                    valign="top">
-                                                                                                                    Giftcard
-                                                                                                                    Generated
-                                                                                                                    By:
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td height="10"
-                                                                                                                    style="font-size:1px;line-height:1px">
-                                                                                                                    &nbsp;
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;max-width:260px;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word"
-                                                                                                                    valign="top">
-                                                                                                                    {{ $mail_data->your_name }}
-                                                                                                                   
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                                <div class="m_1192176901181685102pc-sm-mw-100pc"
-                                                                                    style="display:inline-block;max-width:280px;width:100%;vertical-align:top;overflow:hidden">
-                                                                                    <table border="0"
-                                                                                        cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        width="100%">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td style="padding:10px 20px"
-                                                                                                    valign="top">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        width="100%">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="border-bottom:1px solid #e5e5e5;padding:0 0 10px;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515"
-                                                                                                                    valign="top">
-                                                                                                                    Gifted
-                                                                                                                    To
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td height="10"
-                                                                                                                    style="font-size:1px;line-height:1px">
-                                                                                                                    &nbsp;
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;max-width:260px;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word"
-                                                                                                                    valign="top">
-                                                                                                                    {{ $mail_data->recipient_name }}
-                                                                                                                    
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="line-height:1px;font-size:1px"
-                                                                                height="10">&nbsp;</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="font-size:0" valign="top">
-                                                                                <div class="m_1192176901181685102pc-sm-mw-100pc"
-                                                                                    style="display:inline-block;max-width:280px;width:100%;vertical-align:top">
-                                                                                    <table border="0"
-                                                                                        cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        width="100%">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td style="padding:10px 20px"
-                                                                                                    valign="top">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        width="100%">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="border-bottom:1px solid #e5e5e5;padding:0 0 10px;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515"
-                                                                                                                    valign="top">
-                                                                                                                    Message
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td height="10"
-                                                                                                                    style="font-size:1px;line-height:1px">
-                                                                                                                    &nbsp;
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;max-width:260px;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word;white-space:pre-wrap"
-                                                                                                                    valign="top"
-                                                                                                                    id="m_1192176901181685102message">
-                                                                                                                    {{ $mail_data->message }}
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                                <div class="m_1192176901181685102pc-sm-mw-100pc"
-                                                                                    style="display:inline-block;max-width:280px;width:100%;vertical-align:top">
-                                                                                    <table border="0"
-                                                                                        cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        width="100%">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td style="padding:10px 20px"
-                                                                                                    valign="top">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        width="100%">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="border-bottom:1px solid #e5e5e5;padding:0 0 10px;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515"
-                                                                                                                    valign="top">
-                                                                                                                    Shipping
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td height="10"
-                                                                                                                    style="font-size:1px;line-height:1px">
-                                                                                                                    &nbsp;
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;max-width:260px;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word"
-                                                                                                                    valign="top">
-                                                                                                                    The gift card will be sent to  {{ $patient->email ?? $mail_data->gift_send_to }}, addressed to   {{ $mail_data->recipient_name }}.                                                                                                                    {{-- <a href="https://beta.download.yourgift.cards/download-zip/order/pdf/7f0a841a-2f15-4527-cc0c-08dc2f769b14" style="color:#333333" id="m_1192176901181685102primary-button" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://beta.download.yourgift.cards/download-zip/order/pdf/7f0a841a-2f15-4527-cc0c-08dc2f769b14&amp;source=gmail&amp;ust=1708259681213000&amp;usg=AOvVaw0HIVajL0nNOSHNcYre8BAy">download now</a>) --}}
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="line-height:1px;font-size:1px"
-                                                                                height="10">&nbsp;</td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td height="20"
-                                                                                style="line-height:1px;font-size:1px">
-                                                                                &nbsp;
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="padding:0 20px" valign="top">
-                                                                                <table border="0" cellpadding="0"
-                                                                                    cellspacing="0"
-                                                                                    role="presentation"
-                                                                                    width="100%">
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <th style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;padding:10px 10px 10px 0;border-bottom:1px solid #e5e5e5;width:400px;color:#151515"
-                                                                                                align="left">
-                                                                                            </th>
-                                                                                            <th style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;padding:10px 10px 10px 0;border-bottom:1px solid #e5e5e5;width:44px;color:#151515;text-align:right"
-                                                                                                align="right">
-                                                                                            </th>
-                                                                                            <th style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;border-bottom:1px solid #e5e5e5;padding:10px 0;width:56px;color:#151515;text-align:right"
-                                                                                                align="right">
-                                                                                            </th>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td style="padding:20px 10px 20px 0;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;border-bottom:1px solid #e5e5e5"
-                                                                                                valign="top">
-                                                                                                <table border="0"
-                                                                                                    cellpadding="0"
-                                                                                                    cellspacing="0"
-                                                                                                    role="presentation"
-                                                                                                    width="100%">
-                                                                                                    <tbody>
-                                                                                                        <tr>
-                                                                                                            <td valign="top"
-                                                                                                                style="font-size:0">
-                                                                                                                <div style="display:inline-block;max-width:120px;vertical-align:top"
-                                                                                                                    class="m_4043362051198468644hide-on-xs">
-                                                                                                                    <table
-                                                                                                                        border="0"
-                                                                                                                        cellpadding="0"
-                                                                                                                        cellspacing="0"
-                                                                                                                        role="presentation"
-                                                                                                                        width="100%">
-                                                                                                                        <tbody>
-                                                                                                                        </tbody>
-                                                                                                                    </table>
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    style="display:inline-block;max-width:260px;vertical-align:top">
-                                                                                                                    <table
-                                                                                                                        border="0"
-                                                                                                                        cellpadding="0"
-                                                                                                                        cellspacing="0"
-                                                                                                                        role="presentation"
-                                                                                                                        width="100%">
-                                                                                                                        <tbody>
-                                                                                                                            <tr>
-                                                                                                                                <td style="padding:0 0 0"
-                                                                                                                                    valign="top">
-                                                                                                                                    <table
-                                                                                                                                        border="0"
-                                                                                                                                        cellpadding="0"
-                                                                                                                                        cellspacing="0"
-                                                                                                                                        role="presentation"
-                                                                                                                                        width="100%">
-                                                                                                                                        <tbody>
-                                                                                                                                            <tr>
-                                                                                                                                                <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;letter-spacing:-0.3px;line-height:28px;font-weight:500;font-size:18px;color:#151515"
-                                                                                                                                                    valign="top">
-                                                                                                                                                    ${{ $mail_data->amount }} gift card
-                                                                                                                                                </td>
-                                                                                                                                            </tr>
-                                                                                                                                            <tr>
-                                                                                                                                                <td height="4"style="font-size:1px;line-height:1px">&nbsp;</td>
-                                                                                                                                            </tr>
-                                                                                                                                        </tbody>
-                                                                                                                                        <tbody>
-                                                                                                                                            <tr>
-                                                                                                                                                <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;letter-spacing:-0.2px;line-height:30px;font-size:16px;color:#9b9b9b;max-width:260px;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word;white-space:pre-wrap" valign="top"> For use at Forever Medspa
-                                                                                                                                                </td>
-                                                                                                                                            </tr>
-                                                                                                                                            <tr>
-                                                                                                                                                <td height="4" style="font-size:1px;line-height:1px"> &nbsp;
-                                                                                                                                                </td>
-                                                                                                                                            </tr>
-                                                                                                                                        </tbody>
-                                                                                                                                    </table>
-                                                                                                                                </td>
-                                                                                                                            </tr>
-                                                                                                                        </tbody>
-                                                                                                                    </table>
-                                                                                                                </div>
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    </tbody>
-                                                                                                </table>
-                                                                                            </td>
-                                                                                            <td style="padding:20px 10px 20px 0;color:#9b9b9b;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;border-bottom:1px solid #e5e5e5"
-                                                                                                valign="top"
-                                                                                                align="right">
-                                                                                                {{ $mail_data->qty }}
-                                                                                            </td>
-                                                                                            <td style="padding:20px 0 20px;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;border-bottom:1px solid #e5e5e5;color:#151515"
-                                                                                                valign="top"
-                                                                                                align="right">
-                                                                                                ${{ $mail_data->amount }}
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                    @if ($mail_data->discount != '' && $mail_data->discount != null)
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td colspan="3"
-                                                                                                    height="20"
-                                                                                                    style="line-height:1px;font-size:1px">
-                                                                                                    &nbsp;
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td colspan="2"
-                                                                                                    style="padding:0 10px 0 0;letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#40be65"
-                                                                                                    valign="top"
-                                                                                                    align="right">
-                                                                                                    Discount:
-                                                                                                </td>
-                                                                                                <td style="letter-spacing:-0.2px;line-height:26px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#40be65"
-                                                                                                    valign="top"
-                                                                                                    align="right">
-                                                                                                    -{{ $mail_data->discount }}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    @endif
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td colspan="3"
-                                                                                                height="20"
-                                                                                                style="line-height:1px;font-size:1px">
-                                                                                                &nbsp;
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td class="m_4043362051198468644pc-sm-fs-20"
-                                                                                                colspan="3"
-                                                                                                style="padding:20px 0 0 0;font-family:'Fira Sans',Roboto,Arial,sans-serif;letter-spacing:-0.4px;line-height:34px;font-size:24px;border-top:2px solid #e5e5e5;font-weight:bold;color:#151515"
-                                                                                                valign="top"
-                                                                                                align="right"
-                                                                                                id="m_4043362051198468644total">
-                                                                                                Total:
-                                                                                                ${{ $mail_data->transaction_amount }}
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td style="line-height:1px;font-size:1px"
-                                                                                height="50">&nbsp;</td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="table-layout:fixed;background-color:#f5f7fb;margin:0;padding:20px 0;">
+    <tr>
+        <td align="center" valign="top">
+            <!-- Outer Container -->
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width:620px;margin:0 auto;">
+                <tr>
+                    <td align="left" valign="top" style="padding:0 10px;">
+
+                        <!-- Top Spacer -->
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                            <tr>
+                                <td height="20" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                            </tr>
+                        </table>
+
+                        <!-- Main Card -->
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+                            <tr>
+                                <td style="padding:0;">
+
+                                    <!-- Header with Logo -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;padding:20px 24px 0 24px;">
+                                        <tr>
+                                            <td align="left" valign="middle">
+                                                <a href="https://forevermedspanj.com/" style="text-decoration:none;" target="_blank">
+                                                    <img src="{{ url('/images/gifts/logo.png') }}"
+                                                         width="150"
+                                                         alt="Forever Medspa"
+                                                         style="max-width:100%;height:auto;border:0;display:block;line-height:100%;outline:0;font-size:14px;color:#1b1b1b;"
+                                                         onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Big Title / Intro -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="padding:24px 24px 10px 24px;">
+                                        <tr>
+                                            <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:30px;font-weight:800;line-height:40px;letter-spacing:-0.6px;color:#151515;">
+                                                Thank you for your order
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="16" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;line-height:26px;letter-spacing:-0.2px;color:#6b6b6b;">
+                                                We really appreciate you purchasing this gift card and hope that the recipient loves it!<br><br>
+                                                <img src="{{ url('/images/gifts/logo.png') }}"
+                                                     width="100"
+                                                     height="50"
+                                                     alt="Forever Medspa"
+                                                     style="border:0;line-height:100%;outline:0;font-size:14px;color:#151515;"
+                                                     onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';"><br><br>
+                                                From: <strong>Forever Medspa</strong>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Two-Column: Generated By / Gifted To -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="padding:10px 24px 0 24px;">
+                                        <tr>
+                                            <!-- Col 1 -->
+                                            <td valign="top" width="50%" style="padding:10px 10px 10px 0;">
+                                                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                                    <tr>
+                                                        <td style="border-bottom:1px solid #e5e5e5;padding:0 0 8px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515;">
+                                                            Giftcard Generated By
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height="8" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;line-height:24px;color:#151515;max-width:260px;word-wrap:break-word;">
+                                                            {{ $mail_data->your_name }}
+                                                        </td>
+                                                    </tr>
                                                 </table>
-                                                <table width="100%" border="0" cellspacing="0" cellpadding="0"
-                                                    role="presentation">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td height="8" style="font-size:1px;line-height:1px">
-                                                                &nbsp;
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table border="0" cellpadding="0" cellspacing="0" width="100%"
-                                                    role="presentation">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="m_4043362051198468644pc-sm-p-31-20-39 m_4043362051198468644pc-xs-p-15-10-25"
-                                                                style="padding:31px 30px;background-color:#ffffff;border-radius:8px"
-                                                                valign="top" bgcolor="#ffffff">
-                                                                <table border="0" cellpadding="0" cellspacing="0"
-                                                                    width="100%" role="presentation">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td valign="top" style="font-size:0">
-                                                                                <div class="m_4043362051198468644pc-sm-mw-100pc"
-                                                                                    style="display:inline-block;width:100%;max-width:445px;vertical-align:top">
-                                                                                    <table width="100%"
-                                                                                        border="0" cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td class="m_4043362051198468644pc-xs-p-15-10"
-                                                                                                    style="line-height:20px;letter-spacing:-0.2px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:14px;color:#9b9b9b;padding:0 10px"
-                                                                                                    valign="top">
-                                                                                                    © All rights reserved.<br>Sent by Forever Medspa on behalf of <a>Forever Medspa</a>.
-                                                                                                    <br>
-                                                                                                    <a href="https://forevermedspanj.com/"
-                                                                                                        target="_blank"
-                                                                                                        data-saferedirecturl="https://forevermedspanj.com/">https://www.<wbr>forevermedspanj.com/</a>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                                <div
-                                                                                    style="text-align: center; margin-top: 20px;">
-                                                                                    <a href="{{ route('patient-login') }}"
-                                                                                        target="_blank"
-                                                                                        style="display: inline-block; background-color: #007bff; color: white; text-decoration: none; 
-                                                                   padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 5px; 
-                                                                   font-family: Arial, sans-serif;">
-                                                                                        Sign Up to Track Your Giftcards
-                                                                                    </a>
-                                                                                </div>
-                                                                                <div class="m_4043362051198468644pc-sm-mw-100pc"
-                                                                                    style="display:inline-block;width:100%;max-width:65px;vertical-align:top">
-                                                                                    <table width="100%"
-                                                                                        border="0" cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td valign="top"
-                                                                                                    style="padding:0 0 10px">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td valign="middle"
-                                                                                                                    style="padding:0 10px">
-                                                                                                                    <img src="{{ url('/images/gifts/logo.png') }}"
-                                                                                                                        width="80"
-                                                                                                                        height="40"
-                                                                                                                        alt="Forever Medspa!"
-                                                                                                                        style="border:0;line-height:100%;outline:0;font-size:14px;color:#151515"
-                                                                                                                        class="CToWUd"
-                                                                                                                        data-bit="iit"
-                                                                                                                        onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
+                                            </td>
+
+                                            <!-- Col 2 -->
+                                            <td valign="top" width="50%" style="padding:10px 0 10px 10px;">
+                                                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                                    <tr>
+                                                        <td style="border-bottom:1px solid #e5e5e5;padding:0 0 8px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515;">
+                                                            Gifted To
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height="8" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;line-height:24px;color:#151515;max-width:260px;word-wrap:break-word;">
+                                                            {{ $mail_data->recipient_name }}
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             </td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                                <table width="100%" border="0" cellpadding="0" cellspacing="0"
-                                    role="presentation">
-                                    <tbody>
+                                    </table>
+
+                                    <!-- Two-Column: Message / Shipping -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="padding:0 24px;">
                                         <tr>
-                                            <td height="20" style="font-size:1px;line-height:1px">&nbsp;</td>
+                                            <!-- Message -->
+                                            <td valign="top" width="50%" style="padding:10px 10px 10px 0;">
+                                                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                                    <tr>
+                                                        <td style="border-bottom:1px solid #e5e5e5;padding:0 0 8px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515;">
+                                                            Message
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height="8" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;line-height:24px;color:#151515;white-space:pre-wrap;word-wrap:break-word;">
+                                                            {{ $mail_data->message }}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+
+                                            <!-- Shipping -->
+                                            <td valign="top" width="50%" style="padding:10px 0 10px 10px;">
+                                                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                                    <tr>
+                                                        <td style="border-bottom:1px solid #e5e5e5;padding:0 0 8px;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;font-weight:bold;color:#151515;">
+                                                            Shipping
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height="8" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;line-height:24px;color:#151515;word-wrap:break-word;">
+                                                            The gift card will be sent to
+                                                            <strong>{{ $patient->email ?? $mail_data->gift_send_to }}</strong>,
+                                                            addressed to <strong>{{ $mail_data->recipient_name }}</strong>.
+                                                            {{-- <a href="https://beta.download.yourgift.cards/download-zip/order/pdf/7f0a841a-2f15-4527-cc0c-08dc2f769b14" style="color:#333333" id="m_1192176901181685102primary-button" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://beta.download.yourgift.cards/download-zip/order/pdf/7f0a841a-2f15-4527-cc0c-08dc2f769b14&amp;source=gmail&amp;ust=1708259681213000&amp;usg=AOvVaw0HIVajL0nNOSHNcYre8BAy">download now</a>) --}}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
+                                    </table>
+
+                                    <!-- Spacer -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                        <tr>
+                                            <td height="20" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Order Summary -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="padding:0 24px 24px 24px;">
+                                        <tr>
+                                            <td valign="top">
+                                                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                                    <tr>
+                                                        <th align="left" style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;padding:10px 10px 10px 0;border-bottom:1px solid #e5e5e5;">
+                                                            Item
+                                                        </th>
+                                                        <th align="right" style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;padding:10px 10px 10px 0;border-bottom:1px solid #e5e5e5;">
+                                                            Qty
+                                                        </th>
+                                                        <th align="right" style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;padding:10px 0 10px 0;border-bottom:1px solid #e5e5e5;">
+                                                            Amount
+                                                        </th>
+                                                    </tr>
+
+                                                    <!-- Line Item -->
+                                                    <tr>
+                                                        <td valign="top" style="padding:16px 10px 16px 0;border-bottom:1px solid #e5e5e5;">
+                                                            <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                                                <tr>
+                                                                    <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:18px;font-weight:500;color:#151515;line-height:26px;">
+                                                                        ${{ $mail_data->amount }} gift card
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td height="4" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#9b9b9b;">
+                                                                        For use at Forever Medspa
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td valign="top" align="right" style="padding:16px 10px 16px 0;border-bottom:1px solid #e5e5e5;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#9b9b9b;">
+                                                            {{ $mail_data->qty }}
+                                                        </td>
+                                                        <td valign="top" align="right" style="padding:16px 0 16px 0;border-bottom:1px solid #e5e5e5;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#151515;">
+                                                            ${{ $mail_data->amount }}
+                                                        </td>
+                                                    </tr>
+
+                                                    @if ($mail_data->discount != '' && $mail_data->discount != null)
+                                                        <tr>
+                                                            <td colspan="3" height="12" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" align="right" style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#40be65;padding:0 10px 0 0;">
+                                                                Discount:
+                                                            </td>
+                                                            <td align="right" style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:16px;color:#40be65;">
+                                                                -{{ $mail_data->discount }}
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+
+                                                    <tr>
+                                                        <td colspan="3" height="16" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                                    </tr>
+
+                                                    <!-- Total -->
+                                                    <tr>
+                                                        <td colspan="3" align="right" style="padding-top:16px;border-top:2px solid #e5e5e5;font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:22px;font-weight:bold;line-height:30px;color:#151515;">
+                                                            Total: ${{ $mail_data->transaction_amount }}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Help / Phone -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="padding:0 24px 24px 24px;">
+                                        <tr>
+                                            <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#6b6b6b;">
+                                                Have questions? Call or text us at
+                                                <a href="tel:+12013404809" style="color:#fca52a;text-decoration:none;">(201)&nbsp;340-4809</a>
+                                                and our team will be happy to assist you.
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Spacer Before Footer Card -->
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                            <tr>
+                                <td height="8" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                            </tr>
+                        </table>
+
+                        <!-- Footer Card -->
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#ffffff;border-radius:8px;">
+                            <tr>
+                                <td valign="top" style="padding:24px 24px 20px 24px;">
+
+                                    <!-- Footer Text -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                        <tr>
+                                            <td style="font-family:'Fira Sans',Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#9b9b9b;">
+                                                © All rights reserved.<br>
+                                                Sent by Forever Medspa on behalf of <a style="color:#fca52a;text-decoration:none;">Forever Medspa</a>.<br>
+                                                <a href="https://forevermedspanj.com/" target="_blank" style="color:#fca52a;text-decoration:none;">
+                                                    https://www.forevermedspanj.com/
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="20" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- CTA Buttons + Small Logo -->
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                                        <tr>
+                                            <td align="center" valign="top">
+                                                <!-- CTA 1 -->
+                                                <a href="{{ route('patient-login') }}"
+                                                   target="_blank"
+                                                   style="
+                                                       display:inline-block;
+                                                       background-color:#fca52a;
+                                                       color:#ffffff;
+                                                       text-decoration:none;
+                                                       padding:12px 26px;
+                                                       font-size:16px;
+                                                       font-weight:bold;
+                                                       border-radius:30px;
+                                                       font-family:Arial, sans-serif;
+                                                       letter-spacing:0.3px;
+                                                       margin-bottom:12px;
+                                                   ">
+                                                    Sign Up to Track Your Giftcards
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" valign="top">
+                                                <!-- CTA 2 -->
+                                                <a href="https://forevermedspanj.com/services/book-appointments/"
+                                                   target="_blank"
+                                                   style="
+                                                       display:inline-block;
+                                                       padding:12px 28px;
+                                                       background:#fca52a;
+                                                       color:#ffffff;
+                                                       font-family:Arial, sans-serif;
+                                                       font-size:16px;
+                                                       font-weight:600;
+                                                       text-decoration:none;
+                                                       border-radius:30px;
+                                                       box-shadow:0 4px 10px rgba(0,0,0,0.15);
+                                                       letter-spacing:0.5px;
+                                                       margin-top:8px;
+                                                   ">
+                                                    Book your Appointment
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="20" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" valign="top">
+                                                <img src="{{ url('/images/gifts/logo.png') }}"
+                                                     width="80"
+                                                     height="40"
+                                                     alt="Forever Medspa"
+                                                     style="border:0;line-height:100%;outline:0;font-size:14px;color:#151515;"
+                                                     onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Bottom Spacer -->
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                            <tr>
+                                <td height="20" style="font-size:1px;line-height:1px;">&nbsp;</td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
 </table>
+
 {{-- @endif --}}

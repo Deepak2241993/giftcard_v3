@@ -195,6 +195,7 @@ tbody tr:nth-child(odd) {
                                             <table cellspacing="0" cellpadding="0"
                                                 style="font-family:Open Sans,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;border-collapse:collapse;width:100%">
                                                 <tbody>
+                                                   
                                                     <tr>
                                                         <td
                                                             style="font-family:Open Sans,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;padding-top:48px;padding-bottom:48px">
@@ -204,6 +205,7 @@ tbody tr:nth-child(odd) {
                                                                     <tr>
                                                                         <td align="center"
                                                                             style="font-family:Open Sans,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;padding-bottom:16px">
+                                                                             
                                                                             To get the latest updates click on&nbsp;<a
                                                                                 href="https://www.facebook.com/ForeverMedSpaNJ/"
                                                                                 style="color:#9eb0b7;text-decoration-line:none"
@@ -249,7 +251,26 @@ tbody tr:nth-child(odd) {
                                                                                         style="text-decoration:underline">Forever
                                                                                         MedSpa Wellness
                                                                                         Center</span></a>.</p>
-                                                                            <p></p>
+                                                                            <p> Have questions? Call or text us at <a href="tel:+12013404809">(201)&nbsp;340‑4809</a> and our team will be happy to assist you.</p>
+                                            <p>
+  <center><a href="https://forevermedspanj.com/services/book-appointments/" target="_blank"
+     style="
+       display:inline-block;
+       padding:12px 28px;
+       background:#fca52a;
+       color:#ffffff;
+       font-family:Arial, sans-serif;
+       font-size:16px;
+       font-weight:600;
+       text-decoration:none;
+       border-radius:30px;
+       box-shadow:0 4px 10px rgba(0,0,0,0.2);
+       letter-spacing:0.5px;
+       margin-top:20px;
+     ">
+    Book your Appointment
+  </a></center>
+</p>
                                                                             <hr>
                                                                             <p style="text-align:left">
                                                                                 <strong></strong>
