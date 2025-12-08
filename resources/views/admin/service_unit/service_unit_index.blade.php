@@ -26,10 +26,14 @@
                 
 <div class="card">
     <div class="card-body">
-                 <div class="col-md-2 mb-2">
-                    <!-- Add More Button -->
-                    <a href="{{ route('unit.create') }}" class="btn btn-dark w-100">Add More</a>
-                </div>
+        <div class="mb-3">
+    <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
+    <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
+    <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
+    <button onclick="window.location.href='{{ route('unit.create') }}';" class="btn btn-dark btn-sm">Add More</button>
+</div>
+
+                
                 @if (session('message'))
                     <div class="alert alert-success mt-4">
                         {{ session('message') }}
@@ -47,6 +51,7 @@
                 <table id="datatable-buttons" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                             <th><input type="checkbox" id="select_all"></th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">Unit Name</th>
@@ -60,6 +65,7 @@
                     <tbody id="data-table-body">
                         @foreach ($result as $value)
                             <tr>
+                                   <td><input type="checkbox" class="unit_checkbox" value="{{ $value->id }}"></td>
                                 <td>{{ $loop->iteration }}</td>
                                <td>
                                  @if(Session::has('internal_patient_id'))
@@ -345,4 +351,67 @@
       });
     });
   </script>
+  
+  {{-- For Bluk Action Script --}}
+  <script>
+  // SELECT ALL CHECKBOX
+$('#select_all').on('click', function () {
+    $('.unit_checkbox').prop('checked', this.checked);
+});
+
+// GET SELECTED IDs
+function getSelectedIDs() {
+    let ids = [];
+    $('.unit_checkbox:checked').each(function () {
+        ids.push($(this).val());
+    });
+    return ids;
+}
+
+// BULK DELETE
+$('#bulk_delete').on('click', function () {
+    let ids = getSelectedIDs();
+
+    if (ids.length === 0) {
+        alert("Please select at least one item");
+        return;
+    }
+    if (!confirm("Are you sure you want to delete selected items?")) return;
+
+    bulkAction("delete", ids);
+});
+
+// BULK ACTIVE
+$('#bulk_active').on('click', function () {
+    let ids = getSelectedIDs();
+    if (ids.length === 0) return alert("Select at least one item");
+    bulkAction("active", ids);
+});
+
+// BULK INACTIVE
+$('#bulk_inactive').on('click', function () {
+    let ids = getSelectedIDs();
+    if (ids.length === 0) return alert("Select at least one item");
+    bulkAction("inactive", ids);
+});
+
+// MAIN BULK ACTION AJAX
+function bulkAction(type, ids) {
+    $.ajax({
+        url: "{{ route('unit.bulk.action') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            action_type: type,
+            ids: ids
+        },
+        success: function (response) {
+            alert(response.message);
+            location.reload();
+        }
+    });
+}
+
+</script>
+  {{-- End For Bluk Action Script --}}
 @endpush

@@ -129,6 +129,7 @@ Route::resource('/product', ProductController::class);
 Route::get('/service-search','ProductController@ServiceSearch')->name('service-search');
 Route::get('/unit-search','ProductController@UnitSearch')->name('unit-search');
 Route::resource('/unit', ServiceUnitController::class);
+Route::post('/unit/bulk-action', 'ServiceUnitController@bulkAction')->name('unit.bulk.action');
 Route::get('/unitdelete/{id}','ServiceUnitController@destroy')->name('unitdelete');
 Route::resource('/banner', BannerController::class);
 Route::post('/categories/import', [ProductCategoryImportController::class, 'import'])->name('categories.import');

@@ -272,4 +272,29 @@ public function CreateUnitQuickly(Request $request,ServiceUnit $serviceUnit)
 
     }
 
+    // Bulk Action for Service Unit
+    public function bulkAction(Request $request)
+    {
+        $ids = $request->ids;
+        $action = $request->action_type;
+
+        if ($action == "delete") {
+            ServiceUnit::whereIn('id', $ids)->update(['product_is_deleted' => 1]);
+            return response()->json(['message' => 'Selected units deleted successfully']);
+        }
+
+        if ($action == "active") {
+            ServiceUnit::whereIn('id', $ids)->update(['status' => 1]);
+            return response()->json(['message' => 'Selected units marked as Active']);
+        }
+
+        if ($action == "inactive") {
+            ServiceUnit::whereIn('id', $ids)->update(['status' => 0]);
+            return response()->json(['message' => 'Selected units marked as Inactive']);
+        }
+
+        return response()->json(['message' => 'Invalid action'], 400);
+    }
+
+
 }
