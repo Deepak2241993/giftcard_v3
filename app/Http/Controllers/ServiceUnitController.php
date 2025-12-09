@@ -292,9 +292,36 @@ public function CreateUnitQuickly(Request $request,ServiceUnit $serviceUnit)
             ServiceUnit::whereIn('id', $ids)->update(['status' => 0]);
             return response()->json(['message' => 'Selected units marked as Inactive']);
         }
+        if ($action == "duplicate") {
+            foreach ($ids as $id) {
+                $unit = ServiceUnit::find($id);
+                if ($unit) {
+                    $new = $unit->replicate();
+                    $new->product_name = $unit->product_name . ' (Copy)';  // modify name
+                    $new->save();
+                }
+            }
+            return response()->json(['message' => 'Selected Unit duplicated successfully']);
+        }
 
         return response()->json(['message' => 'Invalid action'], 400);
     }
+    // Duplicate Service Unit
+    public function duplicate($id)
+    {
+        $unit = ServiceUnit::findOrFail($id);
+
+        // Create a duplicate record
+        $new = $unit->replicate();   // clone the row
+        $new->product_name = $unit->product_name . ' (Copy)';  // modify name
+        $new->created_at = now();
+        $new->updated_at = now();
+
+        $new->save();
+
+        return redirect()->back()->with('message', 'Unit duplicated successfully');
+    }
+
 
 
 }

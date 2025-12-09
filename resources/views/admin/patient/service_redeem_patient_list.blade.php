@@ -74,36 +74,38 @@
                         @foreach ($data as $key => $value)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                @if(!empty($value->payment_intent))
+                                @if(!empty($value->payment_intent) && ($value->payment_status == 'paid' || $value->payment_status == 'success'))
                                 <td class="text-center">
-    <a type="button" 
-       class="btn btn-sm btn-outline-success me-1" 
-       data-bs-toggle="modal"
-       data-bs-target="#staticBackdrop_{{ $value['id'] }}"
-       onclick="OrderView({{ $key }}, '{{ $value['order_id'] }}')"
-       title="Redeem Service">
-        <i class="fa fa-check-circle"></i>
-    </a>
+                                    <a type="button" 
+                                    class="btn btn-sm btn-outline-success me-1" 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#redeemAction{{ $value['id'] }}"
+                                    onclick="OrderView({{ $key }}, '{{ $value['order_id'] }}')"
+                                    title="Redeem Service">
+                                        <i class="fa fa-check-circle"></i>
+                                    </a>
 
-    <a type="button" 
-       class="btn btn-sm btn-outline-danger me-1" 
-       data-bs-toggle="modal"
-       data-bs-target="#staticBackdrop_{{ $value['id'] }}"
-       onclick="CancelView({{ $key }}, '{{ $value['order_id'] }}')"
-       title="Cancel Order">
-        <i class="fa fa-times-circle"></i>
-    </a>
+                                    <a type="button" 
+                                    class="btn btn-sm btn-outline-danger me-1" 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#redeemAction{{ $value['id'] }}"
+                                    onclick="CancelView({{ $key }}, '{{ $value['order_id'] }}')"
+                                    title="Cancel Order">
+                                        <i class="fa fa-times-circle"></i>
+                                    </a>
 
-    <a type="button" 
-       class="btn btn-sm btn-outline-warning" 
-       data-bs-toggle="modal" 
-       data-bs-target="#statement_view_{{ $value['id'] }}"
-       onclick="StatementView({{ $key }}, '{{ $value['order_id'] }}')"
-       title="View Statement">
-        <i class="fa fa-file-text"></i>
-    </a>
-</td>
+                                    <a type="button" 
+                                    class="btn btn-sm btn-outline-warning" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#statement_view_{{ $value['id'] }}"
+                                    onclick="StatementView({{ $key }}, '{{ $value['order_id'] }}')"
+                                    title="View Statement">
+                                        <i class="fa fa-file-text"></i>
+                                    </a>
+                                </td>
 
+                                @elseif(!empty($value->payment_intent) && ($value->payment_status == 'under_process'))
+                                <td> <span class="badge bg-primary">{{"Payment ".str_replace('_',' ',UcFirst($value->payment_status))}}</span></td>
                                 @else
                                 <td> <span class="badge bg-danger">No Payment</span></td>
                                 @endif
@@ -132,7 +134,7 @@
     </section>
 
     <!-- for Show Service Order Modal -->
-    <div class="modal fade deepak" id="staticBackdrop_" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade deepak" id="redeemAction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -516,8 +518,8 @@
         function OrderView(id, order_id) {
             $('#redeemed_error').html('');
             $('#redeemed_success').html('');
-            $('.deepak').attr('id', 'staticBackdrop_' + id);
-            $('#staticBackdrop_' + id).modal('show');
+            $('.deepak').attr('id', 'redeemAction' + id);
+            $('#redeemAction' + id).modal('show');
 
             $.ajax({
                 url: '{{ route('redeemcalculation') }}',

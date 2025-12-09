@@ -27,11 +27,12 @@
 <div class="card">
     <div class="card-body">
         <div class="mb-3">
-    <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
-    <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
-    <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
-    <button onclick="window.location.href='{{ route('unit.create') }}';" class="btn btn-dark btn-sm">Add More</button>
-</div>
+        <button id="bulk_duplicate" class="btn btn-secondary btn-sm">Duplicate Selected</button>
+        <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
+        <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
+        <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
+        <button onclick="window.location.href='{{ route('unit.create') }}';" class="btn btn-dark btn-sm">Add More</button>
+    </div>
 
                 
                 @if (session('message'))
@@ -81,6 +82,11 @@
                                 <td>{{ $value->discounted_amount }}</td>
                                 <td>{{ $value->status == 1 ?  "Active":"Inactive" }}</td>
                                  <td class="text-nowrap">
+                                     <a href="{{ route('unit.duplicate', $value['id']) }}" 
+       class="btn btn-sm btn-outline-secondary" 
+       title="Duplicate">
+        <i class="fas fa-copy"></i>
+    </a>
                                     <a href="{{ route('unit.edit', $value['id']) }}" class="btn btn-sm btn-outline-primary" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -395,6 +401,13 @@ $('#bulk_inactive').on('click', function () {
     bulkAction("inactive", ids);
 });
 
+// BULK DUPLICATE
+$('#bulk_duplicate').on('click', function () {
+    let ids = getSelectedIDs();
+    if (ids.length === 0) return alert("Please select at least one product");
+    bulkAction("duplicate", ids);
+});
+
 // MAIN BULK ACTION AJAX
 function bulkAction(type, ids) {
     $.ajax({
@@ -411,6 +424,7 @@ function bulkAction(type, ids) {
         }
     });
 }
+
 
 </script>
   {{-- End For Bluk Action Script --}}

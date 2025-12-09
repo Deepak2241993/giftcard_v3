@@ -600,6 +600,64 @@ if ($request->hasFile('product_image')) {
                     'data' => $data,
                 ], 200);
             }
+
+
+        // For Bulk Action Delete
+        public function bulkAction(Request $request)
+        {
+            $ids = $request->ids ?? [];
+            $action = $request->action_type;
+
+            if (empty($ids)) {
+                return response()->json(['message' => 'No products selected'], 400);
+            }
+
+            if ($action == "delete") {
+                Product::whereIn('id', $ids)->update(['product_is_deleted' => 1]);
+                return response()->json(['message' => 'Selected products deleted successfully']);
+            }
+
+            if ($action == "active") {
+                Product::whereIn('id', $ids)->update(['status' => 1]);
+                return response()->json(['message' => 'Selected products marked as Active']);
+            }
+
+            if ($action == "inactive") {
+                Product::whereIn('id', $ids)->update(['status' => 0]);
+                return response()->json(['message' => 'Selected products marked as Inactive']);
+            }
+
+            if ($action == "duplicate") {
+                foreach ($ids as $id) {
+                    $product = Product::find($id);
+                    if ($product) {
+                        $new = $product->replicate();
+                        $new->product_name = $product->product_name . ' (Copy)';
+                        $new->save();
+                    }
+                }
+                return response()->json(['message' => 'Selected products duplicated successfully']);
+            }
+
+            return response()->json(['message' => 'Invalid action'], 400);
+        }
+
+
+        //  For Duplicate Product
+       public function duplicate($id)
+        {
+            $product = Product::findOrFail($id);
+
+            $new = $product->replicate();
+            $new->product_name = $product->product_name . ' (Copy)';
+            $new->created_at = now();
+            $new->updated_at = now();
+            $new->save();
+
+            return back()->with('success', 'Product duplicated successfully');
+        }
+
+
             
 
     }

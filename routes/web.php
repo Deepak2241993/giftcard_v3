@@ -124,13 +124,25 @@ Route::post('/giftcardstatment','GiftsendController@giftcardstatment')->name('gi
 Route::get('/giftcards-sale/{id?}', 'GiftsendController@giftsale')->name('giftcards-sale');
 Route::post('/giftcancel','GiftsendController@giftcancel')->name('giftcancel');
 Route::resource('/category', ProductCategoryController::class);
+
 Route::resource('/product', ProductController::class);
-// Route::get('/service-buy-from-patient/{id}', 'ProductController@ServiceBuyFromPatientPage')->name('service-buy-from-patient');
 Route::get('/service-search','ProductController@ServiceSearch')->name('service-search');
 Route::get('/unit-search','ProductController@UnitSearch')->name('unit-search');
+// Single Duplicate
+Route::get('/product/duplicate/{id}', 'ProductController@duplicate')->name('product.duplicate');
+
+// Bulk Actions
+Route::post('/product/bulk-action', 'ProductController@bulkAction')->name('product.bulk.action');
+
+// Route::get('/service-buy-from-patient/{id}', 'ProductController@ServiceBuyFromPatientPage')->name('service-buy-from-patient');
+
+
 Route::resource('/unit', ServiceUnitController::class);
 Route::post('/unit/bulk-action', 'ServiceUnitController@bulkAction')->name('unit.bulk.action');
+Route::get('/unit/duplicate/{id}', 'ServiceUnitController@duplicate')->name('unit.duplicate');
 Route::get('/unitdelete/{id}','ServiceUnitController@destroy')->name('unitdelete');
+
+
 Route::resource('/banner', BannerController::class);
 Route::post('/categories/import', [ProductCategoryImportController::class, 'import'])->name('categories.import');
 Route::get('/clear-errors', [ProductCategoryImportController::class, 'clearErrors'])->name('clear.errors');

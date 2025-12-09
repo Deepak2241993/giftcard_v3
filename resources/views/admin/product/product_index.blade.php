@@ -116,34 +116,44 @@
                                         Media
                                     </button>
 
-                                    <a href="{{ route('product.create') }}" class="btn btn-outline-dark mb-2 mt-2">Add
-                                        More</a>
+                                    
 
                                 </div>
                             </div>
                         </div>
-
+                {{-- <div class="mb-3">
+                    <input type="text" id="service_name" class="form-control" placeholder="Search by Product Name">
+                    <button class="btn btn-primary mt-2" onclick="SearchView()">Search</button>
+                </div> --}}
                     </div>
                 </div>
 
-
+                
+               
+                <div class="mb-3">
+                    <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
+                    <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
+                    <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
+                    <button id="bulk_duplicate" class="btn btn-secondary btn-sm">Duplicate Selected</button>
+                    <button onclick="window.location.href='{{ route('product.create') }}';" class="btn btn-dark btn-sm">Add More</button>
+                </div>
                 <table id="datatable-buttons" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="select_all"></th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                 colspan="1" aria-sort="ascending" aria-label="#">#</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                 colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                colspan="1" aria-sort="ascending" aria-label="Product Name">Product Name</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"colspan="1" aria-sort="ascending" aria-label="Product Name">Product Name</th>
                             {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Image">Image</th>
                         <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Actual Price">Actual Price</th>
                         <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Deal Price">Deal Price</th> --}}
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                 colspan="1" aria-sort="ascending" aria-label="Product Description">Product Description
                             </th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                colspan="1" aria-sort="ascending" aria-label="Type">Type</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"colspan="1" aria-sort="Status" aria-label="Type">Status</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"colspan="1" aria-sort="Type" aria-label="Type">Type</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                 colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
 
@@ -153,6 +163,7 @@
 
                         @foreach ($products as $value)
                             <tr>
+                              <td><input type="checkbox" class="product_checkbox" value="{{ $value['id'] }}"></td>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     @if (Session::has('internal_patient_id'))
@@ -186,11 +197,15 @@
 
 
 
-
+ <td>{{ $value['status'] == 1 ? 'Active' : 'Inactive' }}</td>
                                 <td>{{ $value['unit_id'] != null ? 'Unit Service' : 'Normal Deals & Service' }}
                                 </td>
                                 <td class="text-nowrap">
                                     <div class="d-flex justify-content-center align-items-center me-2">
+                                        <a href="{{ route('product.duplicate', $value['id']) }}"
+                                            class="btn btn-sm btn-outline-secondary" title="Duplicate">
+                                            <i class="fa fa-copy"></i>
+                                        </a>
                                         <a href="{{ route('product.edit', $value['id']) }}"
                                             class="btn btn-sm btn-outline-primary" title="Edit">
                                             <i class="fa fa-edit"></i>
@@ -568,5 +583,77 @@
                 "responsive": true,
             });
         });
+    </script>
+
+    {{-- For Bulk Action Script --}}
+    <script>
+     // SELECT ALL CHECKBOX
+$('#select_all').on('click', function () {
+    $('.product_checkbox').prop('checked', this.checked);
+});
+
+// GET SELECTED IDs
+function getSelectedIDs() {
+    let ids = [];
+    $('.product_checkbox:checked').each(function () {
+        ids.push($(this).val());
+    });
+    return ids;
+}
+
+// BULK DELETE
+$('#bulk_delete').on('click', function () {
+    let ids = getSelectedIDs();
+    if (ids.length === 0) {
+        alert("Please select at least one product");
+        return;
+    }
+    if (!confirm("Are you sure you want to delete selected products?")) return;
+
+    bulkAction("delete", ids);
+});
+
+// BULK ACTIVE
+$('#bulk_active').on('click', function () {
+    let ids = getSelectedIDs();
+    if (ids.length === 0) return alert("Please select at least one product");
+    bulkAction("active", ids);
+});
+
+// BULK INACTIVE
+$('#bulk_inactive').on('click', function () {
+    let ids = getSelectedIDs();
+    if (ids.length === 0) return alert("Please select at least one product");
+    bulkAction("inactive", ids);
+});
+
+// BULK DUPLICATE
+$('#bulk_duplicate').on('click', function () {
+    let ids = getSelectedIDs();
+    if (ids.length === 0) return alert("Please select at least one product");
+    bulkAction("duplicate", ids);
+});
+
+// COMMON BULK ACTION AJAX
+function bulkAction(type, ids) {
+    $.ajax({
+        url: "{{ route('product.bulk.action') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            action_type: type,
+            ids: ids
+        },
+        success: function (response) {
+            alert(response.message);
+            location.reload();
+        },
+        error: function (xhr) {
+            alert('Something went wrong!');
+            console.error(xhr.responseText);
+        }
+    });
+}
+
     </script>
 @endpush
