@@ -18,7 +18,6 @@ class ProgramController extends Controller
     {
         $data = Program::where('is_deleted', 0)
         ->get();
-    
         return view('admin.program.index', compact('data'));
 
     }
