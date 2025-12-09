@@ -697,7 +697,10 @@ $amount = 0;
                                           </select>
                                        </li>
                                        <li class="d-flex justify-content-between py-3 border-top">
-                                          <button type="submit" class="btn btn-primary" id="submitPayment">Submit</button>
+                                          <button type="submit" class="btn btn-primary" id="submitPayment">
+                                             <span id="submitText">Submit</span>
+                                             <span id="submitSpinner" class="spinner-border spinner-border-sm d-none"></span>
+                                          </button>
                                        </li>
                                        <li class="d-flex justify-content-between text-danger py-3 border-top">
                                           <div id="errorMessages" class="alert alert-danger" style="display: none;"></div>
@@ -949,16 +952,28 @@ $amount = 0;
 //   For Payment of Cart
 
 document.addEventListener("DOMContentLoaded", function () {
+
     const fnameField = document.getElementById("fname");
     const lnameField = document.getElementById("lname");
     const emailField = document.getElementById("email");
     const phoneField = document.getElementById("phone");
     const patient_id = document.getElementById("patient_id");
+
     const submitButton = document.getElementById("submitPayment");
+    const submitText = document.getElementById("submitText");
+    const submitSpinner = document.getElementById("submitSpinner");
     const errorMessagesDiv = document.getElementById("errorMessages");
+
     submitButton.addEventListener("click", function (e) {
         e.preventDefault();
-const taxrate = document.getElementById("tax")?.value || 0;
+
+        // 🔥 Disable button & show spinner
+        submitButton.disabled = true;
+        submitSpinner.classList.remove("d-none");
+        submitText.textContent = "Processing...";
+
+        const taxrate = document.getElementById("tax")?.value || 0;
+
         // Collect gift cards
         let giftCards = [];
         const cardNumbers = document.querySelectorAll("input[name='card_number[]']");
@@ -973,85 +988,68 @@ const taxrate = document.getElementById("tax")?.value || 0;
 
         // Build form data
         let formData = {
-    cart_total: parseFloat(
-        document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim()
-    ) || 0,
-
-       subtotal: parseFloat(
-        document.getElementById("cart_total")?.textContent.replace("$", "").trim()
-    ) || 0,
-
-    discount: document.getElementById("discount")?.value || 0,
-
-    tax: $("#tax_amount_payment").text().replace("$", "").trim() || 0,
-
-    taxrate: taxrate,
-   
-    gift_cards: giftCards.length > 0 ? giftCards : [],
-
-    pay_amount: parseFloat(
-        document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim()
-    ) || 0,
-
-    payment_status: document.getElementById("payment_status")?.value || "",
-
-    _token: "{{ csrf_token() }}",
-
-    patient_id: patient_id?.value.trim() || "",
-
-    fname: fnameField?.value.trim() || "",
-    lname: lnameField?.value.trim() || "",
-    email: emailField?.value.trim() || "",
-    phone: phoneField?.value.trim() || "",
-
-    giftapply: $("#giftcard_amount_payment").text().replace("$", "").trim() || 0
-};
-
+            cart_total: parseFloat(document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim()) || 0,
+            subtotal: parseFloat(document.getElementById("cart_total")?.textContent.replace("$", "").trim()) || 0,
+            discount: document.getElementById("discount")?.value || 0,
+            tax: $("#tax_amount_payment").text().replace("$", "").trim() || 0,
+            taxrate: taxrate,
+            gift_cards: giftCards,
+            pay_amount: parseFloat(document.getElementById("totalValuePayment")?.textContent.replace("$", "").trim()) || 0,
+            payment_status: document.getElementById("payment_status")?.value || "",
+            _token: "{{ csrf_token() }}",
+            patient_id: patient_id?.value.trim() || "",
+            fname: fnameField?.value.trim() || "",
+            lname: lnameField?.value.trim() || "",
+            email: emailField?.value.trim() || "",
+            phone: phoneField?.value.trim() || "",
+            giftapply: $("#giftcard_amount_payment").text().replace("$", "").trim() || 0
+        };
 
         // Clear previous errors
         errorMessagesDiv.style.display = "none";
         errorMessagesDiv.innerHTML = "";
 
-        // Send AJAX
+        // AJAX Request
         $.ajax({
             url: "{{ route('InternalServicePurchases') }}",
             type: "POST",
             data: formData,
             success: function (response) {
-                alert("Payment details submitted successfully!");
+
                 if (response.invoice_id) {
                     window.location.href = "{{ url('/admin/invoice') }}/" + response.invoice_id;
                 }
-                console.log(response);
             },
             error: function (xhr) {
-               // Debug alert
-               
 
-               if (xhr.status === 422 && xhr.responseJSON?.errors) {
-                  // Laravel validation error
-                  let errors = xhr.responseJSON.errors;
-                  let errorHtml = "<ul>";
+                // ❗ Re-enable button and hide spinner on error
+                submitButton.disabled = false;
+                submitSpinner.classList.add("d-none");
+                submitText.textContent = "Submit";
 
-                  Object.keys(errors).forEach(function (key) {
+                if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                    let errors = xhr.responseJSON.errors;
+                    let errorHtml = "<ul>";
+
+                    Object.keys(errors).forEach(function (key) {
                         errorHtml += `<li>${errors[key][0]}</li>`;
-                  });
+                    });
 
-                  errorHtml += "</ul>";
-                  errorMessagesDiv.innerHTML = errorHtml;
-                  errorMessagesDiv.style.display = "block";
-               } else {
-                  // Show generic error
-                  errorMessagesDiv.innerHTML = `<p>Something went wrong. Please Fill Required Fields.</p>`;
-                  errorMessagesDiv.style.display = "block";
+                    errorHtml += "</ul>";
+                    errorMessagesDiv.innerHTML = errorHtml;
+                    errorMessagesDiv.style.display = "block";
+                } else {
+                    errorMessagesDiv.innerHTML = `<p>Something went wrong. Please Fill Required Fields.</p>`;
+                    errorMessagesDiv.style.display = "block";
 
-                  console.error("AJAX Error: ", xhr.responseText);
-               }
-}
-
+                    console.error("AJAX Error: ", xhr.responseText);
+                }
+            }
         });
+
     });
 });
+
 
 
    // Update Cart
