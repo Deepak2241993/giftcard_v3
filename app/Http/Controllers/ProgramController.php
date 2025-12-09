@@ -16,9 +16,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $data = Program::
-        where('status', 1)
-        ->where('is_deleted', 0)
+        $data = Program::where('is_deleted', 0)
         ->get();
     
         return view('admin.program.index', compact('data'));
@@ -118,4 +116,55 @@ class ProgramController extends Controller
         return redirect(route('program.index'))->with('message', 'Program Deleted Successfully');
 
     }
+
+    // Single Duplicate
+    public function duplicate($id)
+    {
+        $program = Program::findOrFail($id);
+
+        $new = $program->replicate();
+        $new->program_name = $program->program_name . ' (Copy)';
+        $new->created_at = now();
+        $new->updated_at = now();
+        $new->save();
+
+        return back()->with('success', 'Program duplicated successfully');
+    }
+
+    public function bulkAction(Request $request)
+    {
+        $ids = $request->ids;
+        $action = $request->action_type;
+
+        if ($action == "delete") {
+            Program::whereIn('id', $ids)->delete();
+            return response()->json(['message' => 'Programs deleted successfully']);
+        }
+
+        if ($action == "active") {
+            Program::whereIn('id', $ids)->update(['status' => 1]);
+            return response()->json(['message' => 'Programs marked Active']);
+        }
+
+        if ($action == "inactive") {
+            Program::whereIn('id', $ids)->update(['status' => 0]);
+            return response()->json(['message' => 'Programs marked Inactive']);
+        }
+
+        if ($action == "duplicate") {
+            foreach ($ids as $id) {
+                $program = Program::find($id);
+                if ($program) {
+                    $new = $program->replicate();
+                    $new->program_name = $program->program_name . ' (Copy)';
+                    $new->save();
+                }
+            }
+            return response()->json(['message' => 'Programs duplicated successfully']);
+        }
+
+        return response()->json(['message' => 'Invalid Action'], 400);
+    }
+
+
 }

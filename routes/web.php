@@ -185,10 +185,16 @@ Route::resource('/terms', TermController::class);
 Route::post('/get-units-by-service', "TermController@getUnitsByService")->name('get-units-by-service');
 
 Route::resource('/program', ProgramController::class);
+// Single Duplicate
+Route::get('/program/duplicate/{id}', 'ProgramController@duplicate')->name('program.duplicate');
+
+// Bulk Action
+Route::post('/program/bulk-action', 'ProgramController@bulkAction')->name('program.bulk.action');
+
+
 Route::Get('/program-sale/{id}', 'ProgramController@PatientProgramBuy')->name('program-sale');
 Route::resource('/product', ProductController::class);
 Route::resource('/patient', PatientController::class);
-
 Route::post('/patient-data','PatientController@PatientData')->name('patient-data');
 
 // NEW DataTables route (for patient list table)
