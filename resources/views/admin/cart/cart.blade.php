@@ -873,7 +873,8 @@ $amount = 0;
          const tax = parseFloat(taxSelect?.value) || 0;
          const giftCardTotal = calculateGiftCardTotal();
 
-         let subtotalBeforeAdjustments = cartTotal;
+         let amount = $("#cart-final-total").text().replace(/[$,]/g, '');
+         let subtotalBeforeAdjustments = parseFloat(amount);
 
          // ---- Apply gift card first ----
          let subtotalAfterGiftCard = Math.max(subtotalBeforeAdjustments - giftCardTotal, 0);
@@ -888,7 +889,7 @@ $amount = 0;
          const total = subtotal + taxAmount;
 
          // ---- Update UI ----
-         $('#finalcart_total').text(`$${cartTotal.toFixed(2)}`);
+         $('#finalcart_total').text(`$${subtotalBeforeAdjustments.toFixed(2)}`);
          totalValue.textContent = `$${total.toFixed(2)}`;
          totalValuePayment.textContent = `$${total.toFixed(2)}`;
          discountDisplay.textContent = `-$${discount.toFixed(2)}`;

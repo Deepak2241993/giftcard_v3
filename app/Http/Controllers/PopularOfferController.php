@@ -243,7 +243,6 @@ public function updateCart(Request $request)
 
     $key = $request->key;
     $quantity = (int) $request->quantity;
-
     if (isset($cart[$key])) {
         $cart[$key]['quantity'] = $quantity;
          if(isset($request->cart_name)){
