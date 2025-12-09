@@ -183,14 +183,15 @@
 
                             <div class="mb-3 col-lg-6 mt-4">
                                 <label for="status" class="form-label">Status</label>
-                                <select class="form-control" name="status" id='status'>
-                                    <option
-                                        value="1"{{ isset($data['status']) && $data['status'] == 1 ? 'selected' : '' }}>
-                                        Active</option>
-                                    <option
-                                        value="0"{{ isset($data['status']) && $data['status'] == 0 ? 'selected' : '' }}>
-                                        Inactive</option>
+                                <select class="form-control" name="status" id="status">
+                                    <option value="1" {{ isset($data) && $data['status'] == 1 ? 'selected' : '' }}>
+                                        Active
+                                    </option>
+                                    <option value="0" {{ isset($data) && $data['status'] == 0 ? 'selected' : '' }}>
+                                        Inactive
+                                    </option>
                                 </select>
+
                             </div>
 
                             {{-- <div class="mb-12 col-lg-12 self">
@@ -264,7 +265,7 @@
 
             //     }
             // }
-            
+
             // Initial check on page load
             toggleNumberInput();
             // Toggle visibility when any checkbox is clicked

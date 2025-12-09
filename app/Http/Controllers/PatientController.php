@@ -26,9 +26,9 @@ class PatientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-{
-    return view('admin.patient.index'); // No data loaded here
-}
+    {
+        return view('admin.patient.index'); // No data loaded here
+    }
 
 
 
@@ -37,7 +37,7 @@ public function patientTableData(Request $request)
 {
     $query = Patient::where('is_deleted', 0)
         ->select(['id','fname','lname','email','phone','status'])
-        ->orderBy('id', 'DESC');
+        ->orderBy('id', 'DESC'); // same as orderBy('id', 'DESC')
 
     return DataTables::of($query)
         ->addIndexColumn()
@@ -47,10 +47,25 @@ public function patientTableData(Request $request)
         ->addColumn('action', function ($row) {
             return '
                 <div class="btn-group mb-2" role="group">
-                    <a href="'.route('patient.edit', $row->id).'?patient_id='.$row->id.'" class="btn btn-outline-primary btn-sm"><i class="fa fa-user"></i></a>
-                    <a href="'.route('giftcards-sale').'?patient_id='.$row->id.'" class="btn btn-outline-success btn-sm"><i class="fa fa-gift"></i></a>
-                    <a href="'.route('product.index').'?patient_id='.$row->id.'" class="btn btn-outline-info btn-sm"><i class="fa fa-dna"></i></a>
-                    <a href="'.route('program.index').'?patient_id='.$row->id.'" class="btn btn-outline-warning btn-sm"><i class="fa fa-stethoscope"></i></a>
+                    <a href="'.route('patient.edit', $row->id).'?patient_id='.$row->id.'" 
+                        class="btn btn-outline-primary btn-sm">
+                        <i class="fa fa-user"></i>
+                    </a>
+
+                    <a href="'.route('giftcards-sale').'?patient_id='.$row->id.'" 
+                        class="btn btn-outline-success btn-sm">
+                        <i class="fa fa-gift"></i>
+                    </a>
+
+                    <a href="'.route('product.index').'?patient_id='.$row->id.'" 
+                        class="btn btn-outline-info btn-sm">
+                        <i class="fa fa-dna"></i>
+                    </a>
+
+                    <a href="'.route('program.index').'?patient_id='.$row->id.'" 
+                        class="btn btn-outline-warning btn-sm">
+                        <i class="fa fa-stethoscope"></i>
+                    </a>
                 </div>
             ';
         })
@@ -62,6 +77,7 @@ public function patientTableData(Request $request)
         ->rawColumns(['action', 'status_badge'])
         ->make(true);
 }
+
 
 
     /**

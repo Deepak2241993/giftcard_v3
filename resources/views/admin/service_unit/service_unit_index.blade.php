@@ -80,7 +80,11 @@
                                 </td>
                                 <td>{{ $value->amount }}</td>
                                 <td>{{ $value->discounted_amount }}</td>
-                                <td>{{ $value->status == 1 ?  "Active":"Inactive" }}</td>
+                                <td>{!! $value->status == 1 
+    ? "<span class='badge bg-success'>Active</span>" 
+    : "<span class='badge bg-danger'>Inactive</span>" 
+!!}</td>
+
                                  <td class="text-nowrap">
                                      <a href="{{ route('unit.duplicate', $value['id']) }}" 
        class="btn btn-sm btn-outline-secondary" 

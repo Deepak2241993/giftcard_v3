@@ -343,52 +343,34 @@
     </script>
 
     <script>
-        $(function() {
-            $("#datatable-buttons").DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('patient.table.data') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    }, // FIXED
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'patient_name',
-                        name: 'patient_name'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'phone',
-                        name: 'phone'
-                    },
-                    {
-                        data: 'status_badge',
-                        name: 'status',
-                        orderable: false
-                    }
-                ],
-                order: [
-                    [2, "asc"]
-                ], // 👈 Optional: default order by name or id
-                responsive: true,
-                lengthChange: true,
-                autoWidth: false,
-                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+        $(document).ready(function () {
 
+    var table = $("#datatable-buttons").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('patient.table.data') }}",
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+            { data: 'patient_name', name: 'patient_name' },
+            { data: 'email', name: 'email' },
+            { data: 'phone', name: 'phone' },
+            { data: 'status_badge', name: 'status', orderable: false }
+        ],
+        order: [[ 2, "asc" ]],
+        responsive: true,
+        autoWidth: false,
+        lengthChange: true,
 
+        // IMPORTANT: Buttons must be inside this config
+        dom: 'Bfrtip',
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    });
 
-        });
+    // Append Buttons Correctly
+    table.buttons().container()
+        .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+});
+
     </script>
 @endpush

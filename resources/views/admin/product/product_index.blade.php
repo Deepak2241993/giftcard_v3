@@ -196,8 +196,11 @@
                                 ) !!}</td>
 
 
-
- <td>{{ $value['status'] == 1 ? 'Active' : 'Inactive' }}</td>
+  <td>{!! $value['status'] == 1 
+    ? "<span class='badge bg-success'>Active</span>" 
+    : "<span class='badge bg-danger'>Inactive</span>" 
+!!}</td>
+ 
                                 <td>{{ $value['unit_id'] != null ? 'Unit Service' : 'Normal Deals & Service' }}
                                 </td>
                                 <td class="text-nowrap">
