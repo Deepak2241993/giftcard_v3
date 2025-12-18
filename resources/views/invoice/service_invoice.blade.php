@@ -72,6 +72,7 @@
                     <tbody>
                       @php
                         $orderdata = \App\Models\ServiceOrder::where('order_id', $transaction_data->order_id)->get();
+    
                         $subtotal = 0;
                       @endphp
                       @foreach ($orderdata as $key => $value)
@@ -79,7 +80,7 @@
                           $ServiceData = $value->service_type === 'product'
                             ? \App\Models\Product::find($value->service_id)
                             : \App\Models\ServiceUnit::find($value->service_id);
-                          $itemPrice = $ServiceData->discounted_amount ?? $ServiceData->actual_amount;
+                          $itemPrice = $value->discounted_amount ?? $value->actual_amount;
                           $itemTotal = $value->qty * $itemPrice;
                           $subtotal += $itemTotal;
                         @endphp
