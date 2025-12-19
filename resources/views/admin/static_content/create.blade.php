@@ -45,7 +45,7 @@
                                                 class="text-danger">*</span></label>
                                         <input class="form-control" type="text" name="page_name" placeholder="Page Name"
                                             id="page_name" value="{{ isset($staticContent) ? $staticContent->page_name : '' }}"
-                                            required>
+                                            required {{ isset($staticContent) ? 'readonly' : '' }}>
                                     </div>
                                     <div class="mb-3 col-lg-6 col-md-6">
                                         <label for="title" class="form-label">Title<span class="text-danger">*</span></label>
