@@ -1,4 +1,13 @@
+
 @extends('layouts.front-master')
+@php
+    function getStaticContent($id)
+    {
+        $content = App\Models\StaticContent::find($id);
+        return $content ? $content : 'No Data Found';
+    }
+
+@endphp
 @section('body')
     @push('csslink')
         <style>
@@ -152,21 +161,21 @@
 
         <!-- Left Side - Business Info -->
         <div class="business-card">
+        @php
+            $result = getStaticContent(3);
+        @endphp
             <div class="card-glow"></div>
             <div class="business-header">
                 <div class="logo-section">
                     <div class="logo-icon">
                         <i class="fas fa-spa"></i>
                     </div>
-                    <h1>Forever MedSpa</h1>
+                    <h1>{{$result->title}}</h1>
                 </div>
             </div>
 
             <div class="business-description">
-                <p>At <strong>Forever Medspa & Wellness Center</strong>, we offer Botox, Fillers, RF, RFMN, Laser Hair
-                    Reduction, Facials, Microneedling, and Advanced Skin and Body treatments—customized to your unique
-                    needs. We believe aesthetic care should be as personal as you are.
-                </p>
+                {!! $result->content !!}
             </div>
 
             <div class="categories">

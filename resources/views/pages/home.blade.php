@@ -1,4 +1,12 @@
 @extends('layouts.front-master')
+@php
+    function getStaticContent($id)
+    {
+        $content = App\Models\StaticContent::find($id);
+        return $content ? $content : 'No Data Found';
+    }
+
+@endphp
 @section('body')
     @push('css')
     <style>
@@ -190,16 +198,14 @@
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="row align-items-center about-main-info">
                             <div class="col-lg-6 col-md-6 col-sm-12">
-                                <h2><b>Giftcards made simple </b>
+                                @php
+                                  $result = getStaticContent(1);
+                                @endphp
+                                
+                                <h2><b>{{ $result->title }} </b>
                                     {{-- {{dd(Session::get('patient_details'))}} --}}
                                 </h2>
-                                <p style="text-align: justify;">We're thrilled to express our gratitude to the loyal
-                                    customers of MedSpa Wellness centre, with our ! Whether it's a token of appreciation, a
-                                    celebration, or a simple gesture of kindness, our gift cards provide the perfect
-                                    opportunity to share the joy of our products and services. Delight your loved ones with
-                                    the freedom to explore and indulge in what they love most. With each gift card, we're
-                                    extending our heartfelt thanks for your continued support and patronage. Spread the joy
-                                    and make someone's day a little brighter with our gift cards
+                                <p style="text-align: justify;">{!! $result->content ?? 'No Data Found' !!}
                                 </p>
                                 @if (isset($coupon_code) && count($coupon_code) > 0)
                                     <hr>
@@ -740,24 +746,19 @@
     <!-- wish us -->
     {{-- best deals  --}}
     <div id="redeem" class="main-timeline-box">
+        @php
+            $result = getStaticContent(2);
+        @endphp
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="title-box">
-                        <h2><b>Redeem Process</b></h2>
+                        <h2><b>{{$result->title}}</b></h2>
                     </div>
                 </div>
             </div>
             <div class="row p-4">
-                <ol>
-                    <li>The customer needs to purchase the giftcard from<strong> https://myforevermedspa.com</strong></li>
-                    <li>After Purchasing the giftcard, the customer needs to visit the <strong>MedSpa Wellness
-                            Center</strong> to redeem the dedicated purchased Giftcard
-                    </li>
-                    <li>Admins at the Welness centre will check the details of the giftcard and process the transaction as
-                        per need of the customer
-                    </li>
-                </ol>
+                {!! $result->content !!}
             </div>
         </div>
     </div>
