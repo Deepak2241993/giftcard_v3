@@ -16,12 +16,14 @@ return new class extends Migration
         Schema::create('email_templates', function (Blueprint $table) {
             $table->id();
 
-            $table->string('title')->nullable();
-            $table->mediumInteger('message_email')->nullable();
-            $table->longText('html_code')->nullable();
-            $table->tinyInteger('status')->default(1);
-            $table->string('image')->nullable();
-            $table->string('footer_message')->nullable();
+            $table->string('slug', 100)->unique()->after('id');
+            $table->string('subject')->nullable();
+            $table->string('header_title')->nullable();
+            $table->string('header_subtitle')->nullable();
+            $table->text('body_text')->nullable();
+            $table->string('button_text', 100)->nullable();
+            $table->string('button_url')->nullable();
+            $table->string('banner_image')->nullable();
             $table->timestamps();
         });
     }

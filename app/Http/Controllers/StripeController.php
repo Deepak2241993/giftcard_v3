@@ -20,8 +20,8 @@ use Mail;
 use Auth;
 use App\Mail\GeftcardMail;
 use App\Mail\GiftReceipt;
+use App\Mail\Mastermail;
 use Illuminate\Support\Facades\DB;
-use App\Mail\ServicePurchaseConfirmation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Events\GiftcardPurchases;
@@ -729,9 +729,9 @@ public function invoice()
                 session()->forget('cart'); // Clear cart session
                 session()->forget('patient_id'); // Clear cart session
                 DB::commit(); // Commit transaction
-                    //  dd($transaction);
                 $transaction['taxrate'] = $taxrate;
-                Mail::to($transaction->email)->send(new ServicePurchaseConfirmation($transaction));
+                //  dd($transaction->email);
+                Mail::to($transaction->email)->send(new Mastermail($transaction,$template_id=1));
 
                 return response()->json([
                     'message' => 'Order placed successfully',

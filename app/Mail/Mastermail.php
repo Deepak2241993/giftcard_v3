@@ -8,52 +8,52 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\EmailTemplate;
 
-class ServicePurchaseConfirmation extends Mailable
+class Mastermail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $maildata;
+    protected $template;
+
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
-    public $maildata;
-    public function __construct($maildata)
+    public function __construct($maildata, $template_id)
     {
         $this->maildata = $maildata;
+        $this->template = EmailTemplate::findOrFail($template_id);
     }
 
     /**
      * Get the message envelope.
-     *
-     * @return \Illuminate\Mail\Mailables\Envelope
      */
-    public function envelope()
+    public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Service Purchase Confirmation',
+            subject: $this->template->subject
         );
     }
 
     /**
      * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
      */
-    public function content()
+    public function content(): Content
     {
         return new Content(
-            view: 'email.servicePurchaseMail',
+            view: 'email.mastermail',
+            with: [
+                'maildata' => $this->maildata,
+                'template' => $this->template,
+            ]
         );
     }
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array
      */
-    public function attachments()
+    public function attachments(): array
     {
         return [];
     }

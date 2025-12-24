@@ -34,7 +34,7 @@ Route::get('product-page/{token?}/{slug}', 'ProductController@productpage')->nam
 Route::get('productdetails/{slug}','ProductController@productdetails')->name('productdetails');
 Route::get('services','ServiceUnitController@ServicePage')->name('services');
 Route::get('category/{slug}','ProductCategoryController@categorytpage')->name('treatment-categories');
-Route::get('services/{slug}','ServiceUnitController@UnitPageShow')->name('serviceunit');// This is  For Service Frontend and Backend Banner Service
+// Route::get('services/{slug}','ServiceUnitController@UnitPageShow')->name('serviceunit');// This is  For Service Frontend and Backend Banner Service
 Route::get('services/{product_slug}/{unitslug}','ServiceUnitController@UnitPageDetails')->name('unit-details');
 Route::get('service/{slug}','ProductController@productdetails')->name('productdetails');
 Route::post('services-search','ProductController@ServicesSearch')->name('ServicesSearch');
@@ -93,6 +93,8 @@ Route::get('/failed', function () {
 Route::get('/login',[AdminController::class,'login'])->name('login');
 Route::post('/login',[AdminController::class,'login_post'])->name('login-post');
 Route::post('/logout',[AdminController::class,'logout'])->name('logout');
+
+
 //For All Backend Route
 Route::prefix('admin')->middleware('login')->group(function () {
 Route::get('/admin-dashboard', 'HomeController@root')->name('root');
@@ -111,6 +113,8 @@ Route::resource('/coupon', GiftCouponController::class);
 Route::resource('/static-content', StaticContentController::class);
 Route::resource('/medspa-gift', MedsapGiftController::class);
 Route::resource('/email-template', EmailTemplateController::class);
+Route::get('/email-template/{id}/preview', 'EmailTemplateController@preview')->name('email-template.preview');
+Route::post('/email-template/upload-image','EmailTemplateController@uploadImage')->name('email-template.upload-image');
 Route::post('/ckeditor-image-post', 'CkeditorController@uploadImage')->name('ckeditor-image-upload');
 Route::get('/cardgenerated-list','GiftsendController@cardgeneratedList')->name('cardgenerated-list');
 Route::get('/gift-card-transaction-search','GiftsendController@GifttransactionSearch')->name('gift-card-transaction-search');
@@ -136,6 +140,7 @@ Route::post('/product/bulk-action', 'ProductController@bulkAction')->name('produ
 
 // Route::get('/service-buy-from-patient/{id}', 'ProductController@ServiceBuyFromPatientPage')->name('service-buy-from-patient');
 
+Route::view('/email-template-view', 'email.servicePurchaseMail')->name('email-template-view');
 
 Route::resource('/unit', ServiceUnitController::class);
 Route::post('/unit/bulk-action', 'ServiceUnitController@bulkAction')->name('unit.bulk.action');

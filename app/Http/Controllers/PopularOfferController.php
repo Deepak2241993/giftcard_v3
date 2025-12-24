@@ -269,7 +269,8 @@ public function updateCart(Request $request)
         return view('product.cart');
     }
 
-    public function AdminCartview(Request $request){
+    public function AdminCartview(Request $request)
+    {
         
         if (Session::has('internal_patient_id')) {
         $patient_id = Session::get('internal_patient_id');

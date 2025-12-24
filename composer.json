@@ -16,6 +16,7 @@
     "laravel/tinker": "^2.9",
     "laravel/ui": "^4.3",
     "maatwebsite/excel": "^3.1.64",
+    "mews/purifier": "^3.4",
     "psr/simple-cache": "^3.0",
     "stripe/stripe-php": "^15.3",
     "yajra/laravel-datatables-oracle": "^12.6",
