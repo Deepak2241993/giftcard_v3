@@ -39,6 +39,7 @@ cellpadding="0" cellspacing="0">
                                         style="height:70px;"></a>
                             </div>
                             <!-- Header Black Section -->
+                            @if($template->title)
                             <table id="u_content_heading_3"
                                 style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                 cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -48,15 +49,17 @@ cellpadding="0" cellspacing="0">
                                             align="left">
                                             <h1 class="v-line-height v-font-size"
                                                 style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Epilogue; font-size: 22px; font-weight: 400;">
-                                               {{$template->title}}
+                                               {!! $template->title !!}
                                             </h1>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif
                             <!-- Black Section End -->
 
                             <!-- Black Section Content 2 -->
+                            @if($template->secondtitle)
                             <table id="u_content_heading_4"
                                 style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                 cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -72,11 +75,13 @@ cellpadding="0" cellspacing="0">
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif()
                             <!-- Black Section Content 2 -->
 
                              
 
                             <!-- Black Section Image Section -->
+                            @if($template->header_image)
                             <table style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                 cellpadding="0" cellspacing="0" width="100%" border="0">
                                 <tbody>
@@ -102,6 +107,7 @@ cellpadding="0" cellspacing="0">
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif()
                             <!-- Black Image Section End  -->
                         </div>
                     </div>
@@ -121,162 +127,40 @@ cellpadding="0" cellspacing="0">
                     style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
                     <div
                         style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                        <div
-                            style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
                             <p
                                 style="line-height: 24px; padding: 20px; font-size: 16px; word-wrap: break-word; font-family: arial, helvetica, sans-serif;">
                                 {!! str_replace( '[firstname] [lastname]', trim($maildata->fname . ' ' . ($maildata->lname ?? '')), $template->message_email ?? '') !!}
                             </p>
-                            <div style="margin: 20px;">
-                                {{-- Service Details --}}
-                                <div style="width: 100%; overflow-x: auto; margin: 20px 0;">
 
-                                    <table
-                                        style="width: 100%; border-collapse: collapse; font-family: arial, helvetica, sans-serif;">
-                                        <thead>
-                                            <tr>
-                                                <th
-                                                    style="width: 25%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;">
-                                                    Service
-                                                    Name</th>
-                                                <th
-                                                    style="width: 15%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;">
-                                                    Price</th>
-                                                <th
-                                                    style="width: 15%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;">
-                                                    Qty</th>
-                                                <th
-                                                    style="width: 25%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc; text-align: right;">
-                                                    Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc;">
-                                                    Service Name
-                                                </td>
+                            {{-- For Additional Services --}}
+                             @switch($template->id)
 
-                                                <td
-                                                    style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">
-                                                    $ 200.00
-                                                </td>
+                            @case(1)
+                                @include('email.include.servicePurchase')
+                                @break
 
-                                                <td
-                                                    style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">
-                                                    3
-                                                </td>
-
-                                                <td
-                                                    style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc; text-align: right;">
-                                                    60
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tbody>
-                                        <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; font-weight: bold; border: none;">
-                                                Subtotal
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #333; font-weight: bold; border: none;">
-                                               60
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; border: none;">
-                                                Giftcard
-                                                Applied
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #d9534f; border: none;">
-                                                - $30
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; border: none;">
-                                                Tax <span style="color: #666;">(10%)</span>
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #333; border: none;">
-                                                +$6
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #e0e0e0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; font-weight: bold; font-size: 18px; border-top: none;">
-                                                Grand Total
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #333; font-weight: bold; font-size: 18px; border-top: none;">
-                                                $36
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                {{-- For Terms &amp;
-                                Condition --}}
-                                <div
-                                    style="width: 100%; margin: 20px 0; font-family: Arial, Helvetica, sans-serif;">
-                                    <h2 style="margin-bottom: 10px;">Terms
-                                        &amp;
-                                        Conditions</h2>
-
-                                    
-
-                                    
-
-                                    <table
-                                        style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-                                        <thead>
-                                            <tr>
-                                                <th
-                                                    style="padding: 10px; background: #f7f7f7; border: 1px solid #ddd; text-align: left;">
-                                                    Service
-                                                    Name</th>
-                                                <th
-                                                    style="padding: 10px; background: #f7f7f7; border: 1px solid #ddd; text-align: left;">
-                                                    Terms
-                                                    &amp;
-                                                    Conditions</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="padding: 10px; border: 1px solid #ddd; width: 35%; line-height: 1.6;">
-                                                    <ul style="margin: 0; padding-left: 18px;">
-                                                        
-                                                        <li style="margin-bottom: 4px;">Service
-                                                            Term 1</li>
-                                                    </ul>
-                                                </td>
-
-                                                <td
-                                                    style="padding: 10px; border: 1px solid #ddd; width: 65%; line-height: 1.6;">
-                                                    <ul style="margin: 0; padding-left: 18px;">
-                                                        
-                                                        <li style="margin-bottom: 4px;">Condition
-                                                            1</li>
-                                                </td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                {{-- End Terms And
-                                Conditions --}}
-                            </div>
+                            @case(2)
+                                @include('email.include.serviceRedeem')
+                                @break
+                            @case(3)
+                                @include('email.include.dealCancel')
+                                @break
+                            @case(4)
+                                @include('email.include.refundReceipt')
+                                @break
+                            @case(5)
+                                @include('email.include.emailVerify')
+                                @break
+                            @case(6)
+                                @include('email.include.registration')
+                                @break
+                            @case(7)
+                                @include('email.include.forgetpassword')
+                                @break
+                            @default
+                                {{-- intentionally empty --}}
+                            @endswitch
 
                             <hr>
                             <table id="u_content_text_2" style="font-family:arial,helvetica,sans-serif;"
@@ -542,3 +426,4 @@ cellpadding="0" cellspacing="0">
 </html>
 
 @endsection
+

@@ -8,7 +8,6 @@ use App\Models\TimelineEvent;
 use App\Models\Patient;
 use App\Mail\PatientEmailVerify;
 use App\Mail\ForgotPasswordMail;
-use App\Mail\RegistrationMail;
 use Redirect;
 use Mail;
 use Auth;

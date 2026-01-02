@@ -1,14 +1,18 @@
 
 
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="x-apple-disable-message-reformatting">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head></head>
+
 <body class="clean-body u_body"
 style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #e7e7e7;color: #000000">
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="x-apple-disable-message-reformatting">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <table id="u_body"
 style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #e7e7e7;width:100%"
@@ -29,10 +33,11 @@ cellpadding="0" cellspacing="0">
                         <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
                             <div class="logo" style="background-color:#fca52a; padding:20px;">
                                 <a class="navbar-brand" href="https://myforevermedspa.com"><img
-                                        src="{{url('/images/gifts/logo.png')}}" alt="image"
+                                        src="{{$template->logo}}" alt="image"
                                         style="height:70px;"></a>
                             </div>
                             <!-- Header Black Section -->
+                            @if($template->title)
                             <table id="u_content_heading_3"
                                 style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                 cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -42,15 +47,17 @@ cellpadding="0" cellspacing="0">
                                             align="left">
                                             <h1 class="v-line-height v-font-size"
                                                 style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Epilogue; font-size: 22px; font-weight: 400;">
-                                                {{ $template->title ?? 'Thank You for Your Purchase!' }}
+                                               {!! $template->title !!}
                                             </h1>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif
                             <!-- Black Section End -->
 
                             <!-- Black Section Content 2 -->
+                            @if($template->secondtitle)
                             <table id="u_content_heading_4"
                                 style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                 cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -60,17 +67,19 @@ cellpadding="0" cellspacing="0">
                                             align="left">
                                             <h1 class="v-line-height v-font-size"
                                                 style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Epilogue; font-size: 46px; font-weight: 400;">
-                                                {{ $template->secondtitle ?? '' }}
+                                                {{$template->secondtitle}}
                                             </h1>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif()
                             <!-- Black Section Content 2 -->
 
-                            
+                             
 
                             <!-- Black Section Image Section -->
+                            @if($template->header_image)
                             <table style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                 cellpadding="0" cellspacing="0" width="100%" border="0">
                                 <tbody>
@@ -84,7 +93,7 @@ cellpadding="0" cellspacing="0">
                                                         <td style="padding-right: 0px;padding-left: 0px;"
                                                             align="center">
                                                             <img align="center" border="0"
-                                                                src="@if (!empty($template->header_image)) {{ $template->header_image }}@else{{ url('/email_template/med.png') }} @endif"
+                                                                src=" {{$template->header_image}}"
                                                                 alt="image" title="image"
                                                                 style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
                                                                 width="600">
@@ -96,6 +105,7 @@ cellpadding="0" cellspacing="0">
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif()
                             <!-- Black Image Section End  -->
                         </div>
                     </div>
@@ -117,244 +127,66 @@ cellpadding="0" cellspacing="0">
                         style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
                         <div
                             style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                            <p
-                                style="line-height: 24px; padding: 20px; font-size: 16px; word-wrap: break-word; font-family: arial, helvetica, sans-serif;">
-                                {!! str_replace( '[firstname] [lastname]', trim($maildata->fname . ' ' . ($maildata->lname ?? '')), $template->message_email ?? '') !!}
+                            
+                           @php
+                                    $message = $template->message_email ?? '';
 
-                            </p>
-                            <div style="margin: 20px;">
-                                {{-- Service Details --}}
-                                <div style="width: 100%; overflow-x: auto; margin: 20px 0;">
+                                    if (property_exists($maildata, 'fname') && !empty($maildata->fname)) {
+                                        $fullName = trim(
+                                            $maildata->fname . ' ' . ($maildata->lname ?? '')
+                                        );
 
-                                    
-                                    <table
-                                        style="width: 100%; border-collapse: collapse; font-family: arial, helvetica, sans-serif;">
-                                        <thead>
-                                            <tr>
-                                                <th
-                                                    style="width: 25%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;">
-                                                    Service
-                                                    Name</th>
-                                                <th
-                                                    style="width: 15%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;">
-                                                    Price</th>
-                                                <th
-                                                    style="width: 15%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc;">
-                                                    Qty</th>
-                                                <th
-                                                    style="width: 25%; padding: 10px; font-weight: 600; color: #333; background-color: #f0f0f0; border: 1px solid #ccc; text-align: right;">
-                                                    Total</th>
-                                            </tr>
-                                        </thead>
-                                        @php
-                                    $orderdata = \App\Models\ServiceOrder::where('order_id', $maildata->order_id)->get();
-
-                                    @endphp
-                                    {{-- {{
-                                    dd($maildata->order_id
-                                    ); }} --}}
-                              
-                                    <tbody>
-                                    @foreach ($orderdata as $key => $value)
-                                    @php
-                                    if($value->service_type=='product')
-                                    {
-                                    $ServiceData = \App\Models\Product::find($value->service_id);
+                                        $message = str_replace('[firstname] [lastname]', $fullName, $message);
                                     }
-                                    if($value->service_type=='unit')
-                                    { $ServiceData = \App\Models\ServiceUnit::find($value->service_id); }
+                                @endphp
 
-                                    @endphp
-                                            <tr>
-                                                <td
-                                                    style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc;">
-                                                    {{ $ServiceData->product_name}}
-                                                </td>
-
-                                                <td
-                                                    style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">
-                                                    ${{ number_format($ServiceData->discounted_amount ?? $ServiceData->amount, 2) }}
-                                                </td>
-
-                                                <td
-                                                    style="width: 15%; padding: 10px; color: #333; border: 1px solid #ccc;">
-                                                    {{ $value->qty }}
-                                                </td>
-
-                                                <td
-                                                    style="width: 25%; padding: 10px; color: #333; border: 1px solid #ccc; text-align: right;">
-                                                    ${{ number_format(($value->qty * ($ServiceData->discounted_amount ?? $ServiceData->amount)), 2) }}
-                                                </td>
-                                            </tr>
-                                        
-
-                                    @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                {{-- Services Details End
-                                --}}
-                                {{-- {{
-                                dd($maildata->sub_amount);
-                                }} --}}
-                                @php $Totalgiftamount = 0; @endphp
-
-                                @if(!empty($maildata->gift_card_amount))
-                                    @php
-                                        $giftamount = explode('|', $maildata->gift_card_amount);
-                                        foreach ($giftamount as $value) {
-                                            $Totalgiftamount += (float) $value;
-                                        }
-                                    @endphp
-                                @endif
+                                <p style="line-height:24px; padding:20px; font-size:16px; word-wrap:break-word; font-family:arial, helvetica, sans-serif;">
+                                    {!! $message !!}
+                                </p>
 
 
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tbody>
-                                        <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; font-weight: bold; border: none;">
-                                                Subtotal
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #333; font-weight: bold; border: none;">
-                                                ${{ $maildata->sub_amount }}
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; border: none;">
-                                                Giftcard
-                                                Applied
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #d9534f; border: none;">
-                                                - ${{ $Totalgiftamount }}
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #f0f0f0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; border: none;">
-                                                Tax <span style="color: #666;">({{ $maildata->taxrate ?? 0 }}%)</span>
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #333; border: none;">
-                                                +${{ $maildata->tax_amount }}
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #e0e0e0; border: 1px solid #ccc;">
-                                            <td
-                                                style="width: 50%; padding: 10px; color: #333; font-weight: bold; font-size: 18px; border-top: none;">
-                                                Grand Total
-                                            </td>
-                                            <td
-                                                style="width: 50%; text-align: right; padding: 10px; color: #333; font-weight: bold; font-size: 18px; border-top: none;">
-                                                ${{ $maildata->final_amount }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
 
-                                {{-- For Terms &amp;
-                                Condition --}}
-                                <div
-                                    style="width: 100%; margin: 20px 0; font-family: Arial, Helvetica, sans-serif;">
-                                    <h2 style="margin-bottom: 10px;">Terms
-                                        &amp;
-                                        Conditions</h2>
+                            {{-- For Additional Services --}}
+                           
+                             @switch($template->id)
+                                @case(1)
+                                    @includeIf('email.include.servicePurchase')
+                                    @break
 
-                                    @php
-                                    $orders =\App\Models\ServiceOrder::where('order_id',$maildata->order_id)->get();$grouped = [];
-                                    @endphp
+                                @case(2)
+                                    @includeIf('email.include.serviceRedeem')
+                                    @break
 
-                                    @foreach ($orders as $item)
+                                @case(3)
+                                    @includeIf('email.include.dealCancel')
+                                    @break
 
-                                    @php
-                                    $service = null;
-                                    $desc ='No terms available.';
+                                @case(4)
+                                    @includeIf('email.include.refundReceipt')
+                                    @break
 
-                                    if
-                                    ($item->service_type === 'product') {
-                                    $service = \App\Models\Product::find($item->service_id);
+                                @case(5)
+                                    @includeIf('email.include.emailVerify')
+                                    @break
 
-                                    $term = \DB::table('terms') ->where('status', 1) ->whereRaw("FIND_IN_SET(?, REPLACE(service_id, '|', ','))", [$item->service_id]) ->first();
+                                @case(6)
+                                    @includeIf('email.include.registration')
+                                    @break
 
-                                    $desc = $term->description ?? $desc;
+                                 @case(7)
+                                    @includeIf('email.include.forgetpassword')
+                                    @break
 
-                                    } elseif
-                                    ($item->service_type === 'unit') { $service = \App\Models\ServiceUnit::find($item->service_id);
-
-                                    $term = \DB::table('terms') ->where('status', 1) ->whereRaw("FIND_IN_SET(?, REPLACE(unit_id, '|', ','))", [$item->service_id]) ->first();
-
-                                    $desc = $term->description ?? $desc;
-                                    }
-
-                                   if ($service && $service->product_name) 
-                                    {
-                                    $grouped[$desc][] = $service->product_name;
-                                    }
-                                    @endphp
-
-                                    @endforeach
-
-                                    {{-- Render grouped rows
-                                    --}}
-                                   
-
-                                    {{-- 📌 READABLE SERVICE
-                                    NAME UI (Bullet List)
-                                    --}}
-
-                                  
-
-                                    <table
-                                        style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-                                        <thead>
-                                           
-                                            <tr>
-                                                <th
-                                                    style="padding: 10px; background: #f7f7f7; border: 1px solid #ddd; text-align: left;">
-                                                    Service
-                                                    Name</th>
-                                                <th
-                                                    style="padding: 10px; background: #f7f7f7; border: 1px solid #ddd; text-align: left;">
-                                                    Terms
-                                                    &amp;
-                                                    Conditions</th>
-                                            </tr>
-                                             
-                                        </thead>
-
-                                        <tbody>
-                                        @foreach ($grouped as $description => $names)
-                                            <tr>
-                                                <td
-                                                    style="padding: 10px; border: 1px solid #ddd; width: 35%; line-height: 1.6;">
-                                                    <ul style="margin: 0; padding-left: 18px;">
-                                                        @foreach ($names as $sname)
-                                                            <li style="margin-bottom: 4px;">{{ $sname }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                </td>
-
-                                                <td
-                                                    style="padding: 10px; border: 1px solid #ddd; width: 65%; line-height: 1.6;">
-                                                    {!! $description !!}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-
-                                    </table>
-                                </div>
-
-                                {{-- End Terms And
-                                Conditions --}}
-                            </div>
+                                @default
+                                    {{-- intentionally empty --}}
+                            @endswitch
 
                             <hr>
-                            
+                            <table id="u_content_text_2" style="font-family:arial,helvetica,sans-serif;"
+                                role="presentation" cellpadding="0" cellspacing="0" width="100%"
+                                border="0">
+                                
+                            </table>
 
                         </div>
                     </div>
@@ -397,12 +229,8 @@ cellpadding="0" cellspacing="0">
                                                                     style="font-size: 14px; color: #000000; line-height: 140%; text-align: center; word-wrap: break-word;">
                                                                     <p
                                                                         style="font-size: 14px; line-height: 140%;">
-                                                                        @if(!empty($template->footer_message))
-                                                                        {{ $template->footer_message }}
-                                                                        @else
-                                                                        Happy
-                                                                        Shopping!
-                                                                        @endif
+                                                                        
+                                                                       {!! $template->social_message !!}
                                                                     </p>
                                                                 </div>
                                                             </td>
@@ -417,8 +245,8 @@ cellpadding="0" cellspacing="0">
                                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 60px;font-family:arial,helvetica,sans-serif;"
                                                                 align="left">
                                                                 <div align="center">
-                                                                    <div
-                                                                        style="display: table; max-width:187px;">
+                                                                    <div style="display: table; max-width:187px;">
+                                                                        
                                                                         <table align="left" border="0"
                                                                             cellspacing="0"
                                                                             cellpadding="0" width="32"
@@ -433,7 +261,7 @@ cellpadding="0" cellspacing="0">
                                                                                         <a href="{{ $template->social_media_1_url }}"
                                                                                             title="Website"
                                                                                             target="_blank">
-                                                                                            <img src="{{ $template->social_media_1 }}" alt="Twitter" title="Twitter" width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
+                                                                                            <img src={{ $template->social_media_1 }} width="32" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
                                                                                         </a>
                                                                                     </td>
                                                                                 </tr>
@@ -465,6 +293,7 @@ cellpadding="0" cellspacing="0">
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
+
                                                                         <table align="left" border="0"
                                                                             cellspacing="0"
                                                                             cellpadding="0" width="32"
@@ -490,6 +319,7 @@ cellpadding="0" cellspacing="0">
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
+
                                                                         <table align="left" border="0"
                                                                             cellspacing="0"
                                                                             cellpadding="0" width="32"
@@ -523,10 +353,11 @@ cellpadding="0" cellspacing="0">
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <p> {{ $template->footer_message }}</p>
+                                                <p> {!! $template->footer_message !!}</p>
+                                                {{-- Footer end --}}
                                                 <p>
                                                     <a href="{{ $template->button_link }}"
-                                                        target="_blank" style="display:inline-block; padding:12px 28px; background:#fca52a; color:#ffffff; font-family:Arial, sans-serif; font-size:16px; font-weight:600; text-decoration:none; border-radius:30px; box-shadow:0 4px 10px rgba(0,0,0,0.2); letter-spacing:0.5px; margin-top:20px;">{{ $template->button_text }}
+                                                        target="_blank" style="display:inline-block; padding:12px 28px; background:#fca52a; color:#ffffff; font-family:Arial, sans-serif; font-size:16px; font-weight:600; text-decoration:none; border-radius:30px; box-shadow:0 4px 10px rgba(0,0,0,0.2); letter-spacing:0.5px; margin-top:20px;"> {{ $template->button_text }}
                                                     </a>
                                                 </p>
 
@@ -565,7 +396,8 @@ cellpadding="0" cellspacing="0">
                                             align="left">
                                             <div class="v-line-height v-font-size"
                                                 style="font-size: 14px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                <p style="font-size: 18px; line-height: 140%;">{!! $template->footer_contact  !!}
+                                                <p style="font-size: 18px; line-height: 140%;">
+                                                    {{ $template->footer_contact }}
                                                 </p>
                                             </div>
                                         </td>
@@ -611,3 +443,5 @@ cellpadding="0" cellspacing="0">
 </body>
 
 </html>
+
+

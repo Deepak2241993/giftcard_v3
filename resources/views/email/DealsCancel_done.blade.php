@@ -87,7 +87,7 @@
                                                                                 <p style="margin:0 0 1em">Dear
                                                                                     {{ $data->fname ? $data->fname . ' ' . $data->lname : '' }},
                                                                                 </p>
-                                                                                <p>We’ve attached your latest Service
+                                                                                <p> We’ve attached your latest Service
                                                                                     Redeem Statement. You’ll be able to
                                                                                     see the summary of transactions made
                                                                                     for the Service use.</p>

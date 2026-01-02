@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Giftsend;
 use App\Models\TimelineEvent;
 use App\Models\Patient;
-use App\Mail\PatientEmailVerify;
+use App\Mail\Mastermail;
 use App\Mail\ForgotPasswordMail;
 use App\Mail\RegistrationMail;
 use Redirect;
@@ -210,7 +210,7 @@ public function Patientlogout(Request $request) {
                 ]);
                 Giftsend::where('gift_send_to', $patient->email)->update(['gift_send_to' => $patient->patient_login_id]);
                 Giftsend::where('receipt_email', $patient->email)->update(['receipt_email' => $patient->patient_login_id]);
-                Mail::to($patient->email)->send(new PatientEmailVerify($patient));
+                Mail::to($patient->email)->send(new Mastermail($patient,$template_id=5));
                 return response()->json(['success' => true, 'message' => 'Details updated successfully. Verify your email to login !']);
             }
             return response()->json(['success' => false, 'errors' => ['email' => 'Email already exists. Please login.']], 422);
@@ -223,25 +223,26 @@ public function Patientlogout(Request $request) {
             'lname' => $request->lname,
             'email' => $request->email,
             'phone' => $request->phone,
-            'status' => '0',
+            'status' => 0,
             'patient_login_id' => $request->patient_login_id,
             'password' => Hash::make($request->password),
             'user_token' => 'FOREVER-MEDSPA',
             'tokenverify' => bin2hex(random_bytes(32)),
         ]);
-        Mail::to($request->email)->send(new PatientEmailVerify($patient));
+    
+        Mail::to($request->email)->send(new Mastermail($patient,$template_id=5));
         return response()->json(['success' => true, 'message' => 'Signup successful. Verify your email to login !']);
         }
     }
   
     //  For Email Verification 
-    public function PatientEmailVerify(Request $request, $token)
+    public function PatientRegistrationConfirm(Request $request, $token)
     {
         $result = Patient::where('tokenverify', $token)->first();
     
         if ($result) {
             $result->update(['status' => 1, 'tokenverify' => null]);
-            Mail::to($result->email)->send(new RegistrationMail($result));
+            Mail::to($result->email)->send(new Mastermail($result,$template_id=6));
             return redirect()->route('patient-login')->with('message', 'Your email has been verified successfully.');
         }
     
@@ -267,7 +268,7 @@ public function Patientlogout(Request $request) {
         if ($user && $user->patient_login_id !=null && $user->password !=null) {
             // Send the forgot password email
             $user->update(['tokenverify' => bin2hex(random_bytes(32))]);
-            Mail::to($user->email)->send(new ForgotPasswordMail($user));
+            Mail::to($user->email)->send(new Mastermail($user,$template_id=7));
             return view('auth.passwords.forget_email_success')
                 ->with('success', 'A password reset email has been sent to the registered email address.');
         } else {

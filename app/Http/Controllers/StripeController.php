@@ -544,7 +544,8 @@ if (in_array($giftsend->usertype, ['regular', 'guest'])) {
 
         //  For Purchase Confirmation Mail
         // dd($transaction_data);
-        Mail::to($transaction_data->email)->send(new ServicePurchaseConfirmation($transaction_data));
+        Mail::to($transaction_data->email)->send(new Mastermail($transaction_data,$template_id=1));
+    
 
         return redirect()->route('invoice')
                      ->with('transaction_data', $transaction_data)

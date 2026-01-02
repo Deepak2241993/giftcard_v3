@@ -14,8 +14,8 @@ use Illuminate\Http\Request;
 use Auth;
 use Mail;
 use DB;
-use App\Mail\DealsCancle;
-use App\Mail\ServiceRedeemReceipt;
+// use App\Mail\DealsCancle;
+use App\Mail\Mastermail;
 use App\Mail\RefundReceiptMail;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
@@ -189,7 +189,7 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
                     $transactionResult = TransactionHistory::where('order_id', $result->order_id)->first();
 
                     if ($transactionResult) {
-                        Mail::to($transactionResult->email)->send(new ServiceRedeemReceipt($transactionResult));
+                        Mail::to($transactionResult->email)->send(new Mastermail($transactionResult,$template_id=2));
                         Log::info('ServiceRedeemReceipt email sent', ['email' => $transactionResult->email]);
                     } else {
                         Log::warning('Transaction history not found', ['order_id' => $result->order_id]);
@@ -336,100 +336,100 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
      
         
         public function DoCancel(Request $request, ServiceRedeem $service_redeem)
-{
-    // Validate the request data
-    $request->validate([
-        'product_id' => 'required|integer',
-        'order_id' => 'required|string|max:255',
-        'number_of_session_use' => 'required|integer|min:1',
-        'comments' => 'nullable|string|max:255',
-    ]);
+        {
+            // Validate the request data
+            $request->validate([
+                'product_id' => 'required|integer',
+                'order_id' => 'required|string|max:255',
+                'number_of_session_use' => 'required|integer|min:1',
+                'comments' => 'nullable|string|max:255',
+            ]);
 
-    try {
-        $data = $request->all();
-       
-        $data['user_token'] = 'FOREVER-MEDSPA';
-        
-        $result = $service_redeem->create($data);
-
-        if ($result) {
-            $result->transaction_id = 'SER-CAN-' . $result->id;
-            $result->updated_by = Auth::user()->id;
-            $result->save();
-
-            $transactionresult = TransactionHistory::where('order_id', $result->order_id)->first();
-            //  For Timeline store data
-            event(new TimelineServiceCancel([
-                'transaction_id' => $result->transaction_id,
-                'patient_id' => $result->patient_login_id,
-            ]));
             try {
-                // Send cancellation email
-                Mail::to($transactionresult->email)->send(new DealsCancle($transactionresult));
-            } catch (\Exception $e) {
-                // Log if email sending fails
-                Log::error('Email sending failed: ' . $e->getMessage());
-                return response()->json(['success' => false, 'message' => 'Failed to send cancellation email.']);
-            }
+                $data = $request->all();
+            
+                $data['user_token'] = 'FOREVER-MEDSPA';
+                
+                $result = $service_redeem->create($data);
 
-            // For online payment refund
-            if ($transactionresult->payment_mode == 'online') {
-                try {
-                    // Payment Refund Process
-                    Stripe::setApiKey(env('STRIPE_SECRET'));
-                    $refund = Refund::create([
-                        'payment_intent' => $transactionresult->payment_intent,  // Use actual Payment Intent ID
-                        'amount' => $request->refund_amount * 100,  // Amount is in cents
-                        'reason' => 'requested_by_customer',  // Reason for refund
-                    ]);
-                
-                    $balanceTransaction = \Stripe\BalanceTransaction::retrieve($refund->balance_transaction);
-                
-                    // After a successful refund, send a receipt
-                    $this->sendRefundReceipt($transactionresult->email, $refund);
-                
-                    // Update status
-                    $result->update(['status' => 0]);
-                
-                    // Trigger event with stripped details (no sensitive data)
-                    event(new TimelineServiceRefund([
-                        'refund_id' => $refund->id,               // Only refund ID
-                        'status' => $refund->status,              // Refund status
-                        'amount' => $refund->amount / 100,        // Amount in standard currency format
-                        'created_at' => $refund->created,         // Timestamp of refund
-                        'patient_id' =>$result->patient_login_id,         // Timestamp of refund
+                if ($result) {
+                    $result->transaction_id = 'SER-CAN-' . $result->id;
+                    $result->updated_by = Auth::user()->id;
+                    $result->save();
+
+                    $transactionresult = TransactionHistory::where('order_id', $result->order_id)->first();
+                    //  For Timeline store data
+                    event(new TimelineServiceCancel([
+                        'transaction_id' => $result->transaction_id,
+                        'patient_id' => $result->patient_login_id,
                     ]));
-                } catch (\Exception $e) {
-                    // Log if refund process fails
-                    Log::error('Stripe Refund failed: ' . $e->getMessage());
-                    return response()->json(['success' => false, 'message' => 'Failed to process refund.']);
+                    try { 
+                        // Send cancellation email
+                        Mail::to($transactionresult->email)->send(new Mastermail($transactionresult,$template_id=3));
+                    } catch (\Exception $e) {
+                        // Log if email sending fails
+                        Log::error('Email sending failed: ' . $e->getMessage());
+                        return response()->json(['success' => false, 'message' => 'Failed to send cancellation email.']);
+                    }
+
+                    // For online payment refund
+                    if ($transactionresult->payment_mode == 'online') {
+                        try {
+                            // Payment Refund Process
+                            Stripe::setApiKey(env('STRIPE_SECRET'));
+                            $refund = Refund::create([
+                                'payment_intent' => $transactionresult->payment_intent,  // Use actual Payment Intent ID
+                                'amount' => $request->refund_amount * 100,  // Amount is in cents
+                                'reason' => 'requested_by_customer',  // Reason for refund
+                            ]);
+                        
+                            $balanceTransaction = \Stripe\BalanceTransaction::retrieve($refund->balance_transaction);
+                        
+                            // After a successful refund, send a receipt
+                            $this->sendRefundReceipt($transactionresult->email, $refund,$template_id=4);
+                        
+                            // Update status
+                            $result->update(['status' => 0]);
+                        
+                            // Trigger event with stripped details (no sensitive data)
+                            event(new TimelineServiceRefund([
+                                'refund_id' => $refund->id,               // Only refund ID
+                                'status' => $refund->status,              // Refund status
+                                'amount' => $refund->amount / 100,        // Amount in standard currency format
+                                'created_at' => $refund->created,         // Timestamp of refund
+                                'patient_id' =>$result->patient_login_id,         // Timestamp of refund
+                            ]));
+                        } catch (\Exception $e) {
+                            // Log if refund process fails
+                            Log::error('Stripe Refund failed: ' . $e->getMessage());
+                            return response()->json(['success' => false, 'message' => 'Failed to process refund.']);
+                        }
+                        
+                    }
+                    else{
+                        $result->update(['status' => 0]);
+                    }
+
+                    // Success Response
+                    return response()->json(['success' => true, 'message' => 'Service redeemed and refund processed successfully.']);
                 }
-                
-            }
-            else{
-                $result->update(['status' => 0]);
-            }
 
-            // Success Response
-            return response()->json(['success' => true, 'message' => 'Service redeemed and refund processed successfully.']);
+                return response()->json(['success' => true, 'message' => 'Service redeemed successfully.', 'return_process' => 'store-purchase']);
+            } catch (\Exception $e) {
+                // Log any general failure
+                Log::error('DoCancel Process failed: ' . $e->getMessage());
+                return back()->withErrors(['error' => $e->getMessage()]);
+            }
         }
-
-        return response()->json(['success' => true, 'message' => 'Service redeemed successfully.', 'return_process' => 'store-purchase']);
-    } catch (\Exception $e) {
-        // Log any general failure
-        Log::error('DoCancel Process failed: ' . $e->getMessage());
-        return back()->withErrors(['error' => $e->getMessage()]);
-    }
-}
 
 /**
  * Function to send refund receipt to the customer
  */
-private function sendRefundReceipt($email, $refund)
+private function sendRefundReceipt($email, $refund,$template_id)
 {
     try {
         // Send the refund receipt email
-        Mail::to($email)->send(new RefundReceiptMail($refund));
+        Mail::to($email)->send(new Mastermail($refund,$template_id));
 
         // Log the successful sending of the refund receipt
         Log::info('Refund receipt sent successfully to ' . $email);

@@ -78,7 +78,7 @@ Route::get('/failed', function () {
     Route::post('/store-amount', 'PatientController@storeAmount')->name('store-amount');
     Route::post('/unset-amount', 'PatientController@unsetAmont')->name('unset-amount');
     Route::get('/remove-amount', 'PatientController@removeAmount')->name('remove-amount');
-    Route::get('/patient-email-verify/{token}',[PatientAuthController::class,'PatientEmailVerify'])->name('patient_email_verify');
+    Route::get('/patient-email-verify/{token}',[PatientAuthController::class,'PatientRegistrationConfirm'])->name('patient_email_verify');
     Route::get('/forgot-password',[PatientAuthController::class,'ForgotPasswordView'])->name('forgot-password');
     Route::post('/password-reset',[PatientAuthController::class,'ForgotPassword'])->name('password-reset');
     Route::get('/reset-password/{token}',[PatientAuthController::class,'ResetPassword'])->name('ResetPasswordView');

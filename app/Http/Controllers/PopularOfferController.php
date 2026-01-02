@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Mail;
 use Illuminate\Support\Facades\DB;
-use App\Mail\ServicePurchaseConfirmation;
+use App\Mail\Mastermail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -599,7 +599,7 @@ public function Checkout(Request $request)
                     Session::pull('cart');
                 }
 
-        Mail::to($transaction_data->email)->send(new ServicePurchaseConfirmation($transaction_data));
+        Mail::to($transaction_data->email)->send(new Mastermail($transaction_data,$template_id=1));
         return redirect()->route('service-invoice', ['transaction_data' => $transaction_data]);
             } catch (\Exception $e) {
                 DB::rollBack();  // Rollback transaction

@@ -41,6 +41,7 @@ class Mastermail extends Mailable
      */
     public function content(): Content
     {
+        // dd($this->maildata);
         return new Content(
             view: 'email.mastermail',
             with: [

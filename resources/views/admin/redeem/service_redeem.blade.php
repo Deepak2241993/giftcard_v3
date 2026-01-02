@@ -1,24 +1,24 @@
 @extends('layouts.admin_layout')
 @section('body')
     @push('css')
-    <style>
-        .spinner-border {
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        vertical-align: text-bottom;
-        border: 0.1em solid currentColor;
-        border-right-color: transparent;
-        border-radius: 50%;
-        animation: spinner-border 0.75s linear infinite;
-        }
+        <style>
+            .spinner-border {
+                display: inline-block;
+                width: 1rem;
+                height: 1rem;
+                vertical-align: text-bottom;
+                border: 0.1em solid currentColor;
+                border-right-color: transparent;
+                border-radius: 50%;
+                animation: spinner-border 0.75s linear infinite;
+            }
 
-        @keyframesspinner-border {
-        100% {
-        transform: rotate(360deg);
-        }
-        }
-    </style>
+            @keyframesspinner-border {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
     @endpush()
     <section class="content-header">
         <div class="container-fluid">
@@ -45,21 +45,31 @@
 
 
             <div class="container-fluid">
-                
+
                 <!--begin::Row-->
                 {{-- {{ $data->onEachSide(5)->links() }} --}}
                 <table id="datatable-buttons" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="View Order">View Order</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Order Number">Order Number</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Full Name">Full Name</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Email">Email</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Phone">Phone</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Transaction Amount">Transaction Amount</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Transaction Id">Transaction Id</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Created Date & Time">Created Date & Time</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="#">#</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="View Order">View Order</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Order Number">Order Number</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Full Name">Full Name</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Email">Email</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Phone">Phone</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Transaction Amount">Transaction Amount</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Transaction Id">Transaction Id</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Created Date & Time">Created Date & Time
+                            </th>
 
                         </tr>
                     </thead>
@@ -69,38 +79,31 @@
                         @foreach ($data as $key => $value)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                @if(!empty($value->payment_intent))
-                                <td class="text-center">
-    <a type="button" 
-       class="btn btn-sm btn-outline-success me-1" 
-       data-bs-toggle="modal"
-       data-bs-target="#staticBackdrop_{{ $value['id'] }}"
-       onclick="OrderView({{ $key }}, '{{ $value['order_id'] }}')"
-       title="Redeem Service">
-        <i class="fa fa-check-circle"></i>
-    </a>
+                                @if (!empty($value->payment_intent))
+                                    <td class="text-center">
+                                        <a type="button" class="btn btn-sm btn-outline-success me-1" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop_{{ $value['id'] }}"
+                                            onclick="OrderView({{ $key }}, '{{ $value['order_id'] }}')"
+                                            title="Redeem Service">
+                                            <i class="fa fa-check-circle"></i>
+                                        </a>
 
-    <a type="button" 
-       class="btn btn-sm btn-outline-danger me-1" 
-       data-bs-toggle="modal"
-       data-bs-target="#staticBackdrop_{{ $value['id'] }}"
-       onclick="CancelView({{ $key }}, '{{ $value['order_id'] }}')"
-       title="Cancel Order">
-        <i class="fa fa-times-circle"></i>
-    </a>
+                                        <a type="button" class="btn btn-sm btn-outline-danger me-1" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop_{{ $value['id'] }}"
+                                            onclick="CancelView({{ $key }}, '{{ $value['order_id'] }}')"
+                                            title="Cancel Order">
+                                            <i class="fa fa-times-circle"></i>
+                                        </a>
 
-    <a type="button" 
-       class="btn btn-sm btn-outline-warning" 
-       data-bs-toggle="modal" 
-       data-bs-target="#statement_view_{{ $value['id'] }}"
-       onclick="StatementView({{ $key }}, '{{ $value['order_id'] }}')"
-       title="View Statement">
-        <i class="fa fa-file-text"></i>
-    </a>
-</td>
-
+                                        <a type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
+                                            data-bs-target="#statement_view_{{ $value['id'] }}"
+                                            onclick="StatementView({{ $key }}, '{{ $value['order_id'] }}')"
+                                            title="View Statement">
+                                            <i class="fa fa-file-text"></i>
+                                        </a>
+                                    </td>
                                 @else
-                                <td> <span class="badge bg-danger">No Payment</span></td>
+                                    <td> <span class="badge bg-danger">No Payment</span></td>
                                 @endif
                                 <td>{{ $value->order_id }}</td>
                                 <td>{{ $value->fname . ' ' . $value->lname }}</td>
@@ -126,8 +129,8 @@
     </section>
 
     <!-- for Show Service Order Modal -->
-    <div class="modal fade deepak" id="staticBackdrop_" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade deepak" id="staticBackdrop_" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -498,11 +501,6 @@
             });
         }
 
-
-
-
-
-
         //  Order Cancel Code End ***********************************************************************
 
 
@@ -613,7 +611,7 @@
                 var currentRow = $(button).closest('tr');
                 var number_of_session_use = currentRow.find('input[name="number_of_session_use[]"]').val();
                 var remaining_sessions = currentRow.find('td:nth-child(4)')
-            .text(); // Get remaining sessions value from table cell
+                    .text(); // Get remaining sessions value from table cell
                 // Validate session usage
                 if (parseInt(number_of_session_use) > parseInt(remaining_sessions)) {
                     alert('You cannot redeem more sessions than the remaining sessions.');
@@ -704,21 +702,23 @@
         // });
     </script>
 
-<script>
-    $(function () {
-      $("#datatable-buttons").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-    });
-  </script>
+    <script>
+        $(function() {
+            $("#datatable-buttons").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
 @endpush

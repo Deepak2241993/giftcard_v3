@@ -53,12 +53,12 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="checkbox-form">
-                                <h3 class="mb-15">Billing Details</h3>
+                                <h3 class="mb-15">Billing Details </h3>
                                 <div class="row g-5">
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>First Name <span class="required">*</span></label>
-                                            <input type="text" placeholder="" name="fname" value="{{Session::get('result') ? Auth::guard('patient')->user()->fname : old('fname') }}">
+                                            <input type="text" placeholder="" name="fname" value="{{Session::get('patient_details') ? Session::get('patient_details')->fname : old('fname') }}">
                                             @error('fname')
                                             <span class="text-danger">{{ 'First name is required.' }}</span>
                                             @enderror
@@ -67,14 +67,14 @@
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Last Name </label>
-                                            <input type="text" placeholder="" name="lname" value="{{Session::get('result') ? Auth::guard('patient')->user()->lname : old('lname') }}">
+                                            <input type="text" placeholder="" name="lname" value="{{Session::get('patient_details') ? Session::get('patient_details')->lname : old('lname') }}">
                                             
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Email Address <span class="required">*</span></label>
-                                            <input type="email" placeholder="" name="email" value="{{Session::get('result') ? Auth::guard('patient')->user()->email : old('email') }}">
+                                            <input type="email" placeholder="" name="email" value="{{Session::get('patient_details') ? Session::get('patient_details')->email : old('email') }}">
                                             @error('email')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -83,7 +83,7 @@
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Phone <span class="required">*</span></label>
-                                            <input type="number" placeholder="Phone" name="phone" value="{{Session::get('result') ? Auth::guard('patient')->user()->phone : old('phone') }}">
+                                            <input type="number" placeholder="Phone" name="phone" value="{{Session::get('patient_details') ? Session::get('patient_details')->phone : old('phone') }}">
                                             @error('phone')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -91,14 +91,14 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
-                                            <input type="text" placeholder="Apartment, suite, unit etc. (optional)" name="address" value="{{Session::get('result') ? Auth::guard('patient')->user()->address : old('address') }}">
+                                            <input type="text" placeholder="Apartment, suite, unit etc. (optional)" name="address" value="{{Session::get('patient_details') ? Session::get('patient_details')->address : old('address') }}">
                                            
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
                                             <label>Town / City <span class="required">*</span></label>
-                                            <input type="text" placeholder="Town / City" name="city" value="{{Session::get('result') ? Auth::guard('patient')->user()->city : old('city') }}">
+                                            <input type="text" placeholder="Town / City" name="city" value="{{Session::get('patient_details') ? Session::get('patient_details')->city : old('city') }}">
                                             @error('city')
                                                 <span class="text-danger">{{ 'Please Enter Town / City.' }}</span>
                                             @enderror
@@ -107,7 +107,7 @@
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>State / Country <span class="required">*</span></label>
-                                            <input type="text" placeholder="" name="country" value="{{Session::get('result') ? Auth::guard('patient')->user()->country : old('country') }}">
+                                            <input type="text" placeholder="" name="country" value="{{Session::get('patient_details') ? Session::get('patient_details')->country : old('country') }}">
                                             @error('country')
                                                 <span class="text-danger">{{ 'Please Enter State / County' }}</span>
                                             @enderror
@@ -116,7 +116,7 @@
                                     <div class="col-md-6">
                                         <div class="checkout-form-list">
                                             <label>Postcode / Zip <span class="required">*</span></label>
-                                            <input type="text" placeholder="Postcode / Zip" name="zip_code" value="{{Session::get('result') ? Auth::guard('patient')->user()->zip_code : old('zip_code') }}">
+                                            <input type="text" placeholder="Postcode / Zip" name="zip_code" value="{{Session::get('patient_details') ? Session::get('patient_details')->zip_code : old('zip_code') }}">
                                             @error('zip_code')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
