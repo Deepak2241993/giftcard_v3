@@ -185,21 +185,6 @@ class StripeController extends Controller
                     }
                 }
 
-            
-            // This section handles the email sending logic based on user type
-
-                // if (in_array($giftsend->usertype, ['regular', 'guest'])) {
-
-                //     $receipt_email = Patient::where('patient_login_id', $giftsend->receipt_email)
-                //     ->value('email') ?? $giftsend->receipt_email;
-                //     $gift_send_to = $giftsend->gift_send_to;
-                    
-                //     $giftcard_receiver_email_id = Patient::where('email', $giftsend->gift_send_to)
-                //     ->value('patient_login_id') ?? $giftsend->gift_send_to;
-                //     $giftsend->update(['gift_send_to' => $giftcard_receiver_email_id]);
-                // }
-
-
                 
 if (in_array($giftsend->usertype, ['regular', 'guest'])) {
 

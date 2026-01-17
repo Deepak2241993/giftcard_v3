@@ -267,7 +267,7 @@ class GiftController extends Controller
         $coupon_code = GiftCoupon::select('gift_coupons.*')
             ->orderBy('id', 'DESC')->where('gift_coupons.status', 1)
             ->get();
-        $occassion = EmailTemplate::where('status', 1)->get();
+        $occassion = EmailTemplate::where('template_type','==','external')->where('status', 1)->get();
         return view('pages.home', compact('coupon_code', 'occassion'));
     }
 
