@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Mail;
 use Auth;
 use DB;
 use Session;
-use App\Mail\ResendGiftcard;
 use App\Mail\GiftCardStatement;
-use App\Mail\GiftcardCancelMail;
+use App\Mail\Mastermail;
+use App\Models\EmailTemplate;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use App\Events\GiftcardsBuyFromCenter;
@@ -680,7 +680,7 @@ public function giftcancel(Request $request,){
         // Convert $tomail to string if it's an array
         $tomail = is_array($tomail) ? $tomail[0] : $tomail;
         
-        Mail::to($tomail)->send(new GiftcardCancelMail($statement));
+        Mail::to($tomail)->send(new Mastermail($statement,$template_id=10));
      } 
 
     return $result;
@@ -688,19 +688,38 @@ public function giftcancel(Request $request,){
 }
 
 public function Resendmail_view(Request $request){
-    $mail_data = Giftsend::findOrFail($request->id);
+    $maildata = Giftsend::findOrFail($request->id);
+     $template = EmailTemplate::findOrFail(13);
+    
+    $receiver= Patient::where('patient_login_id',$maildata->gift_send_to)->first();
+    $sender= Patient::where('patient_login_id',$maildata->receipt_email)->first();
+    if($receiver)
+        {
+            $maildata['gift_send_to'] = $receiver->email;
+        }
+        if($sender)
+            {
+                $maildata['receipt_email'] = $sender->email;
+            }
+    return view('email.email_template_view',compact('maildata','template'));
 
-     $receiver= Patient::where('patient_login_id',$mail_data->gift_send_to)->first();
-     $sender= Patient::where('patient_login_id',$mail_data->receipt_email)->first();
-     if($receiver)
-     {
-        $mail_data['gift_send_to'] = $receiver->email;
-     }
-     if($sender)
-     {
-        $mail_data['receipt_email'] = $sender->email;
-     }
-    return view('email.email_template_view',compact('mail_data'));
+}
+//For Preview
+public function Resendmail_preview(Request $request){
+    $template = EmailTemplate::findOrFail(13);
+    
+    $maildata = Giftsend::findOrFail($request->id);
+    $receiver= Patient::where('patient_login_id',$maildata->gift_send_to)->first();
+    $sender= Patient::where('patient_login_id',$maildata->receipt_email)->first();
+    if($receiver)
+        {
+        $maildata['gift_send_to'] = $receiver->email;
+        }
+    if($sender)
+            {
+                $maildata['receipt_email'] = $sender->email;
+            }
+    return view('admin.email_template.emailpreview',compact('maildata','template'));
 
 }
 
@@ -709,7 +728,19 @@ public function Resendmail(Request $request)
     try {
         $statement = $request->all();
         $statement['send_mail']='yes';
-        Mail::to($statement['gift_send_to'])->cc($request->cc)->bcc($request->bcc)->send(new ResendGiftcard($statement));
+    $maildata = Giftsend::findOrFail($request->id);
+    $receiver= Patient::where('patient_login_id',$maildata->gift_send_to)->first();
+    $sender= Patient::where('patient_login_id',$maildata->receipt_email)->first();
+    if($receiver)
+        {
+        $maildata['gift_send_to'] = $receiver->email;
+        }
+    if($sender)
+            {
+                $maildata['receipt_email'] = $sender->email;
+            }
+            // dd($statement);
+        Mail::to($statement['gift_send_to'])->cc($request->cc)->bcc($request->bcc)->send(new Mastermail($maildata,$template_id=13));
 
         return back()->with('message', 'Email sent successfully.');
     } 

@@ -42,31 +42,35 @@
                             <div class="mb-3 col-lg-6">
                                 <label for="title" class="form-label">Name</label>
                                 <input class="form-control" type="text" name="recipient_name"
-                                    value="{{ isset($mail_data) && $mail_data->recipient_name ? $mail_data->recipient_name : $mail_data->your_name }}"
+                                    value="{{ isset($maildata) && $maildata->recipient_name ? $maildata->recipient_name : $maildata->your_name }}"
                                     placeholder="To">
                             </div>
                             <div class="mb-3 col-lg-6">
                                 <label for="title" class="form-label">To</label>
                                 <input class="form-control" type="text" name="gift_send_to"
-                                    value="{{ isset($mail_data) ? $mail_data->gift_send_to : '' }}" placeholder="To">
+                                    value="{{ isset($maildata) ? $maildata->gift_send_to : '' }}" placeholder="To">
                             </div>
                             <div class="mb-3 col-lg-6">
                                 <label for="title" class="form-label">CC</label>
                                 <input class="form-control" type="text" name="cc"
-                                    value="{{ isset($mail_data) && $mail_data->recipient_name != '' ? $mail_data->receipt_email : '' }}"
+                                    value="{{ isset($maildata) && $maildata->recipient_name != '' ? $maildata->receipt_email : '' }}"
                                     placeholder="Cc">
                             </div>
                             <div class="mb-3 col-lg-6">
                                 <label for="title" class="form-label">Bcc</label>
-                                <input class="form-control" type="text" name="bcc"
-                                    value="{{ isset($mail_data) ? $mail_data->title : '' }}" placeholder="Bcc">
+                                <input class="form-control" type="text" name="bcc" value="{{ isset($maildata) ? $maildata->title : '' }}" placeholder="Bcc">
+                                <input class="form-control" type="hidden" name="id" value="{{ isset($maildata) ? $maildata->id : '' }}">
                             </div>
 
 
                             <div class="mb-3 col-lg-12">
                                 <label for="amount" class="form-label">Message</label>
-
-                                <textarea readonly name="message" id="summernote" cols="30" rows="10" readonly>@include('email.resedgiftcard')
+                                <iframe 
+                                        src="{{ route('resendmail_preview',$template_id=$maildata->id) }}" 
+                                        width="100%" 
+                                        height="600" 
+                                        style="border:1px solid #ccc;">
+                                    </iframe>
                             </textarea>
 
                             </div>

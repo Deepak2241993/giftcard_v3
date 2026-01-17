@@ -8,8 +8,6 @@ use App\Models\Giftsend;
 use App\Models\TimelineEvent;
 use App\Models\Patient;
 use App\Mail\Mastermail;
-use App\Mail\ForgotPasswordMail;
-use App\Mail\RegistrationMail;
 use Redirect;
 use Mail;
 use Auth;
@@ -21,7 +19,6 @@ use App\Events\EventLogin;
 use App\Events\EventPatientLogout;
 use App\Events\EventPatientCreated;
 use Illuminate\Support\Facades\DB;
-use App\Mail\PatientCredentialsMail;
 use Illuminate\Support\Facades\Log;
 
 class PatientAuthController extends Controller

@@ -18,8 +18,6 @@ use Stripe\Customer;
 use Session;
 use Mail;
 use Auth;
-use App\Mail\GeftcardMail;
-use App\Mail\GiftReceipt;
 use App\Mail\Mastermail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -105,19 +103,8 @@ class StripeController extends Controller
                 'last_for_digit'=>'xxxx-xxxx-xxxx-'.$data->payment_method_details->card->last4,
             );
             $transaction->create($transaction_entry);
-            // $mail_data=array(
-            //             'to'=>session('gift_details')['to'],
-            //             'from'=>session('gift_details')['from'],
-            //             'code'=>session('gift_details')['code'],
-            //             'to_name'=>session('gift_details')['to_name'],
-            //             'from_name'=>session('gift_details')['from_name'],
-            //             'amount'=>session('gift_details')['amount'],
-            //             'template_id'=>session('gift_details')['template_id'],
-            //             'msg'=>$result->msg,
-            //         );
-            
-            // dd($mail_data);
-            Mail::to("$tomail")->send(new GeftcardMail($mail_data));
+           
+            Mail::to("$tomail")->send(new Mastermail($mail_data,$template_id=8));
 
             $request->session()->flush('gift_details');
             return view('stripe.thanks',compact('data'))->with('success', 'Payment successful.');
@@ -257,22 +244,22 @@ if (in_array($giftsend->usertype, ['regular', 'guest'])) {
     // This Section Send Email To (Giftcard Sender)  For Future Date and receipt get to current date
 
                 if ($giftsend->in_future != null && $giftsend->gift_card_send_type == 'other') {
-                    Mail::to($receipt_email)->send(new GiftReceipt($giftsend));
+                    Mail::to($receipt_email)->send(new Mastermail($giftsend,$template_id=9));
                     Log::info('Gift card email sent', ['to' => $receipt_email]);
                 }
  
                 if($giftsend->gift_card_send_type == 'other' &&  $giftsend->in_future == null){
-                    Mail::to($receipt_email)->send(new GiftReceipt($giftsend));
+                    Mail::to($receipt_email)->send(new Mastermail($giftsend,$template_id=9));
                     Log::info('Gift receipt email sent', ['to' => $receipt_email]);
 
-                    Mail::to($gift_send_to)->send(new GeftcardMail($giftsend));
+                    Mail::to($gift_send_to)->send(new Mastermail($giftsend,$template_id=8));
                     Log::info('Gift sent email', ['to' => $giftsend]);
                 }
                 
                 
                 if($giftsend->gift_card_send_type == 'self')
                 {
-                    Mail::to($receipt_email)->send(new GeftcardMail($giftsend));
+                    Mail::to($receipt_email)->send(new Mastermail($giftsend,$template_id=8));
                     Log::info('Gift card email sent', ['to' => $receipt_email]);
                 }
                 

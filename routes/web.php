@@ -172,6 +172,7 @@ Route::post('/giftcard-purchase','GiftsendController@GiftPurchase')->name('giftc
 Route::get('/giftcard-purchases-success','GiftsendController@GiftPurchaseSuccess')->name('giftcard-purchases-success');
 Route::post('/giftcard-payment-update','GiftsendController@updatePaymentStatus')->name('giftcard-payment-update');
 Route::get('/resendmail_view','GiftsendController@Resendmail_view')->name('Resendmail_view');
+Route::get('/resendmail_preview','GiftsendController@Resendmail_preview')->name('resendmail_preview');
 Route::post('/resendmail','GiftsendController@Resendmail')->name('resendmail');
 Route::get('search-keywords-reports','ProductController@KeywordsReports')->name('keywords_reports');
 Route::get('export-keywords','ProductController@ExportDate')->name('export_date');

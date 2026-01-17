@@ -20,6 +20,7 @@ use App\Events\EventPatientLogout;
 use App\Events\EventPatientCreated;
 use Illuminate\Support\Facades\DB;
 use App\Mail\PatientCredentialsMail;
+use App\Mail\Mastermail;
 use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
@@ -109,9 +110,12 @@ public function logout(Request $request) {
 
             $result = $patient->create($data);
 
+            $result['plain_password'] = $randomPassword;
+            $result['full_name'] = $full_name;
+
             if ($result) {
                 try {
-                    Mail::to($request->email)->send(new PatientCredentialsMail($result->patient_login_id, $randomPassword, $full_name));
+                    Mail::to($request->email)->send(new Mastermail($result->patient_login_id, $template_id = 12));
                 } catch (\Exception $e) {
                     Log::error('Email sending failed: ' . $e->getMessage());
                 }

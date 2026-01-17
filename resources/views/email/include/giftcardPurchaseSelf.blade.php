@@ -1,0 +1,103 @@
+@php
+    $isDummyMode = request()->query('mode') === 'dummy';
+@endphp
+
+@if ($isDummyMode)
+    @php
+        /*
+         |-----------------------------------------
+         | Dummy preview data (ONLY for preview)
+         |-----------------------------------------
+         */
+
+        $cardnumber = [
+            (object) ['giftnumber' => 'GIFT-1234567890'],
+            (object) ['giftnumber' => 'GIFT-0987654321'],
+            (object) ['giftnumber' => 'GIFT-0987654323'],
+            (object) ['giftnumber' => 'GIFT-0987654324'],
+        ];
+    @endphp
+@else
+    @php
+        /*
+         |-----------------------------------------
+         | Real data passed from controller
+         |-----------------------------------------
+         */
+        $cardnumber = App\Models\GiftcardsNumbers::where('transaction_id', $maildata->transaction_id)->get();
+    @endphp
+@endif
+
+<table id="u_content_heading_2" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0"
+    cellspacing="0" width="100%" border="0">
+    <tbody>
+        <tr>
+            <td style="overflow-wrap:break-word;word-break:break-word;padding:30px 0px 0px;font-family:arial,helvetica,sans-serif;"
+                align="left">
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="{{ route('patient-login') }}" target="_blank"
+                        style="display: inline-block; background-color: #007bff; color: white; text-decoration: none; 
+padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 5px; 
+font-family: Arial, sans-serif;">
+                        Sign Up to Track Your Giftcards
+                    </a>
+                </div>
+                <h1 class="v-line-height v-font-size"
+                    style="margin: 0px; color: #000000; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Epilogue; font-size: 40px; font-weight: 700;">
+                    Giftcard Details:
+                </h1>
+
+            </td>
+        </tr>
+        {{-- Gift Card Generate --}}
+        <tr>
+            <td>
+                @foreach ($cardnumber as $value)
+                    <div class="u-row-container"
+                        style="padding: 36px 0px;background-image: url('{{ url('/email_template') }}/giftcards_number_show.png');background-repeat: no-repeat;background-position: center center;background-color: transparent">
+                        <div class="u-row"
+                            style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+                            <div
+                                style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+
+                                <div class="u-col u-col-100"
+                                    style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                                    <div
+                                        style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+
+                                        <div
+                                            style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                            <table id="u_content_button_3"
+                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%" border="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;"
+                                                            align="left">
+
+                                                            <div align="center">
+
+                                                                {{-- <a href="#" target="_blank" class="v-button v-size-width v-font-size" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #fca52a; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:45%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 21px;"> --}}
+                                                                <span
+                                                                    class="v-line-height v-padding v-button v-size-width v-font-size"
+                                                                    style="display:block;padding:10px 20px;line-height:120%; box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #fca52a; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:45%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 21px;"><span
+                                                                        style="line-height: 25.2px;">{{ $value->giftnumber }}</span></span>
+                                                                {{-- </a> --}}
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </td>
+        </tr>
+    </tbody>
+</table>

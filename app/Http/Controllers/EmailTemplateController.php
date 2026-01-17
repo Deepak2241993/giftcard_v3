@@ -241,9 +241,181 @@ class EmailTemplateController extends Controller
         "tokenverify" => "bdfb6e8f94e3f4c3a5e8e9f6c7d8e9f0",
         "fname" => 'Deepak',
         "lname" => 'Prasad',
-        'tokenverify' => 'bdfb6e8f94e3f4c3a5e8e9f6c7d8e9f0',
         "patient_login_id" => "Deepak_123"
   ];
+    break;
+      case 8: //Gift Card Purchase Mail
+        $maildata = (object) [
+        "id" => 127,
+        "future_mail_status" => 0,
+        "qty" => 4,
+        "amount" => "75.00",
+        "your_name" => "Deepak Prasad",
+        "recipient_name" => "Deepak Kesarwani",
+        "message" => "This is Test mail",
+        "gift_card_send_type" => "other",
+        "in_future" => null,
+        "status" => 0,
+        "coupon_code" => null,
+        "gift_send_to" => "rrgraphic224@gmail.com",
+        "user_token" => "FOREVER-MEDSPA",
+        "created_at" => "2026-01-03 03:32:44",
+        "updated_at" => "2026-01-03 03:33:10",
+        "receipt_email" => "Deepak_123",
+        "discount" => 0.0,
+        "transaction_id" => "card_1SlQGgHXhy3bfGAtrzaCK94N",
+        "payment_status" => "succeeded",
+        "payment_time" => 1767429187,
+        "transaction_amount" => 300,
+        "usertype" => "regular",
+        "payment_mode" => "Payment Gateway",
+        "event_id" => null
+  ];
+    break;
+          case 9: //Gift Card Purchase Receipt Mail
+        $maildata = (object) [
+        "your_name" => "Deepak Prasad",
+        "recipient_name" => 'Deepak Kesarwani',
+        "gift_send_to" =>'Deepak Kesarwani',
+        "qty" => 4,
+        'amount' => 75,
+        "patient_login_id" => "Deepak_123",
+        "fname"=>"",
+        "lname"=>"",
+        "message"=>"Wishing you a wonderful birthday filled with joy and laughter!",
+        "cardnumber"=>"GIFT-1234567890"
+  ];
+    break;
+       case 10: //Gift Card Cancel Receipt Mail
+       $maildata = (object) [
+    'result' => [
+        [
+            'transaction_id' => 'card_1SlLBvHXhy3bfGAt1kzQ90a1',
+            'user_token' => 'FOREVER-MEDSPA',
+            'giftnumber' => 'FEMS-1767409674162',
+            'amount' => 50,
+            'comments' => 'TestMail',
+            'actual_paid_amount' => 50,
+            'updated_at' => '2026-01-03T06:43:58.000000Z',
+        ],
+        [
+            'transaction_id' => 'CANCEL20260103014357',
+            'user_token' => 'FOREVER-MEDSPA',
+            'giftnumber' => 'FEMS-1767409674162',
+            'amount' => 0,
+            'comments' => 'cancel',
+            'actual_paid_amount' => null,
+            'updated_at' => '2026-01-03T06:43:58.000000Z',
+        ],
+    ],
+
+    'TotalAmount' => 50,
+    'actual_paid_amount' => 50,
+    'status' => 200,
+    'success' => 'Gift History Found Successfully',
+
+    'receiverAndSenderDetails' => (object) [
+        'id' => 122,
+        'future_mail_status' => 0,
+        'qty' => 4,
+        'amount' => '50.00',
+        'your_name' => 'Deepak Prasad',
+        'recipient_name' => 'RR',
+        'message' => 'TestMail',
+        'gift_card_send_type' => 'other',
+        'in_future' => null,
+        'status' => 0,
+        'coupon_code' => null,
+        'gift_send_to' => 'deepakprasad224@gmail.com',
+        'user_token' => 'FOREVER-MEDSPA',
+        'created_at' => '2026-01-03T03:07:19.000000Z',
+        'updated_at' => '2026-01-03T03:07:54.000000Z',
+        'receipt_email' => 'Deepak098',
+        'discount' => 0,
+        'transaction_id' => 'card_1SlLBvHXhy3bfGAt1kzQ90a1',
+        'payment_status' => 'succeeded',
+        'payment_time' => '1767409672',
+        'transaction_amount' => 200,
+        'usertype' => 'regular',
+        'payment_mode' => 'Payment Gateway',
+        'event_id' => null,
+    ],
+];
+
+    break;
+     case 11: //Gift Card Purchase Self Mail
+        $maildata = (object) [
+        "id" => 127,
+        "future_mail_status" => 0,
+        "qty" => 4,
+        "amount" => "75.00",
+        "your_name" => "Deepak Prasad",
+        "recipient_name" => "",
+        "message" => "This is Test mail",
+        "gift_card_send_type" => "other",
+        "in_future" => null,
+        "status" => 0,
+        "coupon_code" => null,
+        "gift_send_to" => "rrgraphic224@gmail.com",
+        "user_token" => "FOREVER-MEDSPA",
+        "created_at" => "2026-01-03 03:32:44",
+        "updated_at" => "2026-01-03 03:33:10",
+        "receipt_email" => "Deepak_123",
+        "discount" => 0.0,
+        "transaction_id" => "card_1SlQGgHXhy3bfGAtrzaCK94N",
+        "payment_status" => "succeeded",
+        "payment_time" => 1767429187,
+        "transaction_amount" => 300,
+        "usertype" => "regular",
+        "payment_mode" => "Payment Gateway",
+        "event_id" => null
+  ];
+    break;
+    case 11: //Gift Card Purchase Self Mail
+        $maildata = (object) [
+        "id" => 127,
+        "full_name" => "Mr.Jone Kumar",
+        "password" => "yvNNYcUEKq",
+        "user_name" => "Jone_123",
+
+  ];
+    break;
+    case 12: //Gift Card Purchase Self Mail
+        $maildata = (object) [
+        "id" => 127,
+        "full_name" => "Mr.Jone Kumar",
+        "password" => "yvNNYcUEKq",
+        "user_name" => "Jone_123",
+
+  ];
+   break;
+    case 13: //Gift Card Purchase Self Mail
+         $maildata = (object) [
+        "id" => 127,
+        "future_mail_status" => 0,
+        "qty" => 4,
+        "amount" => "75.00",
+        "your_name" => "Deepak Prasad",
+        "recipient_name" => "Deepak Kesarwani",
+        "message" => "This is Test mail",
+        "gift_card_send_type" => "other",
+        "in_future" => null,
+        "status" => 0,
+        "coupon_code" => null,
+        "gift_send_to" => "rrgraphic224@gmail.com",
+        "user_token" => "FOREVER-MEDSPA",
+        "created_at" => "2026-01-03 03:32:44",
+        "updated_at" => "2026-01-03 03:33:10",
+        "receipt_email" => "Deepak_123",
+        "discount" => 0.0,
+        "transaction_id" => "card_1SlQGgHXhy3bfGAtrzaCK94N",
+        "payment_status" => "succeeded",
+        "payment_time" => 1767429187,
+        "transaction_amount" => 300,
+        "usertype" => "regular",
+        "payment_mode" => "Payment Gateway",
+        "event_id" => null
+        ];
     break;
     default:
         // Default preview data
@@ -253,8 +425,8 @@ class EmailTemplateController extends Controller
             "order_id"     => "PREVIEW-001",
             "sub_amount"   => "150.00",
             "taxrate"      => 8,
-            "tax_amount"   => "12.00",
-            "final_amount" => "162.00",
+            "tax_amount"   => "00",
+            "final_amount" => "00",
         ];
         break;
 }
