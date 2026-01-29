@@ -645,7 +645,7 @@ return $result;
 
 
 
-public function giftcancel(Request $request,){
+public function giftcancel(Request $request){
 
     $data_arr = $request->except('_token');
     $data = json_encode($data_arr);
