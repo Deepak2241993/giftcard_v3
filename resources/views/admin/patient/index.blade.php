@@ -79,6 +79,10 @@
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#importPatient">
             Import Patient
         </button>
+
+        <button id="mergePatientsBtn" class="btn btn-danger d-none ml-2">
+            <i class="fa fa-compress"></i> Merge Selected Patients
+        </button>
     </div>
     </section>
  
@@ -129,6 +133,9 @@
         <table id="datatable-buttons" class="table table-hover align-middle mb-0 modern-table">
             <thead class="table-light">
                 <tr>
+                    <th>
+                        <input type="checkbox" id="selectAllPatients">
+                    </th>
                     <th>#</th>
                     <th><i class="fa fa-cogs"></i> Action</th>
                     <th><i class="fa fa-user"></i> Patient</th>
@@ -264,9 +271,220 @@
         <!-- /.modal-dialog -->
     </div>
     {{-- Import Patient --}}
+
+
+    {{-- ================= MERGE PREVIEW MODAL ================= --}}
+<div class="modal fade" id="mergePreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            {{-- Header --}}
+            <div class="modal-header bg-warning d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    ⚠ Review Patient Merge
+                </h5>
+
+                <div>
+                    <small class="text-muted mr-3">
+                        Left = KEEP • Right = MERGE
+                    </small>
+
+                    <button id="swapPatientsBtn"
+                            type="button"
+                            class="btn btn-outline-dark btn-sm">
+                        🔄 Swap KEEP / MERGE
+                    </button>
+
+                    <button type="button" class="close ml-2" data-dismiss="modal">
+                        &times;
+                    </button>
+                </div>
+            </div>
+
+            {{-- Body --}}
+            <div class="modal-body">
+                <div class="row">
+
+                    {{-- KEEP --}}
+                    <div class="col-md-6">
+                        <h6 class="text-success font-weight-bold mb-2">
+                            KEEP PATIENT
+                        </h6>
+                        <div id="patientA"></div>
+                    </div>
+
+                    {{-- MERGE --}}
+                    <div class="col-md-6">
+                        <h6 class="text-danger font-weight-bold mb-2">
+                            MERGE PATIENT
+                        </h6>
+                        <div id="patientB"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="modal-footer">
+                <button id="confirmMergeBtn"
+                        type="button"
+                        class="btn btn-danger">
+                    Proceed
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{-- ================= MERGE PREVIEW MODAL END ================= --}}
+
+
+{{-- ================= FINAL CONFIRMATION MODAL ================= --}}
+<div class="modal fade" id="mergeConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    Final Confirmation
+                </h5>
+            </div>
+
+            <div class="modal-body">
+                <p class="text-danger">
+                    This action <strong>cannot be undone</strong>.
+                </p>
+
+                <label class="font-weight-bold">
+                    Type <span class="text-danger">MERGE</span> to confirm:
+                </label>
+
+                <input type="text"
+                       id="mergeConfirmText"
+                       class="form-control"
+                       placeholder="Type MERGE">
+            </div>
+
+            <div class="modal-footer">
+                <button id="finalMergeBtn"
+                        type="button"
+                        class="btn btn-danger"
+                        disabled>
+                    🔥 MERGE
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{-- ================= FINAL CONFIRMATION MODAL END ================= --}}
+
+{{-- End FINAL CONFIRMATION MODAL --}}
 @endsection
 
 @push('script')
+
+{{-- For Mearge Function Script  --}}
+<script>
+let selectedPatients = [];
+let keepId = null;
+let mergeId = null;
+
+/* ---------------- SELECT CHECKBOXES ---------------- */
+
+$('#selectAllPatients').on('change', function () {
+    $('.patient-checkbox').prop('checked', this.checked).trigger('change');
+});
+
+$(document).on('change', '.patient-checkbox', function () {
+    selectedPatients = $('.patient-checkbox:checked')
+        .map(function () { return $(this).val(); })
+        .get();
+
+    $('#mergePatientsBtn')
+        .toggleClass('d-none', selectedPatients.length !== 2);
+});
+
+/* ---------------- LOAD MERGE PREVIEW ---------------- */
+
+$('#mergePatientsBtn').click(function () {
+    $.ajax({
+        url: "{{ route('patients.merge.preview') }}",
+        type: "GET",
+        data: {
+            'ids[]': selectedPatients
+        },
+        success: function (res) {
+            $('#patientA').html(res.patientA);
+            $('#patientB').html(res.patientB);
+
+            // Default assignment
+            keepId  = selectedPatients[1];
+            mergeId = selectedPatients[0];
+
+            $('#mergePreviewModal').modal('show');
+        }
+    });
+});
+
+/* ---------------- 🔄 SWAP KEEP / MERGE ---------------- */
+
+$('#swapPatientsBtn').on('click', function () {
+
+    // Swap UI
+    let left  = $('#patientA').html();
+    let right = $('#patientB').html();
+
+    $('#patientA').html(right);
+    $('#patientB').html(left);
+
+    // Swap IDs
+    let temp = keepId;
+    keepId = mergeId;
+    mergeId = temp;
+});
+
+/* ---------------- PROCEED ---------------- */
+
+$('#confirmMergeBtn').click(function () {
+    $('#mergePreviewModal').modal('hide');
+    $('#mergeConfirmModal').modal('show');
+});
+
+/* ---------------- FINAL CONFIRM ---------------- */
+
+$('#mergeConfirmText').keyup(function () {
+    $('#finalMergeBtn').prop('disabled', $(this).val() !== 'MERGE');
+});
+
+/* ---------------- EXECUTE MERGE ---------------- */
+
+$('#finalMergeBtn').click(function () {
+    $.post("{{ route('patients.merge.execute') }}", {
+        _token: "{{ csrf_token() }}",
+        keep_id: keepId,
+        merge_id: mergeId
+    }, function () {
+        location.reload();
+    });
+});
+</script>
+
+{{-- Mearge Code End  --}}
+
+
     <script>
         function createFrom() {
             let formData = new FormData(document.getElementById("patientForm"));
@@ -342,30 +560,37 @@
         }
     </script>
 
+{{-- For Index Table Data --}}
     <script>
         $(document).ready(function () {
 
     var table = $("#datatable-buttons").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('patient.table.data') }}",
-        columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'action', name: 'action', orderable: false, searchable: false },
-            { data: 'patient_name', name: 'patient_name' },
-            { data: 'email', name: 'email' },
-            { data: 'phone', name: 'phone' },
-            { data: 'status_badge', name: 'status', orderable: false }
-        ],
-        order: [[ 2, "asc" ]],
-        responsive: true,
-        autoWidth: false,
-        lengthChange: true,
+    processing: true,
+    serverSide: true,
+    ajax: "{{ route('patient.table.data') }}",
+    columns: [
+        {
+            data: 'id',
+            orderable: false,
+            searchable: false,
+            render: function (id) {
+                return `<input type="checkbox" class="patient-checkbox" value="${id}">`;
+            }
+        },
+        { data: 'DT_RowIndex', orderable: false, searchable: false },
+        { data: 'action', orderable: false, searchable: false },
+        { data: 'patient_name' },
+        { data: 'email' },
+        { data: 'phone' },
+        { data: 'status_badge', orderable: false }
+    ],
+    order: [[3, "asc"]],
+    responsive: true,
+    autoWidth: false,
+    dom: 'Bfrtip',
+    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+});
 
-        // IMPORTANT: Buttons must be inside this config
-        dom: 'Bfrtip',
-        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    });
 
     // Append Buttons Correctly
     table.buttons().container()

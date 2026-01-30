@@ -399,7 +399,16 @@ public function patientTableData(Request $request)
         // My Services
        public function Myservices(TransactionHistory $transaction){
         $email = Auth::guard('patient')->user()->email;
-        $data = $transaction->where('email',$email)->orderBy('id','DESC')->paginate(10);
+        $patient = Patient::where('email', $email)
+                    ->where('is_deleted', 0)
+                    ->whereNotIn('status', [0, 2])
+                    ->first();
+        if($patient->patient_login_id!=null){
+            $data = $transaction->where('patient_login_id', $patient->patient_login_id)->orderBy('id','DESC')->paginate(10);;
+        }
+        else{
+           $data = $transaction->where('email',$email)->orderBy('id','DESC')->paginate(10);
+        }
         return view('patient.services.my-services',compact('data'));
        }
 
@@ -578,21 +587,117 @@ public function patientTableData(Request $request)
     }
 
 
+
  public function importPatients(Request $request)
-{
-    ini_set('max_execution_time', 300);
+    {
+        ini_set('max_execution_time', 300);
 
-    $request->validate([
-        'file' => 'required|mimes:csv,txt'
-    ]);
+        $request->validate([
+            'file' => 'required|mimes:csv,txt'
+        ]);
 
-    $import = new PatientsImport();
-    Excel::import($import, $request->file('file'));
+        $import = new PatientsImport();
+        Excel::import($import, $request->file('file'));
 
-    $skippedData = $import->skipped;
+        $skippedData = $import->skipped;
 
-    return view('admin.patient.import_result', compact('skippedData'));
+        return view('admin.patient.import_result', compact('skippedData'));
+    }
+
+    // Patient Data Mearge View
+   public function preview(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array|size:2',
+            'ids.*' => 'exists:patients,id'
+        ]);
+
+        $patients = Patient::whereIn('id', $request->ids)->get();
+
+        // Define Patient A (KEEP) and Patient B (MERGE)
+        $patientA = $patients[0];  //Keep
+        $patientB = $patients[1]; //Merge
+        
+
+        // Transaction counts
+        $patientA->transaction_count = DB::table('transaction_histories')
+            ->where('patient_login_id', $patientA->patient_login_id)
+            ->count();
+
+        $patientB->transaction_count = DB::table('transaction_histories')
+            ->where('patient_login_id', $patientB->patient_login_id)
+            ->count();
+
+        // Service counts
+        $patientA->service_count = DB::table('service_orders')
+            ->where('patient_login_id', $patientA->patient_login_id)
+            ->count();
+
+        $patientB->service_count = DB::table('service_orders')
+            ->where('patient_login_id', $patientB->patient_login_id)
+            ->count();
+
+        return response()->json([
+            'patientA' => view('admin.patient.merge.patient_card', [
+                'patient' => $patientA,
+                'type'    => 'KEEP'
+            ])->render(),
+
+            'patientB' => view('admin.patient.merge.patient_card', [
+                'patient' => $patientB,
+                'type'    => 'MERGE'
+            ])->render(),
+        ]);
+    }
+
+    public function merge(Request $request)
+    {
+        $request->validate([
+            'keep_id'  => 'required|exists:patients,id',
+            'merge_id' => 'required|different:keep_id'
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            $keep  = DB::table('patients')->where('id', $request->keep_id)->first();
+            $merge = DB::table('patients')->where('id', $request->merge_id)->first();
+    // dd($keep,$merge);
+            // 1️⃣ Move transaction history
+            DB::table('transaction_histories')
+                ->where('patient_login_id', $merge->patient_login_id)
+                ->update([
+                    'patient_login_id' => $keep->patient_login_id,
+                    'user_token'       => $keep->user_token,
+                    'email'            => $keep->email,
+                    'phone'            => $keep->phone,
+                    'updated_at'       => now(),
+                ]);
+
+            // 2️⃣ Move service orders
+            DB::table('service_orders')
+                ->where('patient_login_id', $merge->patient_login_id)
+                ->update([
+                    'patient_login_id' => $keep->patient_login_id,
+                    'user_token'       => $keep->user_token,
+                    'updated_by'       => auth()->id(),
+                    'updated_at'       => now(),
+                ]);
+
+            // 3️⃣ Soft-merge patient record
+            DB::table('patients')
+                ->where('id', $merge->id)
+                ->update([
+                    'status'     => 2, // Merged
+                    'is_deleted' => 1,
+                    'updated_by'=> auth()->id(),
+                    'updated_at'=> now(),
+                ]);
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Patients merged successfully'
+        ]);
+    }
 }
 
-
-}
