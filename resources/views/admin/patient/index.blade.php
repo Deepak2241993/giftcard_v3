@@ -206,7 +206,7 @@
 
                             <div class="mb-3 col-lg-6 self mt-2">
                                 <label for="phone_number" class="form-label">Mobile</label>
-                                <input class="form-control" type="number" name="phone" id="phone_number"
+                                <input class="form-control" type="text" name="phone" id="phone_number"
                                     placeholder="Mobile">
                             </div>
 

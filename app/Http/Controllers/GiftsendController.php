@@ -199,24 +199,26 @@ class GiftsendController extends Controller
     public function selfgift(Request $request){
     
         $data_arr = $request->except('_token');
-
         $patient = Patient::where('email',$request->gift_send_to)->first();
+
         if($patient != null && $patient->patient_login_id != null)
         {
             //  for gift send to self
-            if($patient->patient_login_id == '' AND $request->gift_send_to != null)
+            if($patient->patient_login_id != '' AND $request->gift_send_to != null)
             {
+                // Set patient login id if exist
                 $data_arr['gift_send_to'] =  $patient->patient_login_id;
                 $data_arr['receipt_email'] = $patient->patient_login_id;
-                
             }
             else
             {
+                // Set Email if patient login id not exist
                 $data_arr['gift_send_to'] =  $request->gift_send_to;
                 $data_arr['receipt_email'] = $request->gift_send_to;
             }
             $data_arr['usertype'] = 'regular';
         }
+
         else{
             $data_arr['gift_send_to'] =  $request->gift_send_to;
             $data_arr['receipt_email'] = $request->gift_send_to;

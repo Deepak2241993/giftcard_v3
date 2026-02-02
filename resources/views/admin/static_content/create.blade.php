@@ -55,7 +55,7 @@
                                     <div class="mb-3 col-lg-12 col-md-6 self">
                                         <label for="content" class="form-label">Content<span
                                                 class="text-danger">*</span></label>
-                                        <textarea class="form-control" name="content" id="content" cols="30" rows="10" required>{{ isset($staticContent) ? $staticContent->content : '' }}</textarea>
+                                        <textarea class="form-control summernote" name="content" id="content" cols="30" rows="10" required>{{ isset($staticContent) ? $staticContent->content : '' }}</textarea>
                                     </div>
 
 
@@ -126,14 +126,23 @@
     <script>
         $(document).ready(function() {
             $('.summernote').summernote({
-                height: 300, // set editor height
-                minHeight: null, // set minimum height of editor
-                maxHeight: null, // set maximum height of editor
-                focus: true // set focus to editable area after initializing summernote
+                height: 300, // Set height of the editor
+                width: 860, // Set width of the editor
+                focus: true, // Focus the editor on load
+                fontSizes: ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'], // Font sizes
+                toolbar: [
+                    ['undo', ['undo']],
+                    ['redo', ['redo']],
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['font', ['strikethrough']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ol', 'paragraph']],
+                    ['insert', ['picture', 'link']] // Add picture button for image upload
+                    // ['para', ['ul','ol', 'paragraph']],
+                ],
                 popover: {
                     image: [
-
-                        // This is a Custom Button in a new Toolbar Area
                         ['custom', ['examplePlugin']],
                         ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
                         ['float', ['floatLeft', 'floatRight', 'floatNone']],

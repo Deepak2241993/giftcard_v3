@@ -13,14 +13,14 @@
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
-          {{-- <li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-          </li> --}}
+          </li>
           <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="{{ route('patient.index') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Patient Management</a>
-            {{-- <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
               <li><a href="{{ route('patient.index') }}" class="dropdown-item">Patient List</a></li>           
-            </ul> --}}
+            </ul>
           </li>
           
           <li class="nav-item dropdown">
