@@ -36,47 +36,57 @@ class PatientController extends Controller
 public function patientTableData(Request $request)
 {
     $query = Patient::where('is_deleted', 0)
-        ->select(['id','fname','lname','email','phone','status'])
-        ->orderBy('id', 'DESC'); // same as orderBy('id', 'DESC')
+        ->select(['id','fname','lname','email','phone','status']);
 
     return DataTables::of($query)
         ->addIndexColumn()
+
         ->addColumn('patient_name', function ($row) {
-            return $row->fname . ' ' . $row->lname;
+            return trim($row->fname . ' ' . $row->lname);
         })
+
+        // 🔥 GLOBAL SEARCH (name + email + phone)
+        ->filter(function ($query) use ($request) {
+            if ($search = $request->input('search.value')) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('fname', 'LIKE', "%{$search}%")
+                      ->orWhere('lname', 'LIKE', "%{$search}%")
+                      ->orWhereRaw("CONCAT(fname,' ',lname) LIKE ?", ["%{$search}%"])
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone', 'LIKE', "%{$search}%");
+                });
+            }
+        })
+
         ->addColumn('action', function ($row) {
             return '
-                <div class="btn-group mb-2" role="group">
-                    <a href="'.route('patient.edit', $row->id).'?patient_id='.$row->id.'" 
-                        class="btn btn-outline-primary btn-sm">
+                <div class="btn-group mb-2">
+                    <a href="'.route('patient.edit',$row->id).'" class="btn btn-outline-primary btn-sm">
                         <i class="fa fa-user"></i>
                     </a>
-
-                    <a href="'.route('giftcards-sale').'?patient_id='.$row->id.'" 
-                        class="btn btn-outline-success btn-sm">
+                    <a href="'.route('giftcards-sale').'?patient_id='.$row->id.'" class="btn btn-outline-success btn-sm">
                         <i class="fa fa-gift"></i>
                     </a>
-
-                    <a href="'.route('product.index').'?patient_id='.$row->id.'" 
-                        class="btn btn-outline-info btn-sm">
+                    <a href="'.route('product.index').'?patient_id='.$row->id.'" class="btn btn-outline-info btn-sm">
                         <i class="fa fa-dna"></i>
                     </a>
-
-                    <a href="'.route('program.index').'?patient_id='.$row->id.'" 
-                        class="btn btn-outline-warning btn-sm">
+                    <a href="'.route('program.index').'?patient_id='.$row->id.'" class="btn btn-outline-warning btn-sm">
                         <i class="fa fa-stethoscope"></i>
                     </a>
-                </div>
-            ';
+                </div>';
         })
+
         ->addColumn('status_badge', function ($row) {
             return $row->status == 1
                 ? '<span class="badge bg-success">Active</span>'
                 : '<span class="badge bg-danger">Inactive</span>';
         })
-        ->rawColumns(['action', 'status_badge'])
+
+        ->rawColumns(['action','status_badge'])
         ->make(true);
 }
+
+
 
 
 
