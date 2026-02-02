@@ -129,84 +129,85 @@ public function patientTableData(Request $request)
      * @return \Illuminate\Http\Response
      */
     public function edit(Patient $patient, Request $request, TransactionHistory $transaction)
-{
-     if(isset($_GET['patient_id']))
-         {
-            $request->session()->put('internal_patient_id', $request->get('patient_id'));
+    {
+        if(isset($_GET['patient_id']))
+            {
+                $request->session()->put('internal_patient_id', $request->get('patient_id'));
+            }
+        $patient_login_id = $patient->patient_login_id;
+        $patient_email = $patient->email;
+
+        // -----------------------------
+        // 1. Timeline Events
+        // -----------------------------
+        $query = TimelineEvent::where('patient_id', $patient_login_id);
+
+        if ($request->start_time && $request->end_time) {
+            $startTime = Carbon::parse($request->start_time)->startOfDay();
+            $endTime = Carbon::parse($request->end_time)->endOfDay();
+            $query->whereBetween('created_at', [$startTime, $endTime]);
+        } else {
+            $query->latest()->limit(10);
         }
-    $patient_login_id = $patient->patient_login_id;
-    $patient_email = $patient->email;
 
-    // -----------------------------
-    // 1. Timeline Events
-    // -----------------------------
-    $query = TimelineEvent::where('patient_id', $patient_login_id);
+        $timeline = $query->get();
 
-    if ($request->start_time && $request->end_time) {
-        $startTime = Carbon::parse($request->start_time)->startOfDay();
-        $endTime = Carbon::parse($request->end_time)->endOfDay();
-        $query->whereBetween('created_at', [$startTime, $endTime]);
-    } else {
-        $query->latest()->limit(10);
+        // -----------------------------
+        // 2. All Giftsend Records
+        // -----------------------------
+        $giftcards = Giftsend::where(function ($query) use ($patient_login_id) {
+                $query->whereColumn('gift_send_to', 'receipt_email')
+                    ->whereNull('recipient_name')
+                    ->where('gift_send_to', $patient_login_id);
+            })
+            ->orWhere(function ($query) use ($patient_login_id) {
+                $query->whereColumn('gift_send_to', '!=', 'receipt_email')
+                    ->whereNotNull('recipient_name')
+                    ->where('gift_send_to', $patient_login_id);
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        // -----------------------------
+        // 3. Giftcards Received by Patient
+        // -----------------------------
+        $mygiftcards = Giftsend::where('gift_send_to', $patient_login_id)
+            ->orWhere('gift_send_to', $patient_email)
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
+        // -----------------------------
+        // 4. Giftcards Sent by Patient
+        // -----------------------------
+        $sendgiftcards = Giftsend::where('receipt_email', $patient_login_id)
+            ->orWhere('receipt_email', $patient_email)
+            ->orWhere('receipt_email', $patient_email)
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+        // $sendgiftcards = Giftsend::getSentGiftcards($patient_login_id)
+        //     ->orderBy('id', 'DESC')
+        //     ->paginate(10);
+
+        // -----------------------------
+        // 5. Service Orders
+        // -----------------------------
+        $sevice_orders = $transaction
+            ->where('email', $patient_email)
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
+        // -----------------------------
+        // Return to View
+        // -----------------------------
+        return view('admin.patient.create', compact(
+            'patient',
+            'timeline',
+            'giftcards',
+            'mygiftcards',
+            'sendgiftcards',
+            'sevice_orders'
+        ));
     }
-
-    $timeline = $query->get();
-
-    // -----------------------------
-    // 2. All Giftsend Records
-    // -----------------------------
-    $giftcards = Giftsend::where(function ($query) use ($patient_login_id) {
-            $query->whereColumn('gift_send_to', 'receipt_email')
-                  ->whereNull('recipient_name')
-                  ->where('gift_send_to', $patient_login_id);
-        })
-        ->orWhere(function ($query) use ($patient_login_id) {
-            $query->whereColumn('gift_send_to', '!=', 'receipt_email')
-                  ->whereNotNull('recipient_name')
-                  ->where('gift_send_to', $patient_login_id);
-        })
-        ->orderBy('id', 'DESC')
-        ->get();
-
-    // -----------------------------
-    // 3. Giftcards Received by Patient
-    // -----------------------------
-    $mygiftcards = Giftsend::where('gift_send_to', $patient_login_id)
-        ->orWhere('gift_send_to', $patient_email)
-        ->orderBy('id', 'DESC')
-        ->paginate(10);
-
-    // -----------------------------
-    // 4. Giftcards Sent by Patient
-    // -----------------------------
-       $sendgiftcards = Giftsend::where('receipt_email', $patient_login_id)
-        ->orWhere('receipt_email', $patient_email)
-        ->orderBy('id', 'DESC')
-        ->paginate(10);
-    // $sendgiftcards = Giftsend::getSentGiftcards($patient_login_id)
-    //     ->orderBy('id', 'DESC')
-    //     ->paginate(10);
-
-    // -----------------------------
-    // 5. Service Orders
-    // -----------------------------
-    $sevice_orders = $transaction
-        ->where('email', $patient_email)
-        ->orderBy('id', 'DESC')
-        ->paginate(10);
-
-    // -----------------------------
-    // Return to View
-    // -----------------------------
-    return view('admin.patient.create', compact(
-        'patient',
-        'timeline',
-        'giftcards',
-        'mygiftcards',
-        'sendgiftcards',
-        'sevice_orders'
-    ));
-}
 
 
     /**
@@ -306,18 +307,26 @@ public function patientTableData(Request $request)
                 $patient_login_id = Auth::guard('patient')->user()->patient_login_id;
                 $order = TransactionHistory::where('patient_login_id',  $patient_login_id)->count();
 
-                $giftcards = Giftsend::where(function($query) use ($patient_login_id) {
-                    $query->whereColumn('gift_send_to', 'receipt_email')
-                          ->where('recipient_name', null)
-                          ->where('gift_send_to', $patient_login_id);
-                })
-                ->orWhere(function($query) use ($patient_login_id) {
-                    $query->whereColumn('gift_send_to', '!=', 'receipt_email')
-                          ->whereNotNull('recipient_name')
-                          ->where('gift_send_to', $patient_login_id);
-                })
-                ->orderBy('id', 'DESC')
-                ->count();
+            // $giftcards = Giftsend::where('gift_send_to', $patient_login_id)
+            //     ->where(function ($query) {
+            //         $query
+            //             ->where(function ($q) {
+            //                 $q->whereColumn('gift_send_to', 'receipt_email')
+            //                 ->whereNull('recipient_name');
+            //             })
+            //             ->orWhere(function ($q) {
+            //                 $q->whereColumn('gift_send_to', '!=', 'receipt_email')
+            //                 ->whereNotNull('recipient_name');
+            //             });
+            //     })
+            //     ->orderBy('id', 'DESC')
+            //     ->count();
+
+            $giftcards = Giftsend::where('gift_send_to', $patient_login_id)
+            ->orWhere('gift_send_to', $patient_login_id)
+            ->orderBy('id', 'DESC')
+            ->count();
+
                 return view('patient.patient_dashboad', compact('order','giftcards'));                
             }
             else{
@@ -357,8 +366,17 @@ public function patientTableData(Request $request)
          public function Mygiftcards(Patient $patient)
             {
                 $patient_login_id = Auth::guard('patient')->user()->patient_login_id;
-                $mygiftcards = Giftsend::getReceivedGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
-                $sendgiftcards = Giftsend::getSentGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
+                 $mygiftcards = Giftsend::where('gift_send_to', $patient_login_id)
+                    ->orWhere('gift_send_to', $patient_login_id)
+                    ->orderBy('id', 'DESC')
+                    ->paginate(10);
+                // $mygiftcards = Giftsend::getReceivedGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
+                // $sendgiftcards = Giftsend::getSentGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
+                   $sendgiftcards = Giftsend::where('receipt_email', $patient_login_id)
+                    ->orWhere('receipt_email', $patient_login_id)
+                    ->orWhere('receipt_email', $patient_login_id)
+                    ->orderBy('id', 'DESC')
+                    ->paginate(10);
                 return view('patient.giftcards.my-giftcards', compact('mygiftcards', 'sendgiftcards'));
             }
 
@@ -647,6 +665,32 @@ public function patientTableData(Request $request)
             ->where('patient_login_id', $patientB->patient_login_id)
             ->count();
 
+        // Self Giftcards counts
+        $patientA->self_giftcard_count = DB::table('giftsends')
+            ->whereIn('gift_card_send_type', ['self', 'other'])
+            ->where('gift_send_to', $patientA->patient_login_id)
+            ->count();
+            
+        $patientB->self_giftcard_count = DB::table('giftsends')
+             ->whereIn('gift_card_send_type', ['self', 'other'])
+            ->where('gift_send_to', $patientB->patient_login_id)
+            ->count();
+
+           // Send to Other
+        $patientA->other_giftcard_count = DB::table('giftsends')
+            ->where('receipt_email', $patientA->patient_login_id)
+            ->where('gift_send_to', "!=",$patientA->patient_login_id)
+            ->count();
+            //SELECT count(id) FROM `giftsends` WHERE `receipt_email`="RR123" AND `gift_send_to`!="RR123";
+
+            
+        $patientB->other_giftcard_count = DB::table('giftsends')
+            ->where('receipt_email', $patientB->patient_login_id)
+            ->where('gift_send_to', "!=",$patientB->patient_login_id)
+            ->count();
+
+        // Send Giftcards counts
+// dd( $patientA);
         return response()->json([
             'patientA' => view('admin.patient.merge.patient_card', [
                 'patient' => $patientA,
@@ -671,7 +715,7 @@ public function patientTableData(Request $request)
 
             $keep  = DB::table('patients')->where('id', $request->keep_id)->first();
             $merge = DB::table('patients')->where('id', $request->merge_id)->first();
-    // dd($keep,$merge);
+
             // 1️⃣ Move transaction history
             DB::table('transaction_histories')
                 ->where('patient_login_id', $merge->patient_login_id)
@@ -693,6 +737,29 @@ public function patientTableData(Request $request)
                     'updated_at'       => now(),
                 ]);
 
+            // Giftcard Merge
+
+            //case Send to Other 
+            DB::table('giftsends')
+                ->where('gift_send_to', $merge->patient_login_id) //Deepak098
+                ->update([
+                    'status'     => 2, // Merged
+                    'gift_send_to' => $keep->patient_login_id,
+                    'updated_by'=> auth()->id(),
+                    'updated_at'=> now(),
+                ]);
+
+            // For Self Purcase and Received from Other
+             DB::table('giftsends')
+                ->where('receipt_email', $merge->patient_login_id) //Deepak098
+                ->update([
+                    'status'     => 2, // Merged
+                    'receipt_email' => $keep->patient_login_id,
+                    'updated_by'=> auth()->id(),
+                    'updated_at'=> now(),
+                ]);
+            
+
             // 3️⃣ Soft-merge patient record
             DB::table('patients')
                 ->where('id', $merge->id)
@@ -702,6 +769,8 @@ public function patientTableData(Request $request)
                     'updated_by'=> auth()->id(),
                     'updated_at'=> now(),
                 ]);
+            
+           
         });
 
         return response()->json([

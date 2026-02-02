@@ -256,14 +256,14 @@
                                                                 <td><?php echo date('m-d-Y h:i:A', strtotime($value['created_at'])); ?></td>
                                                                 </td>
                                                                 <td>
-                                                                    
-                                                                        @if ($value['recipient_name'] != null && ($value['gift_send_to'] != $value['receipt_email']))
-                                                                            {{$value['recipient_name']}}
-                                                                        @else{
-                                                                            {{!! "<span class='badge bg-primary'>".$value['your_name']."</span>" !!}}
-                                                                        }
-                                                                        @endif
-                                                                </td>
+                                                                @if (!empty($value['recipient_name']) && $value['gift_send_to'] != $value['receipt_email'])
+                                                                    {!! $value['recipient_name'] !!}
+                                                                @else
+                                                                    <span class="badge bg-primary">
+                                                                        {{ $value['your_name'] }}
+                                                                    </span>
+                                                                @endif
+                                                            </td>
                                                                 <td>{{ $value['recipient_name'] ? $value['message'] : '---' }}
                                                                 </td>
                                                                 {{-- <td>{{ $value['recipient_name'] ? $value['receipt_email'] : 'Medspa' }}</td> --}}

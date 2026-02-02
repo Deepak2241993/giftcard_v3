@@ -431,8 +431,9 @@ $('#mergePatientsBtn').click(function () {
             $('#patientB').html(res.patientB);
 
             // Default assignment
-            keepId  = selectedPatients[1];
-            mergeId = selectedPatients[0];
+            keepId = selectedPatients[0];
+            mergeId  = selectedPatients[1];
+            console.log(keepId,mergeId);
 
             $('#mergePreviewModal').modal('show');
         }

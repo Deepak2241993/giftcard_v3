@@ -357,6 +357,7 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody id="data-table-body">
+                                                                           
                                                                             @foreach ($mygiftcards as $key => $value)
                                                                                 <tr>
                                                                                     <td>{{ $loop->iteration }}</td>
@@ -465,7 +466,9 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody id="data-table-body">
+                                                                       
                                                                         @foreach ($sendgiftcards as $key => $value)
+                                                                           
                                                                             <tr>
                                                                                 <td>{{ $loop->iteration }}</td>
                                                                                 <td>
@@ -493,7 +496,7 @@
                                                                                         @if ($value['recipient_name'] != null && ($value['gift_send_to'] != $value['receipt_email']))
                                                                                             {{$value['recipient_name']}}
                                                                                         @else
-                                                                                            <span class='badge bg-primary'>{{$value['your_name']}}</span>
+                                                                                            <span class='badge bg-primary'>Self</span>
                                                                                         
                                                                                         @endif
                                                                                 </td>
@@ -535,6 +538,7 @@
 
 
                                                                                 <!-- Button trigger modal -->
+                                                                                
                                                                             </tr>
                                                                         @endforeach
                                                                         <br>

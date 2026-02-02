@@ -54,6 +54,7 @@ Route::get('find-deals','ProductCategoryController@FindDeals')->name('find-deals
 Route::get('invoice','StripeController@invoice')->name('invoice');
 
 Route::get('/generate-pdf/{id}', [PDFController::class, 'generatePDF']);
+
 //  New Code For API URL Call
 Route::post('/sendgift','GiftsendController@sendgift')->name('sendgift');
 Route::post('/selfgift','GiftsendController@selfgift')->name('selfgift');

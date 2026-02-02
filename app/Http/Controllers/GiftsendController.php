@@ -123,19 +123,30 @@ class GiftsendController extends Controller
 
     public function sendgift(Request $request){
         $data_arr = $request->except('_token');
+
+        
+        if($data_arr['patient_login_id'] != '')
+         {
+            $patientreceiver = Patient::where('email',$request->gift_send_to)->first();
+            $patientsender = Patient::where('email',$request->receipt_email)->first();
+            if($patientreceiver != null && $data_arr['patient_login_id'] != null)
+            {
+            $data_arr['gift_send_to'] = $patientreceiver->patient_login_id;
+            $data_arr['receipt_email'] = $patientsender->patient_login_id;
+            $data_arr['usertype'] = 'regular';
+            }
+         }
    
        
         // find User exist or not
-        if($request->patient_login_id !=null)
-        {
-        $data_arr['gift_send_to'] = $request->gift_send_to;
-        $data_arr['receipt_email'] = $request->patient_login_id;
-        $data_arr['usertype'] = 'regular';
-        }
-        
         else{
+            $patientreceiver = Patient::where('email',$request->gift_send_to)->first();
             $data_arr['receipt_email'] = $request->receipt_email;
-            $data_arr['gift_send_to'] = $request->gift_send_to;
+            if($patientreceiver)
+                {
+                 $data_arr['gift_send_to'] = $patientreceiver->patient_login_id;
+                }
+           
             $data_arr['usertype'] = 'guest';
         }
         
@@ -196,7 +207,7 @@ class GiftsendController extends Controller
     }
 
     // For Self Giftcards
-    public function selfgift(Request $request){
+     public function selfgift(Request $request){
     
         $data_arr = $request->except('_token');
         $patient = Patient::where('email',$request->gift_send_to)->first();
@@ -204,7 +215,7 @@ class GiftsendController extends Controller
         if($patient != null && $patient->patient_login_id != null)
         {
             //  for gift send to self
-            if($patient->patient_login_id != '' AND $request->gift_send_to != null)
+            if($patient->patient_login_id != null AND $request->gift_send_to != null)
             {
                 // Set patient login id if exist
                 $data_arr['gift_send_to'] =  $patient->patient_login_id;

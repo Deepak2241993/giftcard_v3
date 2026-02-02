@@ -9,7 +9,7 @@ class Giftsend extends Model
 {
     use HasFactory;
     public $timestamps = true;
-    protected $fillable = ['future_mail_status', 'qty', 'amount', 'your_name', 'recipient_name', 'message', 'gift_card_send_type', 'in_future', 'status', 'coupon_code', 'gift_send_to', 'user_token', 'created_at', 'updated_at', 'receipt_email', 'discount', 'transaction_id', 'payment_status', 'payment_time', 'transaction_amount', 'usertype', 'payment_mode', 'event_id'];
+    protected $fillable = ['future_mail_status', 'qty', 'amount', 'your_name', 'recipient_name', 'message', 'gift_card_send_type', 'in_future', 'status', 'coupon_code', 'gift_send_to', 'user_token', 'created_at', 'updated_at', 'receipt_email', 'discount', 'transaction_id', 'payment_status', 'payment_time', 'transaction_amount', 'usertype', 'payment_mode', 'event_id','updated_by'];
 
 //  For Received Giftcards
     public static function getReceivedGiftcards($patient_login_id)
