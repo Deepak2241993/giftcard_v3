@@ -124,34 +124,68 @@ class GiftsendController extends Controller
     public function sendgift(Request $request){
         $data_arr = $request->except('_token');
 
-        
-        if($data_arr['patient_login_id'] != '')
-         {
-            $patientreceiver = Patient::where('email',$request->gift_send_to)->first();
-            $patientsender = Patient::where('email',$request->receipt_email)->first();
-            if($patientreceiver != null && $data_arr['patient_login_id'] != null)
-            {
-            $data_arr['gift_send_to'] = $patientreceiver->patient_login_id;
-            $data_arr['receipt_email'] = $patientsender->patient_login_id;
-            $data_arr['usertype'] = 'regular';
+      
+        // if($data_arr['patient_login_id'] != '')
+        //  {
+        //     $patientreceiver = Patient::where('email',$request->gift_send_to)->first();
+        //     $patientsender = Patient::where('email',$request->receipt_email)->first();
+        //     if($patientreceiver != null && $data_arr['patient_login_id'] != null)
+        //     {
+        //     $data_arr['gift_send_to'] = $patientreceiver->patient_login_id;
+        //     $data_arr['receipt_email'] = $patientsender->patient_login_id;
+        //     $data_arr['usertype'] = 'regular';
+        //     }
+        //     dd($data_arr,$patientsender->patient_login_id,$data_arr['receipt_email']);
+        //  }
+
+        // dd($data_arr);
+         if (!empty($data_arr['patient_login_id'])) {
+          $patientreceiver = Patient::where('email', $request->gift_send_to)->first();
+            $patientsender   = Patient::where('email', $request->receipt_email)->first();
+
+            if ($patientreceiver && $patientsender) {
+
+                // ✅ Both exist
+                $data_arr['gift_send_to']  = $patientreceiver->patient_login_id;
+                $data_arr['receipt_email'] = $patientsender->patient_login_id;
+                $data_arr['usertype']      = 'regular';
+
+            } elseif ($patientsender) {
+
+                // ✅ Only sender exists
+                $data_arr['receipt_email'] = $patientsender->patient_login_id;
+                $data_arr['usertype']      = 'regular';
+
+            } elseif ($patientreceiver) {
+
+                // ✅ Only receiver exists
+                $data_arr['gift_send_to']  = $patientreceiver->patient_login_id;
+                $data_arr['usertype']      = 'regular';
             }
-         }
+
+
+            // Debug only (remove in production)
+        }
+
    
        
         // find User exist or not
         else{
             $patientreceiver = Patient::where('email',$request->gift_send_to)->first();
-            $data_arr['receipt_email'] = $request->receipt_email;
-            if($patientreceiver)
-                {
-                 $data_arr['gift_send_to'] = $patientreceiver->patient_login_id;
-                }
+                $data_arr['gift_send_to'] = $patientreceiver->patient_login_id ?? $data_arr['gift_send_to'];
+                
+
+             $patientsender = Patient::where('email',$request->receipt_email)->first();
+                $data_arr['receipt_email'] = $patientsender->patient_login_id ?? $data_arr['receipt_email'];
+            
+           
            
             $data_arr['usertype'] = 'guest';
         }
         
          
-        // dd($data_arr);
+         
+
         $data_arr['amount'] = $data_arr['amount'] / $data_arr['qty'];
         $data = json_encode($data_arr);
         //  First API
@@ -211,6 +245,7 @@ class GiftsendController extends Controller
     
         $data_arr = $request->except('_token');
         $patient = Patient::where('email',$request->gift_send_to)->first();
+       
 
         if($patient != null && $patient->patient_login_id != null)
         {
@@ -236,7 +271,6 @@ class GiftsendController extends Controller
             $data_arr['usertype'] = 'guest';
         }
        
-
         $data_arr['amount'] = $data_arr['amount'] / $data_arr['qty'];
         $data = json_encode($data_arr);
         // dd($data);
