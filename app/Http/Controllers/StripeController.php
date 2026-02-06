@@ -246,7 +246,7 @@ class StripeController extends Controller
     // This Section Send Email To (Giftcard Sender)  For Future Date and receipt get to current date
 
                 if ($giftsend->in_future != null && $giftsend->gift_card_send_type == 'other') {
-                    Mail::to($receipt_email)->send(new Mastermail($giftsend,$template_id=9));
+                    Mail::to($receipt_email)->send(new Mastermail($giftsend,$template_id=8));
                     Log::info('Gift card email sent', ['to' => $receipt_email]);
                 }
 
@@ -259,12 +259,12 @@ class StripeController extends Controller
                     // if receiver patient exist then only mail send
                     if($patientreceiver)
                         {
-                            Mail::to($patientreceiver->email)->send(new Mastermail($giftsend,$template_id=9));
+                            Mail::to($patientreceiver->email)->send(new Mastermail($giftsend,$template_id=8));
                             Log::info('Gift receipt email sent', ['to' => $patientreceiver->email]);
                         }
                     else
                         {
-                            Mail::to($giftsend->gift_send_to)->send(new Mastermail($giftsend,$template_id=9));
+                            Mail::to($giftsend->gift_send_to)->send(new Mastermail($giftsend,$template_id=8));
                             Log::info('Gift receipt email sent', ['to' => $giftsend->gift_send_to]);
                         }
                    
@@ -272,12 +272,12 @@ class StripeController extends Controller
                     $giftsender=Patient::where('patient_login_id',$giftsend->receipt_email)->first();
                     if($giftsender)
                         {
-                            Mail::to($giftsender->email)->send(new Mastermail($giftsend,$template_id=8));
+                            Mail::to($giftsender->email)->send(new Mastermail($giftsend,$template_id=9));
                             Log::info('Gift sent email', ['to' => $giftsender->email]);
                         }
                     else
                         {
-                            Mail::to($giftsend->receipt_email)->send(new Mastermail($giftsend,$template_id=8));
+                            Mail::to($giftsend->receipt_email)->send(new Mastermail($giftsend,$template_id=9));
                             Log::info('Gift sent email', ['to' => $giftsend->receipt_email]);
                         }
                 }
@@ -288,11 +288,11 @@ class StripeController extends Controller
                     $receiver=Patient::where('patient_login_id',$giftsend->receipt_email)->first();
                     if($receiver)
                         {
-                            Mail::to($receiver->email)->send(new Mastermail($giftsend,$template_id=8));
+                            Mail::to($receiver->email)->send(new Mastermail($giftsend,$template_id=11));
                         }
                         else
                         {
-                            Mail::to($giftsend->receipt_email)->send(new Mastermail($giftsend, $template_id=8));
+                            Mail::to($giftsend->receipt_email)->send(new Mastermail($giftsend, $template_id=11));
                         }
                     
                     Log::info('Gift card email sent', ['to' => $receipt_email]);

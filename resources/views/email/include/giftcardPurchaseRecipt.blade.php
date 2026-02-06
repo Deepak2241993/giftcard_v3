@@ -1,3 +1,32 @@
+@php
+    $isDummyMode = request()->query('mode') === 'dummy';
+@endphp
+
+@if ($isDummyMode)
+    @php
+        /*
+         |-----------------------------------------
+         | Dummy preview data (ONLY for preview)
+         |-----------------------------------------
+         */
+       
+        $cardnumber = [
+            (object) ['giftnumber' => 'GIFT-1234567890'],
+            (object) ['giftnumber' => 'GIFT-0987654321'],
+            (object) ['giftnumber' => 'GIFT-0987654323'],
+            (object) ['giftnumber' => 'GIFT-0987654324'],
+        ];  
+    @endphp
+@else
+    @php
+        /*
+         |-----------------------------------------
+         | Real data passed from controller
+         |-----------------------------------------
+         */
+        $cardnumber = App\Models\GiftcardsNumbers::where('transaction_id', $maildata->transaction_id)->get();
+    @endphp
+@endif
 <div style="line-height: 24px; padding: 20px; font-size: 16px; word-wrap: break-word; font-family: arial, helvetica, sans-serif;">
 
 <!-- Two-Column: Message / Shipping -->
@@ -40,7 +69,8 @@
                                font-size:15px;
                                line-height:24px;
                                color:#555555;">
-                        Wishing you a wonderful birthday filled with joy and laughter!
+                                {{ $maildata->message }}
+                       
                     </td>
                 </tr>
             </table>
@@ -64,13 +94,75 @@
                         The gift card will be sent to<br>
                         <strong style="color:#000000;"> {{ $maildata->recipient_name }}</strong>
                         <br><br>
-                        Addressed to<br>
-                        <strong style="color:#000000;"> {{ $maildata->your_name }}</strong>
+                        
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+
+
+    
+</table>
+
+
+
+<table id="u_content_heading_2" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0"
+    cellspacing="0" width="100%" border="0">
+    <tbody>
+        <tr>
+            <td style="overflow-wrap:break-word;word-break:break-word;padding:30px 0px 0px;font-family:arial,helvetica,sans-serif;"
+                align="left">
+                
+                <h1 class="v-line-height v-font-size"
+                    style="margin: 0px; color: #000000; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Epilogue; font-size: 40px; font-weight: 700;">
+                    Giftcard Details:
+                </h1>
+
+            </td>
+        </tr>
+        {{-- Gift Card Generate --}}
+        <tr>
+            <td>
+                @foreach ($cardnumber as $value)
+                    <tr>
+    <td align="center" style="padding:20px 0;">
+        @foreach ($cardnumber as $value)
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                    <td align="center" style="padding:10px 0;">
+                        <table width="600" cellpadding="0" cellspacing="0" role="presentation"
+                               style="margin:0 auto;">
+                            <tr>
+                                <td align="center">
+                                    <span
+                                        style="
+                                            display:inline-block;
+                                            padding:12px 28px;
+                                            font-size:20px;
+                                            font-family:Arial, Helvetica, sans-serif;
+                                            font-weight:bold;
+                                            color:#ffffff;
+                                            background-color:#fca52a;
+                                            border-radius:6px;
+                                            letter-spacing:1px;
+                                        ">
+                                        {{ $value->giftnumber }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        @endforeach
+    </td>
+</tr>
+
+                @endforeach
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 </div>
