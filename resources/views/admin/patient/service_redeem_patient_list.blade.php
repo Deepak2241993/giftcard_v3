@@ -102,6 +102,18 @@
                                     title="View Statement">
                                         <i class="fa fa-file-text"></i>
                                     </a>
+                                  
+                                    @if(Auth::user()->user_type==1)
+                                      <a type="button"
+                                        class="btn btn-sm btn-outline-primary me-1"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#RedeemServiceRolBack{{ $value['id'] }}"
+                                        onclick="ServiceRollback({{ $key }}, '{{ $value['order_id'] }}')"
+                                        title="Redeem Service Roll Back">
+                                        <i class="fa fa-undo"></i>
+                                        </a>
+
+                                    @endif
                                 </td>
 
                                 @elseif(!empty($value->payment_intent) && ($value->payment_status == 'under_process'))
@@ -215,6 +227,56 @@
         </div>
     </div>
     {{-- Service Order Cancel Modal End --}}
+
+    {{-- For Rollback Service --}}
+    <div class="modal fade deepak" id="RollBackAction"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">RollBack Service</h5>
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div class="d-flex flex-column">
+
+                    <h3>Redeemed Service</h3>
+
+                    <!-- Messages -->
+                        <h4 class="text-success" id="redeemed_success"></h4>
+                        <h4 class="text-danger" id="redeemed_error"></h4>
+                    <!-- Dynamic table -->
+                    <div id="rollbackservicebody" class="mt-4"></div>
+
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
 @endsection
 @push('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
@@ -507,10 +569,6 @@
         }
 
 
-
-
-
-
         //  Order Cancel Code End ***********************************************************************
 
 
@@ -614,6 +672,182 @@
                 }
             });
         }
+
+        //  Service Roll Back
+// ForDate Formate Chage
+function formatDateMDYHMI(dateString) {
+    var d = new Date(dateString);
+
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var day   = String(d.getDate()).padStart(2, '0');
+    var year  = String(d.getFullYear()).slice(-2);
+    var hour  = String(d.getHours()).padStart(2, '0');
+    var min   = String(d.getMinutes()).padStart(2, '0');
+
+    return month + '-' + day + '-' + year + ' ' + hour + ':' + min;
+}
+
+    function ServiceRollback(id, order_id) {
+
+    var $modal = $('#RollBackAction');
+
+    $modal.find('#redeemed_error').hide().html('');
+    $modal.find('#redeemed_success').hide().html('');
+    $modal.find('#rollbackservicebody').html('');
+
+    $modal.modal({
+        backdrop: 'static',
+        keyboard: false
+    }).modal('show');
+
+    $.ajax({
+        url: '{{ route('redeemedservice') }}',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            _token: '{{ csrf_token() }}',
+            order_id: order_id
+        },
+        success: function (response) {
+
+            if (!response.success || response.redeemedServices.length === 0) {
+                $modal.find('#rollbackservicebody').html(
+                    '<p class="text-center">No redeemed services found.</p>'
+                );
+                return;
+            }
+
+            var table = $('<table class="table table-bordered table-striped">');
+
+            table.append(
+                '<thead>' +
+                '<tr>' +
+                '<th>#</th>' +
+                '<th>Redeemed Date</th>' +
+                '<th>Service Name</th>' +
+                '<th>Redeemed Sessions</th>' +
+                '<th>Rollback Reason<span class="text-danger">*</span></th>' +
+                '<th>Action</th>' +
+                '</tr>' +
+                '</thead>'
+            );
+
+            var tbody = $('<tbody>');
+
+            $.each(response.redeemedServices, function (index, element) {
+
+                var serviceName = (element.service_type === 'product')
+                    ? element.product_name
+                    : element.unit_name;
+
+                tbody.append(
+                    '<tr id="redeem_row_' + element.id + '">' +
+                    '<td>' + (index + 1) + '</td>' +
+                    '<td>' + formatDateMDYHMI(element.redeemed_date) + '</td>' +
+                    '<td>' + (serviceName || '-') + '</td>' +
+                    '<td>' + element.redeemed_sessions + '</td>' +
+                    '<td>' +
+                    '<textarea required class="form-control" rows="2" ' +
+                    'id="rollback_comment_' + element.id + '" ' +
+                    'placeholder="Enter rollback reason"></textarea>' +
+                    '</td>' +
+                    '<td>' +
+                    '<button type="button" ' +
+                    'class="btn btn-sm btn-outline-danger" ' +
+                    'onclick="rollbackRedeemed(' + element.id + ', this)">' +
+                    'Rollback' +
+                    '</button>' +
+                    '</td>' +
+                    '</tr>'
+                );
+            });
+
+            table.append(tbody);
+            $modal.find('#rollbackservicebody').html(table);
+        }
+    });
+}
+
+
+
+
+
+
+// For Rolback Service
+function rollbackRedeemed(redeemId, btn) {
+
+    var $modal = $(btn).closest('.modal');
+    var comment = $modal.find('#rollback_comment_' + redeemId).val().trim();
+
+    if (comment === '') {
+        alert('Please enter a rollback reason.');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to rollback this redeemed session?')) {
+        return;
+    }
+
+    $(btn).prop('disabled', true).text('Rolling...');
+
+    $.ajax({
+        url: '{{ route('rollback-redeemed-service') }}',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            _token: '{{ csrf_token() }}',
+            redeem_id: redeemId,
+            comment: comment
+        },
+        success: function (response) {
+
+            if (response.success) {
+
+                $modal.find('#redeemed_error').hide();
+
+                $modal.find('#redeemed_success')
+                    .html(response.message || 'Redeemed session rolled back successfully.')
+                    .fadeIn();
+
+                $('#redeem_row_' + redeemId).fadeOut(300, function () {
+                    $(this).remove();
+                });
+
+                setTimeout(function () {
+                    $modal.find('#redeemed_success').fadeOut();
+                }, 3000);
+
+            } else {
+
+                $modal.find('#redeemed_success').hide();
+
+                $modal.find('#redeemed_error')
+                    .html(response.message || 'Rollback failed.')
+                    .fadeIn();
+
+                $(btn).prop('disabled', false).text('Rollback');
+            }
+        },
+        error: function () {
+
+            $modal.find('#redeemed_success').hide();
+
+            $modal.find('#redeemed_error')
+                .html('Something went wrong. Please try again.')
+                .fadeIn();
+
+            $(btn).prop('disabled', false).text('Rollback');
+        }
+    });
+}
+
+
+
+
+
+
+
+        //  Service Roll back end 
 
         function handleRedeemClick(button) {
             if (confirm('Are you sure you want to redeem this?')) {

@@ -158,14 +158,22 @@ Route::post('/delete-image', [ImageUploadController::class, 'deleteImage']);
 Route::get('/export-categories', [CategoryExportController::class, 'exportCategories']);
 Route::get('/export-categories-with-full-data', [CategoryExportController::class, 'exportCategoriesWithAllFields']);
 Route::get('/export-services', [CategoryExportController::class, 'exportServices']);
+
+// Service Related Route 
 Route::get('/service-redeem','ServiceOrderController@ServiceRedeemView')->name('service-redeem-view');
 Route::get('/service-redeem-patient-list/{id}','ServiceOrderController@ServiceRedeemPatientList')->name('service-redeem-patient-list');
 Route::post('/redeem-services','ServiceOrderController@ServiceRedeem')->name('redeem-services');
 Route::get('/search-order-api','ServiceOrderController@SearchOrderApi')->name('search-order-api');
+Route::post('/redeemcalculation', 'ServiceOrderController@redeemcalculation')->name('redeemcalculation');
+Route::post('/service-statement', 'ServiceOrderController@getServiceStatement')->name('service-statement');
+Route::post('/redeemedservice', 'ServiceOrderController@redeemedservice')->name('redeemedservice');
+Route::post('/rollback-redeemed-service', 'ServiceOrderController@rollbackRedeemedService')->name('rollback-redeemed-service');
+
+
 Route::get('/patient-search','PatientController@PatientSearch')->name('patient.search');
 Route::post('/patient-import','PatientController@importPatients')->name('patients.import');
-Route::post('/service-statement', 'ServiceOrderController@getServiceStatement')->name('service-statement');
-Route::post('/redeemcalculation', 'ServiceOrderController@redeemcalculation')->name('redeemcalculation');
+
+
 Route::post('/do-cancel', 'ServiceOrderController@DoCancel')->name('do-cancel');
 Route::get('/cancel-service', 'ServiceOrderController@ServiceCancel')->name('cancel-service');
 Route::resource('/popular-offers', PopularOfferController::class);

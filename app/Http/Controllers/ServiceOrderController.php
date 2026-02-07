@@ -298,7 +298,10 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
             )
             ->leftJoin('products', 'service_orders.service_id', '=', 'products.id')
             ->leftJoin('service_units', 'service_orders.service_id', '=', 'service_units.id')
-            ->leftJoin('service_redeems', 'service_orders.id', '=', 'service_redeems.service_order_id')
+            ->leftJoin('service_redeems', function ($join) {
+                $join->on('service_orders.id', '=', 'service_redeems.service_order_id')
+                    ->where('service_redeems.is_deleted', 0); // ✅ only non-deleted
+            })
             ->where('service_orders.order_id', $orderId)
             ->groupBy(
                 'service_orders.id',
@@ -322,6 +325,7 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
             )
             ->get();
 
+
             // Calculate total remaining sessions
             $totalRemainingSessions = $servicePurchases->sum('remaining_sessions');
 
@@ -331,6 +335,66 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
                 'totalRemainingSessions' => $totalRemainingSessions,
             ]);
         }
+
+    public function redeemedservice(Request $request)
+{
+    $orderId = $request->order_id;
+
+    $redeemedServices = DB::table('service_redeems')
+        ->select(
+            'service_redeems.id',
+            'service_redeems.created_at as redeemed_date',
+            'service_redeems.number_of_session_use as redeemed_sessions',
+            'service_orders.service_type',
+            'products.product_name',
+            'service_units.product_name as unit_name'
+        )
+        ->join('service_orders', 'service_redeems.service_order_id', '=', 'service_orders.id')
+        ->leftJoin('products', function ($join) {
+            $join->on('service_orders.service_id', '=', 'products.id')
+                 ->where('service_orders.service_type', 'product');
+        })
+        ->leftJoin('service_units', function ($join) {
+            $join->on('service_orders.service_id', '=', 'service_units.id')
+                 ->where('service_orders.service_type', 'unit');
+        })
+        ->where('service_orders.order_id', $orderId)
+        ->where('service_redeems.is_deleted', 0)
+        ->orderBy('service_redeems.created_at', 'desc')
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'redeemedServices' => $redeemedServices
+    ]);
+}
+
+// For RollBack Service
+public function rollbackRedeemedService(Request $request)
+{
+
+    $redeemId = $request->redeem_id;
+    $redeem = ServiceRedeem::where('id', $redeemId)
+        ->where('is_deleted', 0)
+        ->first();
+
+    if (!$redeem) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Redeemed service not found'
+        ]);
+    }
+
+    $redeem->is_deleted = 1;
+    $redeem->comments = $request->comment;
+    $redeem->transaction_id = "SER-ROLLBACK-".$request->redeem_id;
+    $redeem->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Redeemed session rolled back successfully'
+    ]);
+}
 
 
      

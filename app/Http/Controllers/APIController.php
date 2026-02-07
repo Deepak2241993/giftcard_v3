@@ -2204,7 +2204,8 @@ public function product_view(Request $request, $id)
         ->leftJoin('service_units', 'service_units.id', '=', 'service_orders.service_id')
         ->leftJoin('service_redeems', function ($join) {
             $join->on('service_redeems.order_id', '=', 'service_orders.order_id')
-                 ->on('service_redeems.product_id', '=', 'service_orders.service_id');
+                 ->on('service_redeems.product_id', '=', 'service_orders.service_id')
+                 ->where('service_redeems.is_deleted', 0); // ✅ fix
         })
         ->select(
             'products.product_name',
