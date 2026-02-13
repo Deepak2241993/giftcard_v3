@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Employee;
 
 class User extends Authenticatable
 {
@@ -27,6 +28,11 @@ class User extends Authenticatable
         'user_type',
         'remember_token'
     ];
+
+       public function employee()
+        {
+            return $this->hasOne(Employee::class);
+        }
 
     /**
      * The attributes that should be hidden for serialization.

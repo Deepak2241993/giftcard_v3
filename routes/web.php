@@ -9,6 +9,9 @@ use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\CategoryExportController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ClinicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -226,6 +229,24 @@ Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'
 
     Route::post('patients/merge-execute', [PatientController::class, 'merge'])
         ->name('patients.merge.execute');
+
+
+// Admin Managemnent Route
+
+Route::resource('employees', EmployeeController::class);
+Route::get('employees-table-data', [EmployeeController::class, 'tableData'])->name('employees.table.data');
+Route::get('employees.export.pdf', [EmployeeController::class, 'exportPdf'])->name('employees.export.pdf');
+
+// for Departments
+Route::resource('departments', DepartmentController::class);
+Route::post('departments/bulk-action', [DepartmentController::class, 'bulkAction'])->name('departments.bulk.action');
+
+// for Clinic
+Route::resource('clinics', ClinicController::class);
+Route::post('clinics/bulk-action', [ClinicController::class,'bulkAction'])->name('clinics.bulk.action');
+
+Route::resource('designations', DesignationController::class);
+    
 
 });
 
