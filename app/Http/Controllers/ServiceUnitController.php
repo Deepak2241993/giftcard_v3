@@ -143,9 +143,10 @@ class ServiceUnitController extends Controller
     // For Frontend Unit page Show
 
     public function UnitPageShow(Request $request, $slug){
-       $product = Product::where('product_slug',$slug)->first();
-       $result = explode('|',$product->unit_id);
-        return view('product.unit_show',compact('result','product'));
+       $ServiceUnit = ServiceUnit::where('product_slug',$slug)->first();
+       $result = explode('|',$ServiceUnit->unit_id);
+
+        return view('product.unit-details',compact('result','ServiceUnit'));
     }
 
     public function UnitPageDetails(Request $request, $product_slug,$slug){

@@ -56,6 +56,7 @@
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">Unit Name</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Page Url">Front Page URL</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Orignal Price">Orignal Price</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Discounted Price">Discounted Price</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Status">Status</th>
@@ -77,6 +78,9 @@
                                 </td>
                                 <td>
                                     {{ $value->product_name ? $value->product_name: 'N/A' }}
+                                </td>
+                                 <td>
+                                   <a target="_blank" href="{{ $value->product_slug ? url('/services/'.$value->product_slug) : 'N/A' }}">{{ $value->product_slug ? url('/serviceunit/'.$value->product_slug) : 'N/A' }}</a>
                                 </td>
                                 <td>{{ $value->amount }}</td>
                                 <td>{{ $value->discounted_amount }}</td>

@@ -500,93 +500,174 @@ class StripeController extends Controller
 
 
 
-    public function stripcheckoutSuccess(Request $request)
+   public function stripcheckoutSuccess(Request $request)
 {
     try {
+
+        if (!$request->session_id) {
+            throw new \Exception('Stripe session id missing');
+        }
+
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $response = $stripe->checkout->sessions->retrieve($request->session_id);
 
-        $transaction_data = \App\Models\TransactionHistory::where('payment_session_id', $response->id)->first(); 
-        $ServiceOrder = \App\Models\ServiceOrder::where('order_id', $transaction_data->order_id)->first(); 
-        
-        if ($transaction_data) {
-            // Prepare the data to be updated
-            $data = [
-                'payment_status' => $response->payment_status,
-                'status' => ($response->status == 'complete') ? 1 : 0,
-                'payment_intent' => $response->payment_intent,
-                'transaction_status' => $response->status,
-                'transaction_amount' => $response->amount_total / 100,
-            ];
+        if (!$response || !$response->id) {
+            throw new \Exception('Invalid Stripe session response');
+        }
 
-            // Update the transaction history record
-            $transaction_data->update($data);
-            $ServiceOrder->where('order_id', $ServiceOrder->order_id)->update(['status' => 1]);
+        $transaction_data = \App\Models\TransactionHistory::where(
+            'payment_session_id',
+            $response->id
+        )->first();
 
+        if (!$transaction_data) {
+            throw new \Exception('Transaction not found for session: ' . $response->id);
+        }
 
-            if ($transaction_data->gift_card_applyed != null) {
-                $giftcardnumbers = explode('|', $transaction_data->gift_card_applyed);
-                $giftcardamounts = explode('|', $transaction_data->gift_card_amount);
+        $ServiceOrder = \App\Models\ServiceOrder::where(
+            'order_id',
+            $transaction_data->order_id
+        )->first();
 
-                foreach ($giftcardnumbers as $key => $value) {
-                    $giftcard_result = \App\Models\GiftcardsNumbers::where('giftnumber', $value)->first();
+        // =======================
+        // Update Transaction
+        // =======================
+        $data = [
+            'payment_status'      => $response->payment_status ?? null,
+            'status'              => ($response->status === 'complete') ? 1 : 0,
+            'payment_intent'      => $response->payment_intent ?? null,
+            'transaction_status'  => $response->status ?? null,
+            'transaction_amount'  => isset($response->amount_total)
+                                        ? ($response->amount_total / 100)
+                                        : 0,
+        ];
 
-                    if ($giftcard_result) {
-                        $data_arr = [
-                            'gift_card_number' => $value,
-                            'amount' => $giftcardamounts[$key],
-                            'comments' => "You have redeemed your giftcard " . $giftcardnumbers[$key] . " on the purchase of the service Order Number: " . $transaction_data->order_id,
-                            'user_id' => $giftcard_result->user_id,
-                            'user_token' => 'FOREVER-MEDSPA',
-                        ];
+        $transaction_data->update($data);
 
-                        $data = json_encode($data_arr);
+        // =======================
+        // Update Service Order
+        // =======================
+        if ($ServiceOrder) {
+            $ServiceOrder->update(['status' => 1]);
+        }
 
-                        $result = $this->postAPI('gift-card-redeem', $data);
+        // =======================
+        // Gift Card Logic
+        // =======================
+        if (!empty($transaction_data->gift_card_applyed)) {
 
-                        if ($result['status'] == 200) {
-                            $data_arr['gift_card_number'] = $value;
-                            $data_arr['user_token'] = 'FOREVER-MEDSPA';
+            $giftcardnumbers = explode('|', $transaction_data->gift_card_applyed);
+            $giftcardamounts = explode('|', $transaction_data->gift_card_amount);
 
-                            $data = json_encode($data_arr);
-                            $statement = $this->postAPI('gift-card-statment', $data);
-                            $giftcard_result = \App\Models\GiftcardsNumbers::where('giftnumber', $value)->first();
-                            $statement['giftCardHolderDetails'] = $result['giftCardHolderDetails'];
-                            \Mail::to($result['giftCardHolderDetails']['gift_send_to'])->send(new \App\Mail\GiftCardStatement($statement));
-                        }
+            foreach ($giftcardnumbers as $key => $value) {
+
+                $giftcard_result = \App\Models\GiftcardsNumbers::where(
+                    'giftnumber',
+                    $value
+                )->first();
+
+                if (!$giftcard_result) {
+                    continue;
+                }
+
+                $amount = $giftcardamounts[$key] ?? 0;
+
+                $data_arr = [
+                    'gift_card_number' => $value,
+                    'amount'           => $amount,
+                    'comments'         => "You have redeemed your giftcard {$value} on the purchase of the service Order Number: {$transaction_data->order_id}",
+                    'user_id'          => $giftcard_result->user_id,
+                    'user_token'       => 'FOREVER-MEDSPA',
+                ];
+
+                $result = $this->postAPI(
+                    'gift-card-redeem',
+                    json_encode($data_arr)
+                );
+
+                if (!is_array($result) || ($result['status'] ?? null) != 200) {
+                    \Log::error('Gift card redeem failed', ['response' => $result]);
+                    continue;
+                }
+
+                // Gift card statement
+                $statement = $this->postAPI(
+                    'gift-card-statment',
+                    json_encode([
+                        'gift_card_number' => $value,
+                        'user_token'       => 'FOREVER-MEDSPA',
+                    ])
+                );
+
+                if (
+                    isset($result['giftCardHolderDetails']['gift_send_to'])
+                ) {
+                    $statement['giftCardHolderDetails'] =
+                        $result['giftCardHolderDetails'];
+
+                    try {
+                        \Mail::to(
+                            $result['giftCardHolderDetails']['gift_send_to']
+                        )->send(
+                            new \App\Mail\GiftCardStatement($statement)
+                        );
+                    } catch (\Exception $e) {
+                        \Log::error('Gift card mail failed: ' . $e->getMessage());
                     }
                 }
             }
-            session::pull('giftcards');
-            session::pull('total_gift_applyed');
-            session::pull('tax_amount');
-            session::pull('totalValue');
-            session::pull('front_cart');
         }
 
-        //  For Purchase Confirmation Mail
-        // dd($transaction_data);
-        Mail::to($transaction_data->email)->send(new Mastermail($transaction_data,$template_id=1));
-    
+        // =======================
+        // Clear Sessions
+        // =======================
+        session()->forget([
+            'giftcards',
+            'total_gift_applyed',
+            'tax_amount',
+            'totalValue',
+            'front_cart',
+        ]);
 
-        return redirect()->route('invoice')
-                     ->with('transaction_data', $transaction_data)
-                     ->with('success', 'Payment successful.');
-   
+        // =======================
+        // Purchase Confirmation Mail
+        // =======================
+        try {
+            Mail::to($transaction_data->email)
+                ->send(new Mastermail($transaction_data, 1));
+        } catch (\Exception $e) {
+            \Log::error('Order mail failed: ' . $e->getMessage());
+        }
+
+        return redirect()
+            ->route('invoice')
+            ->with('transaction_data', $transaction_data)
+            ->with('success', 'Payment successful.');
+
     } catch (\Exception $e) {
-        // Log the error message
-        \Log::error('Transaction Status : ' . $e->getMessage());
-        return view('stripe.failed')->with('error', 'Payment processing failed. Please contact support.');
+
+        \Log::error('Transaction Status Error: ' . $e->getMessage());
+
+        return view('stripe.failed')->with(
+            'error',
+            'Payment processing failed. Please contact support.'
+        );
     }
 }
 
 
 public function invoice()
 {
-    // Retrieve flash data
     $transaction_data = session('transaction_data');
+
+    if (!$transaction_data) {
+        return redirect()->route('home');
+    }
+
     return view('invoice.service_invoice', compact('transaction_data'));
 }
+
+
 
 
 

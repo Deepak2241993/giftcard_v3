@@ -37,7 +37,7 @@ Route::get('product-page/{token?}/{slug}', 'ProductController@productpage')->nam
 Route::get('productdetails/{slug}','ProductController@productdetails')->name('productdetails');
 Route::get('services','ServiceUnitController@ServicePage')->name('services');
 Route::get('category/{slug}','ProductCategoryController@categorytpage')->name('treatment-categories');
-// Route::get('services/{slug}','ServiceUnitController@UnitPageShow')->name('serviceunit');// This is  For Service Frontend and Backend Banner Service
+Route::get('services/{slug}','ServiceUnitController@UnitPageShow')->name('serviceunit');// This is  For Service Frontend and Backend Banner Service
 Route::get('services/{product_slug}/{unitslug}','ServiceUnitController@UnitPageDetails')->name('unit-details');
 Route::get('service/{slug}','ProductController@productdetails')->name('productdetails');
 Route::post('services-search','ProductController@ServicesSearch')->name('ServicesSearch');
