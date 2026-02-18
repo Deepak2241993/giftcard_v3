@@ -273,6 +273,8 @@
     {{-- Import Patient --}}
 
 
+
+    
     {{-- ================= MERGE PREVIEW MODAL ================= --}}
 <div class="modal fade" id="mergePreviewModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
@@ -398,90 +400,164 @@
 
 {{-- For Mearge Function Script  --}}
 <script>
-let selectedPatients = [];
-let keepId = null;
+/* ======================================================
+   MERGE STATE
+====================================================== */
+let selectedPatients = new Set();
+let keepId  = null;
 let mergeId = null;
 
-/* ---------------- SELECT CHECKBOXES ---------------- */
-
-$('#selectAllPatients').on('change', function () {
-    $('.patient-checkbox').prop('checked', this.checked).trigger('change');
-});
-
+/* ======================================================
+   CHECKBOX HANDLING (LIMIT = 2)
+====================================================== */
 $(document).on('change', '.patient-checkbox', function () {
-    selectedPatients = $('.patient-checkbox:checked')
-        .map(function () { return $(this).val(); })
-        .get();
+
+    const id = $(this).val();
+
+    if (this.checked) {
+
+        if (selectedPatients.size >= 2) {
+            alert('You can select only 2 patients to merge.');
+            $(this).prop('checked', false);
+            return;
+        }
+
+        selectedPatients.add(id);
+
+    } else {
+        selectedPatients.delete(id);
+    }
 
     $('#mergePatientsBtn')
-        .toggleClass('d-none', selectedPatients.length !== 2);
+        .toggleClass('d-none', selectedPatients.size !== 2);
 });
 
-/* ---------------- LOAD MERGE PREVIEW ---------------- */
+/* ======================================================
+   RESTORE CHECKBOX STATE AFTER PAGINATION / SEARCH
+====================================================== */
+$('#datatable-buttons').on('draw.dt', function () {
+    $('.patient-checkbox').each(function () {
+        if (selectedPatients.has($(this).val())) {
+            $(this).prop('checked', true);
+        }
+    });
+});
 
-$('#mergePatientsBtn').click(function () {
+/* ======================================================
+   LOAD MERGE PREVIEW
+====================================================== */
+$('#mergePatientsBtn').on('click', function () {
+
+    const ids = Array.from(selectedPatients);
+
     $.ajax({
         url: "{{ route('patients.merge.preview') }}",
         type: "GET",
-        data: {
-            'ids[]': selectedPatients
-        },
+        data: { 'ids[]': ids },
         success: function (res) {
+
             $('#patientA').html(res.patientA);
             $('#patientB').html(res.patientB);
 
-            // Default assignment
-            keepId = selectedPatients[0];
-            mergeId  = selectedPatients[1];
-            console.log(keepId,mergeId);
+            // Default order
+            keepId  = ids[0];
+            mergeId = ids[1];
 
             $('#mergePreviewModal').modal('show');
         }
     });
 });
 
-/* ---------------- 🔄 SWAP KEEP / MERGE ---------------- */
+/* ======================================================
+   🔄 SWAP KEEP / MERGE (DELEGATED)
+====================================================== */
+// $(document).on('click', '#swapPatientsBtn', function () {
 
-$('#swapPatientsBtn').on('click', function () {
+//     let left  = $('#patientA').html();
+//     let right = $('#patientB').html();
 
-    // Swap UI
-    let left  = $('#patientA').html();
-    let right = $('#patientB').html();
+//     $('#patientA').html(right);
+//     $('#patientB').html(left);
 
-    $('#patientA').html(right);
-    $('#patientB').html(left);
+//     let temp = keepId;
+//     keepId = mergeId;
+//     mergeId = temp;
+// });
 
-    // Swap IDs
+/* ======================================================
+   🔄 SWAP KEEP / MERGE (SERVER RENDERED)
+====================================================== */
+$(document).on('click', '#swapPatientsBtn', function () {
+
+    // 1️⃣ Swap IDs
     let temp = keepId;
     keepId = mergeId;
     mergeId = temp;
+
+    // 2️⃣ Reload preview from server (CORRECT WAY)
+    $.ajax({
+        url: "{{ route('patients.merge.preview.swap') }}",
+        type: "GET",
+        data: {
+            keep_id: keepId,
+            merge_id: mergeId
+        },
+        success: function (res) {
+            $('#patientA').html(res.patientA);
+            $('#patientB').html(res.patientB);
+        }
+    });
 });
 
-/* ---------------- PROCEED ---------------- */
-
-$('#confirmMergeBtn').click(function () {
+/* ======================================================
+   PROCEED TO FINAL CONFIRM
+====================================================== */
+$('#confirmMergeBtn').on('click', function () {
+    $('#swapPatientsBtn').prop('disabled', true);
     $('#mergePreviewModal').modal('hide');
     $('#mergeConfirmModal').modal('show');
 });
 
-/* ---------------- FINAL CONFIRM ---------------- */
 
-$('#mergeConfirmText').keyup(function () {
+/* ======================================================
+   FINAL CONFIRM TEXT
+====================================================== */
+$('#mergeConfirmText').on('keyup', function () {
     $('#finalMergeBtn').prop('disabled', $(this).val() !== 'MERGE');
 });
 
-/* ---------------- EXECUTE MERGE ---------------- */
+/* ======================================================
+   COLLECT KEEP PATIENT EDITABLE DATA
+====================================================== */
+function collectKeepPatientData() {
+    let data = {};
 
-$('#finalMergeBtn').click(function () {
+    $('#patientA .keep-input').each(function () {
+        const field = $(this).data('field');
+        data[field] = $(this).val();
+    });
+
+    return data;
+}
+
+/* ======================================================
+   EXECUTE MERGE
+====================================================== */
+$('#finalMergeBtn').on('click', function () {
+
+    const keepData = collectKeepPatientData();
+
     $.post("{{ route('patients.merge.execute') }}", {
         _token: "{{ csrf_token() }}",
         keep_id: keepId,
-        merge_id: mergeId
+        merge_id: mergeId,
+        keep_data: keepData
     }, function () {
         location.reload();
     });
 });
 </script>
+
 
 {{-- Mearge Code End  --}}
 
@@ -563,40 +639,49 @@ $('#finalMergeBtn').click(function () {
 
 {{-- For Index Table Data --}}
     <script>
-        $(document).ready(function () {
+       $(document).ready(function () {
 
     var table = $("#datatable-buttons").DataTable({
-    processing: true,
-    serverSide: true,
-    ajax: "{{ route('patient.table.data') }}",
-    columns: [
-        {
-            data: 'id',
-            orderable: false,
-            searchable: false,
-            render: function (id) {
-                return `<input type="checkbox" class="patient-checkbox" value="${id}">`;
-            }
-        },
-        { data: 'DT_RowIndex', orderable: false, searchable: false },
-        { data: 'action', orderable: false, searchable: false },
-        { data: 'patient_name' },
-        { data: 'email' },
-        { data: 'phone' },
-        { data: 'status_badge', orderable: false }
-    ],
-    order: [[3, "asc"]],
-    responsive: true,
-    autoWidth: false,
-    dom: 'Bfrtip',
-    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
-});
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('patient.table.data') }}",
+        columns: [
+            {
+                data: 'id',
+                orderable: false,
+                searchable: false,
+                render: function (id) {
+                    return `<input type="checkbox" class="patient-checkbox" value="${id}">`;
+                }
+            },
+            { data: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'action', orderable: false, searchable: false },
+            { data: 'patient_name' },
+            { data: 'email' },
+            { data: 'phone' },
+            { data: 'status_badge', orderable: false }
+        ],
+        order: [[3, "asc"]],
+        responsive: true,
+        autoWidth: false,
+        dom: 'Bfrtip',
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    });
 
+    // ✅ RESTORE CHECKBOX STATE AFTER PAGINATION / SEARCH
+    $('#datatable-buttons').on('draw.dt', function () {
+        $('.patient-checkbox').each(function () {
+            if (selectedPatients.has($(this).val())) {
+                $(this).prop('checked', true);
+            }
+        });
+    });
 
     // Append Buttons Correctly
     table.buttons().container()
         .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 });
+
 
     </script>
 @endpush

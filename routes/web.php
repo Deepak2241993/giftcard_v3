@@ -224,11 +224,14 @@ Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'
 
 
 // Patient Data Mearge
-  Route::get('patients/merge-preview', [PatientController::class, 'preview'])
+    Route::get('patients/merge-preview', [PatientController::class, 'preview'])
         ->name('patients.merge.preview');
 
     Route::post('patients/merge-execute', [PatientController::class, 'merge'])
         ->name('patients.merge.execute');
+
+    Route::get('/patients/merge/preview-swap', [PatientController::class, 'previewSwap'])
+        ->name('patients.merge.preview.swap');
 
 
 // Admin Managemnent Route

@@ -705,78 +705,122 @@ public function patientTableData(Request $request)
     }
 
     public function merge(Request $request)
+{
+    $request->validate([
+        'keep_id'  => 'required|exists:patients,id',
+        'merge_id' => 'required|different:keep_id',
+    ]);
+
+    DB::transaction(function () use ($request) {
+
+        $keep  = Patient::lockForUpdate()->findOrFail($request->keep_id);
+        $merge = Patient::lockForUpdate()->findOrFail($request->merge_id);
+
+        /* ============================================
+           1️⃣ FREE UNIQUE FIELDS FROM MERGE PATIENT
+        ============================================ */
+        $merge->update([
+            'email'            => null,
+            'phone'            => null,
+            'patient_login_id' => null,
+            'updated_by'       => auth()->id(),
+        ]);
+
+        /* ============================================
+           2️⃣ UPDATE KEEP PATIENT (EDITABLE DATA)
+        ============================================ */
+        if ($request->filled('keep_data')) {
+            $keep->update([
+                'fname' => $request->keep_data['fname'] ?? $keep->fname,
+                'lname' => $request->keep_data['lname'] ?? $keep->lname,
+                'email' => $request->keep_data['email'] ?? $keep->email,
+                'phone' => $request->keep_data['phone'] ?? $keep->phone,
+                'updated_by' => auth()->id(),
+            ]);
+        }
+
+        /* ============================================
+           3️⃣ MOVE RELATED DATA
+        ============================================ */
+
+        DB::table('transaction_histories')
+            ->where('patient_login_id', $merge->patient_login_id)
+            ->update([
+                'patient_login_id' => $keep->patient_login_id,
+                'user_token'       => $keep->user_token,
+                'email'            => $keep->email,
+                'phone'            => $keep->phone,
+                'updated_at'       => now(),
+            ]);
+
+        DB::table('service_orders')
+            ->where('patient_login_id', $merge->patient_login_id)
+            ->update([
+                'patient_login_id' => $keep->patient_login_id,
+                'user_token'       => $keep->user_token,
+                'updated_by'       => auth()->id(),
+                'updated_at'       => now(),
+            ]);
+
+        /* ============================================
+           4️⃣ SOFT DELETE MERGE PATIENT
+        ============================================ */
+        $merge->update([
+            'status'     => 2, // merged
+            'is_deleted' => 1,
+            'updated_by' => auth()->id(),
+        ]);
+    });
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Patients merged successfully',
+    ]);
+}
+
+
+    public function previewSwap(Request $request)
     {
         $request->validate([
             'keep_id'  => 'required|exists:patients,id',
-            'merge_id' => 'required|different:keep_id'
+            'merge_id' => 'required|exists:patients,id'
         ]);
 
-        DB::transaction(function () use ($request) {
+        $keep  = Patient::findOrFail($request->keep_id);
+        $merge = Patient::findOrFail($request->merge_id);
 
-            $keep  = DB::table('patients')->where('id', $request->keep_id)->first();
-            $merge = DB::table('patients')->where('id', $request->merge_id)->first();
+        // Counts (reuse your logic)
+        foreach ([$keep, $merge] as $patient) {
+            $patient->transaction_count = DB::table('transaction_histories')
+                ->where('patient_login_id', $patient->patient_login_id)
+                ->count();
 
-            // 1️⃣ Move transaction history
-            DB::table('transaction_histories')
-                ->where('patient_login_id', $merge->patient_login_id)
-                ->update([
-                    'patient_login_id' => $keep->patient_login_id,
-                    'user_token'       => $keep->user_token,
-                    'email'            => $keep->email,
-                    'phone'            => $keep->phone,
-                    'updated_at'       => now(),
-                ]);
+            $patient->service_count = DB::table('service_orders')
+                ->where('patient_login_id', $patient->patient_login_id)
+                ->count();
 
-            // 2️⃣ Move service orders
-            DB::table('service_orders')
-                ->where('patient_login_id', $merge->patient_login_id)
-                ->update([
-                    'patient_login_id' => $keep->patient_login_id,
-                    'user_token'       => $keep->user_token,
-                    'updated_by'       => auth()->id(),
-                    'updated_at'       => now(),
-                ]);
+            $patient->self_giftcard_count = DB::table('giftsends')
+                ->where('gift_send_to', $patient->patient_login_id)
+                ->count();
 
-            // Giftcard Merge
-
-            //case Send to Other 
-            DB::table('giftsends')
-                ->where('gift_send_to', $merge->patient_login_id) //Deepak098
-                ->update([
-                    'status'     => 2, // Merged
-                    'gift_send_to' => $keep->patient_login_id,
-                    'updated_by'=> auth()->id(),
-                    'updated_at'=> now(),
-                ]);
-
-            // For Self Purcase and Received from Other
-             DB::table('giftsends')
-                ->where('receipt_email', $merge->patient_login_id) //Deepak098
-                ->update([
-                    'status'     => 2, // Merged
-                    'receipt_email' => $keep->patient_login_id,
-                    'updated_by'=> auth()->id(),
-                    'updated_at'=> now(),
-                ]);
-            
-
-            // 3️⃣ Soft-merge patient record
-            DB::table('patients')
-                ->where('id', $merge->id)
-                ->update([
-                    'status'     => 2, // Merged
-                    'is_deleted' => 1,
-                    'updated_by'=> auth()->id(),
-                    'updated_at'=> now(),
-                ]);
-            
-           
-        });
+            $patient->other_giftcard_count = DB::table('giftsends')
+                ->where('receipt_email', $patient->patient_login_id)
+                ->count();
+        }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Patients merged successfully'
+            'patientA' => view('admin.patient.merge.patient_card', [
+                'patient' => $keep,
+                'type'    => 'KEEP'
+            ])->render(),
+
+            'patientB' => view('admin.patient.merge.patient_card', [
+                'patient' => $merge,
+                'type'    => 'MERGE'
+            ])->render(),
         ]);
     }
+
+
 }
 

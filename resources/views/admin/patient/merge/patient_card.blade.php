@@ -3,23 +3,59 @@
 
         <h5 class="{{ $type === 'KEEP' ? 'text-success' : 'text-danger' }}">
             {{ $type }} PATIENT
+            @if($type === 'KEEP')
+                <small class="text-muted">(Editable)</small>
+            @endif
         </h5>
-       
 
-        <p><strong>Name:</strong> {{ $patient->fname }} {{ $patient->lname }}</p>
-        <p><strong>Email:</strong> {{ $patient->email }}</p>
-        <p><strong>Phone:</strong> {{ $patient->phone }}</p>
+        {{-- Name --}}
+        <div class="mb-2">
+            <strong>Name:</strong>
+            @if($type === 'KEEP')
+                <input type="text"
+                       class="form-control form-control-sm keep-input"
+                       data-field="name"
+                       value="{{ $patient->fname }} {{ $patient->lname }}">
+            @else
+                {{ $patient->fname }} {{ $patient->lname }}
+            @endif
+        </div>
+
+        {{-- Email --}}
+        <div class="mb-2">
+            <strong>Email:</strong>
+            @if($type === 'KEEP')
+                <input type="email"
+                       class="form-control form-control-sm keep-input"
+                       data-field="email"
+                       value="{{ $patient->email }}">
+            @else
+                {{ $patient->email }}
+            @endif
+        </div>
+
+        {{-- Phone --}}
+        <div class="mb-2">
+            <strong>Phone:</strong>
+            @if($type === 'KEEP')
+                <input type="text"
+                       class="form-control form-control-sm keep-input"
+                       data-field="phone"
+                       value="{{ $patient->phone }}">
+            @else
+                {{ $patient->phone }}
+            @endif
+        </div>
+
         <p><strong>Login ID:</strong> {{ $patient->patient_login_id }}</p>
 
         <hr>
-        <h5 class="text-primary">Services Details</h5>
+
         <p><strong>Transactions:</strong> {{ $patient->transaction_count }}</p>
         <p><strong>Services:</strong> {{ $patient->service_count }}</p>
 
-        <hr>
-        <h5 class="text-primary">GiftCard Details</h5>
-        <p><strong>Self Purchases/Received Giftcard :</strong> {{ $patient->self_giftcard_count }}</p>
-        <p><strong>Giftcard Send to Other  :</strong> {{ $patient->other_giftcard_count }}</p>
+        <p><strong>Self Giftcards:</strong> {{ $patient->self_giftcard_count }}</p>
+        <p><strong>Giftcards to Others:</strong> {{ $patient->other_giftcard_count }}</p>
 
     </div>
 </div>
