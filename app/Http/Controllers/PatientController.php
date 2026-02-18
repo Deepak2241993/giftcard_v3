@@ -646,6 +646,7 @@ public function patientTableData(Request $request)
         $patientA = $patients[0];  //Keep
         $patientB = $patients[1]; //Merge
         
+        // dd( $patients[0]['patient_login_id'], $patients[1]['patient_login_id']);
 
         // Transaction counts
         $patientA->transaction_count = DB::table('transaction_histories')
