@@ -97,30 +97,26 @@ class PatientAuthController extends Controller
     }
 
       //  for patient login
-public function PatientloginView()
-{
-    // Debugging (optional): 
-    // dd(session()->all());
-
-    // Check if the patient is already logged in
-    if (Auth::guard('patient')->check()) {
-        // Redirect to the patient dashboard if logged in
-        if(session()->has('amount')){
-            $amount = Session::get('amount');
-            return redirect()->route('home')->with('amount', $amount);
+    public function PatientloginView()
+    {
+        // Check if the patient is already logged in
+        if (Auth::guard('patient')->check()) {
+            // Redirect to the patient dashboard if logged in
+            if(session()->has('amount')){
+                $amount = Session::get('amount');
+                return redirect()->route('home')->with('amount', $amount);
+            }
+            else if (session()->has('front_cart')) {
+                return redirect()->route('checkout_view');
+            }
+            else
+            {
+                return redirect()->route('patient-dashboard');
+            }
         }
-        else if (session()->has('front_cart')) {
-            return redirect()->route('checkout_view');
-        }
-        else
-        {
-            return redirect()->route('patient-dashboard');
-        }
+        // Otherwise, show the login page
+        return view('auth.patient_login');
     }
-
-    // Otherwise, show the login page
-    return view('auth.patient_login');
-}
 
 
 
@@ -131,11 +127,10 @@ public function Patientlogout(Request $request) {
     $patient = Auth::guard('patient')->user();
 
     // Log out the patient using the patient guard
-    Auth::guard('patient')->logout();
+    Auth::guard('patient')->logout(); // Patient
     $request->session()->forget('patientlogin');
     $request->session()->forget('patient_details');
     $request->session()->forget('front_cart');
-    $request->session()->invalidate();
     $request->session()->regenerateToken();
     // Redirect to the patient login page
     return redirect(route('patient-login'));

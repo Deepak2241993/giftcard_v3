@@ -1,6 +1,6 @@
 <nav class="main-header navbar navbar-expand-md navbar-light navbar-white sticky-top">
     <div class="container">
-        <a href="{{ route('root') }}" class="navbar-brand">
+        <a href="{{ route('admin-dashboard') }}" class="navbar-brand">
             <img src="{{ url('/medspa.png') }}" alt="Forever Medspa" class="brand-image img-circle elevation-3"
                 style="opacity: .8" onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
             <span class="brand-text font-weight-light">Forever Medspa</span>

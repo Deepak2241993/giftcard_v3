@@ -71,7 +71,6 @@ class EmployeeController extends Controller
     Employee::create([
         'user_id'        => $user->id,
         'emp_id'         => $request->emp_id,
-        'employee_code'  => $request->employee_code,
         'first_name'     => $request->first_name,
         'last_name'      => $request->last_name,
         'email'          => $request->email,
@@ -95,9 +94,11 @@ class EmployeeController extends Controller
         'updated_by'     => auth()->id(),
     ]);
 
-    return redirect()
-        ->route('employees.index')
-        ->with('success', 'Employee created successfully. Default password is phone number.');
+        return response()->json([
+            'status'  => true,
+            'message' => 'Employee created successfully. Default password is phone number.'
+        ]);
+
 }
 
     /**

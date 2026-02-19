@@ -26,61 +26,6 @@ use Illuminate\Support\Facades\Log;
 class AdminController extends Controller
 {
     //  for User Login
-    public function login_post(Request $request){
-    
-        $this->validate($request, [
-            'email'   => 'required|email',
-            'password'  => 'required|alphaNum|min:8'
-           ],
-           [
-            'email.required' => 'The email field is required.',
-            'password.required' => 'The Password field is required and must be at least 8 characters long.',
-        ]);
-      
-           $credentials = $request->only('email', 'password');
-      
-           if(Auth::attempt($credentials))
-           {
-                $request->session()->put('adminlogin',Auth::user()->name);
-                $response = array('success' => true, 'error' => false, 'message' => 'Login successfully..');
-                return redirect(route('root'));
-            }
-        else{
-            
-            $response = array('success' => false, 'error' => true, 'message' => 'Please Check User Details');
-            return redirect(route('login'));
-             }
-    }
-
-    public function login(){
-        if(Auth::check())
-        {
-    
-            return redirect(route('root'));
-        }
-        else
-        {
-            return view('auth.login');
-        }
-    }
-
-
-
-    //    for Admin Logout
-public function logout(Request $request) {
-    // Log out the admin using the admin guard
-    Auth::guard('admin')->logout();
-    $request->session()->forget('adminlogin');
-    $request->session()->regenerateToken();
-    $request->session()->invalidate();
-
-    
-    // Redirect to the login page
-    return redirect('/login');
-}
-
-
-   
 
     public function PatientQuickCreate(Request $request, Patient $patient)
     {
@@ -136,8 +81,6 @@ public function logout(Request $request) {
             return response()->json(['success' => false, 'message' => 'An unexpected error occurred.']);
         }
     }
-
-
         
 }
 

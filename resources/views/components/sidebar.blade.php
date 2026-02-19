@@ -10,7 +10,7 @@
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="{{ route('root') }}" class="brand-link">
+        <a href="{{ route('admin-dashboard') }}" class="brand-link">
             <img src="{{ url('/medspa.png') }}" alt="Forever Medspa" class="brand-image img-circle elevation-3"
                 style="opacity: .8" onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
             <span class="brand-text font-weight-light">Forever Medspa</span>
@@ -59,7 +59,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             {{-- <li class="nav-item">
-                                <a href="{{ route('root') }}" class="nav-link">
+                                <a href="{{ route('admin-dashboard') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Dashboard</p>
                                 </a>

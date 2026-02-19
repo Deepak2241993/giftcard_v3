@@ -26,7 +26,8 @@ class User extends Authenticatable
         'password',
         'avatar',
         'user_type',
-        'remember_token'
+        'remember_token',
+        'user_token'
     ];
 
        public function employee()
