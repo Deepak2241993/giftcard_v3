@@ -715,8 +715,7 @@ public function patientTableData(Request $request)
             'keep_data' => 'sometimes|array',
             'keep_data.fname' => 'nullable|string|max:255',
             'keep_data.lname' => 'nullable|string|max:255',
-            'keep_data.email' => 'nullable|email|unique:patients,email,' . $request->keep_id,
-            'keep_data.phone' => 'nullable|string|max:20|unique:patients,phone,' . $request->keep_id,
+
         ]);
 
         try {
