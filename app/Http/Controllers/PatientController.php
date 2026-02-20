@@ -705,44 +705,89 @@ public function patientTableData(Request $request)
 
     public function merge(Request $request)
     {
+        // ===============================
+        // 1️⃣ VALIDATION
+        // ===============================
         $request->validate([
             'keep_id'  => 'required|exists:patients,id',
-            'merge_id' => 'required|different:keep_id',
+            'merge_id' => 'required|exists:patients,id|different:keep_id',
+
+            'keep_data' => 'sometimes|array',
+            'keep_data.fname' => 'nullable|string|max:255',
+            'keep_data.lname' => 'nullable|string|max:255',
+            'keep_data.email' => 'nullable|email|unique:patients,email,' . $request->keep_id,
+            'keep_data.phone' => 'nullable|string|max:20|unique:patients,phone,' . $request->keep_id,
         ]);
 
-        DB::transaction(function () use ($request) {
+        try {
 
-            $keep  = Patient::lockForUpdate()->findOrFail($request->keep_id);
-            $merge = Patient::lockForUpdate()->findOrFail($request->merge_id);
-       
-            
-            /* ============================================
-            3️⃣ MOVE RELATED DATA
-            ============================================ */
+            DB::transaction(function () use ($request) {
 
-            DB::table('transaction_histories')
-                ->where('patient_login_id', $merge->patient_login_id)
-                ->update([
-                    'patient_login_id' => $keep->patient_login_id,
-                    'user_token'       => $keep->user_token,
-                    'email'            => $keep->email,
-                    'phone'            => $keep->phone,
-                    'updated_at'       => now(),
+                // ===============================
+                // 2️⃣ LOCK BOTH PATIENTS
+                // ===============================
+                $keep  = Patient::lockForUpdate()->findOrFail($request->keep_id);
+                $merge = Patient::lockForUpdate()->findOrFail($request->merge_id);
+
+                // ===============================
+                // 3️⃣ SAFETY CHECK
+                // ===============================
+                if (empty($keep->patient_login_id) || empty($merge->patient_login_id)) {
+                    throw new \Exception('Merge allowed only when both patients have Login ID');
+                }
+
+                /* ============================================
+                4️⃣ MOVE RELATED DATA (MERGE → KEEP)
+                ============================================ */
+
+                DB::table('transaction_histories')
+                    ->where('patient_login_id', $merge->patient_login_id)
+                    ->update([
+                        'patient_login_id' => $keep->patient_login_id,
+                        'updated_by'       => auth()->id(),
+                        'updated_at'       => now(),
+                    ]);
+
+                DB::table('service_orders')
+                    ->where('patient_login_id', $merge->patient_login_id)
+                    ->update([
+                        'patient_login_id' => $keep->patient_login_id,
+                        'updated_by'       => auth()->id(),
+                        'updated_at'       => now(),
+                    ]);
+
+                /* ============================================
+                5️⃣ FREE UNIQUE FIELDS FROM MERGED PATIENT
+                ============================================ */
+
+                $merge->update([
+                    'email'       => null,
+                    'phone'       => null,
+                    'status'      => 2, // merged / inactive
+                    'is_deleted'  => 1,
+                    'updated_by'  => auth()->id(),
+                    'updated_at'  => now(),
                 ]);
 
-            DB::table('service_orders')
-                ->where('patient_login_id', $merge->patient_login_id)
-                ->update([
-                    'patient_login_id' => $keep->patient_login_id,
-                    'user_token'       => $keep->user_token,
-                    'updated_by'       => auth()->id(),
-                    'updated_at'       => now(),
-                ]);
+                /* ============================================
+                6️⃣ UPDATE KEEP PATIENT (OPTIONAL DATA)
+                ============================================ */
+
+                if ($request->filled('keep_data')) {
+                    $keep->update([
+                        'fname'      => $request->keep_data['fname']  ?? $keep->fname,
+                        'lname'      => $request->keep_data['lname']  ?? $keep->lname,
+                        'email'      => $request->keep_data['email']  ?? $keep->email,
+                        'phone'      => $request->keep_data['phone']  ?? $keep->phone,
+                        'updated_by' => auth()->id(),
+                        'updated_at' => now(),
+                    ]);
+                }
 
             /* ============================================
-            4 Giftcard Merge
+            5 Giftcard Merge
             ============================================ */
-             //case Send to Other 
+            //  case Send to Other 
             DB::table('giftsends')
                 ->where('gift_send_to', $merge->patient_login_id) //Deepak098
                 ->update([
@@ -762,41 +807,31 @@ public function patientTableData(Request $request)
                     'updated_at'=> now(),
                 ]);
 
+            });
 
-
-            /* ============================================
-            1️⃣ FREE UNIQUE FIELDS FROM MERGE PATIENT
-            ============================================ */
-            $merge->update([
-                'email'            => null,
-                'phone'            => null,
-                'patient_login_id' => null,
-                'status' => 2,
-                'is_deleted' => 1,
-                'updated_by' => auth()->id(),
+            // ===============================
+            // 7️⃣ SUCCESS RESPONSE
+            // ===============================
+            return response()->json([
+                'success' => true,
+                'message' => 'Patients merged successfully',
             ]);
-        
-            /* ============================================
-            2️⃣ UPDATE KEEP PATIENT (EDITABLE DATA)
-            ============================================ */
-            if ($request->filled('keep_data')) {
-                $keep->update([
-                    'fname' => $request->keep_data['fname'] ?? $keep->fname,
-                    'lname' => $request->keep_data['lname'] ?? $keep->lname,
-                    'email' => $request->keep_data['email'] ?? $keep->email,
-                    'phone' => $request->keep_data['phone'] ?? $keep->phone,
-                    'updated_by' => auth()->id(),
-                ]);
-            }
 
-        });
+        } catch (\Throwable $e) {
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Patients merged successfully',
-        ]);
+            // ===============================
+            // 8️⃣ ERROR RESPONSE
+            // ===============================
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
+   
+
+     
 
     public function previewSwap(Request $request)
     {

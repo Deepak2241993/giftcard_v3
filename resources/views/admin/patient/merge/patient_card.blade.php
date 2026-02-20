@@ -10,14 +10,25 @@
 
         {{-- Name --}}
         <div class="mb-2">
-            <strong>Name:</strong>
+            <strong>First Name:</strong>
             @if($type === 'KEEP')
                 <input type="text"
                        class="form-control form-control-sm keep-input"
-                       data-field="name"
-                       value="{{ $patient->fname }} {{ $patient->lname }}">
+                       data-field="fname"
+                       value="{{ $patient->fname }}">
             @else
-                {{ $patient->fname }} {{ $patient->lname }}
+                {{ $patient->fname }}
+            @endif
+        </div>
+          <div class="mb-2">
+            <strong>Last Name:</strong>
+            @if($type === 'KEEP')
+                <input type="text"
+                       class="form-control form-control-sm keep-input"
+                       data-field="lname"
+                       value="{{ $patient->lname }}">
+            @else
+                {{ $patient->lname }}
             @endif
         </div>
 
