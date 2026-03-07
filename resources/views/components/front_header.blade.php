@@ -294,12 +294,18 @@ $amount = 0;
     @if (!empty($cart))
     <div class="cart-items" id="cartItems" @if(empty($cart)) style="display: none;" @else style="display: block;" @endif>
             @foreach ($cart as $key => $item)
-                @php
+               @php
                     $units = App\Models\ServiceUnit::find($item['unit_id']);
-                    $image = explode('|', $units->product_image);
+
+                    if(!$units){
+                        continue; // skip this cart item if product not found
+                    }
+
+                    $image = explode('|', $units->product_image ?? '');
                     $price = $units->discounted_amount ?? $units->amount;
                     $subtotal = $price * $item['quantity'];
                     $amount += $subtotal;
+
                     if ($units->giftcard_redemption == 0) {
                         $redeem++;
                     }

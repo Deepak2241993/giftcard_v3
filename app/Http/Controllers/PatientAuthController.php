@@ -125,8 +125,6 @@ class PatientAuthController extends Controller
 public function Patientlogout(Request $request) {
     // Retrieve the logged-in patient
     $patient = Auth::guard('patient')->user();
-
-    // Log out the patient using the patient guard
     Auth::guard('patient')->logout(); // Patient
     $request->session()->forget('patientlogin');
     $request->session()->forget('patient_details');

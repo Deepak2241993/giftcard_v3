@@ -1,13 +1,5 @@
-
 @extends('layouts.front-master')
-@php
-    function getStaticContent($id)
-    {
-        $content = App\Models\StaticContent::find($id);
-        return $content ? $content : 'No Data Found';
-    }
 
-@endphp
 @section('body')
     @push('csslink')
         <style>
@@ -135,42 +127,40 @@
 
         <style>
             @media (max-width: 767px) {
+
                 /* .container {
-                    display: flex;
-                    flex-direction: column;
-                } */
-                .business-card, .service-selection {
-                        width: 100% !important;
-                        margin-bottom: 20px;
+                            display: flex;
+                            flex-direction: column;
+                        } */
+                .business-card,
+                .service-selection {
+                    width: 100% !important;
+                    margin-bottom: 20px;
                 }
             }
         </style>
-        
+
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-        {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
-
-        <!-- FontAwesome (for icons if needed) -->
-        {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> --}}
     @endpush
 
 
     <div class="container">
         <div id="successToast" class="toast-success"></div>
-        
+
 
         <!-- Left Side - Business Info -->
         <div class="business-card">
-        @php
-            $result = getStaticContent(3);
-        @endphp
+            @php
+                $result = getStaticContent(3);
+            @endphp
             <div class="card-glow"></div>
             <div class="business-header">
                 <div class="logo-section">
                     <div class="logo-icon">
                         <i class="fas fa-spa"></i>
                     </div>
-                    <h1>{{$result->title}}</h1>
+                    <h1>{{ $result->title }}</h1>
                 </div>
             </div>
 
@@ -184,54 +174,53 @@
                 </div>
                 <!-- Category Search -->
                 <div class="category-search-container mb-3 position-relative">
-                    <input type="text" id="categorySearch" class="form-control" placeholder="Search categories..." autocomplete="off">
-                        <i class="fas fa-search category-search-icon position-absolute" style="right:40px; top:12px;"></i>
-                    <button class="btn btn-sm btn-light position-absolute" id="clearCategorySearch" style="right:5px; top:6px; display:none;" >
-                            <i class="fas fa-times"></i>
+                    <input type="text" id="categorySearch" class="form-control" placeholder="Search categories..."
+                        autocomplete="off">
+                    <i class="fas fa-search category-search-icon position-absolute" style="right:40px; top:12px;"></i>
+                    <button class="btn btn-sm btn-light position-absolute" id="clearCategorySearch"
+                        style="right:5px; top:6px; display:none;">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
 
-                    <!-- Categories Accordion -->
+                <!-- Categories Accordion -->
                 <div class="accordion" id="accordionExample">
                     @foreach ($category as $key => $value)
-                    <div class="card accordion-item">
-                        <div class="card-header p-2" id="heading{{ $key }}">
-                            <h2 class="mb-0">
-                                <button class="btn text-left w-100 {{ $key != 0 ? 'collapsed' : '' }}" 
-                                type="button" 
-                                data-toggle="collapse" 
-                                data-target="#collapse{{ $key }}" 
-                                aria-expanded="{{ $key == 0 ? 'true' : 'false' }}" 
-                                aria-controls="collapse{{ $key }}" style="color: #f39548;">
-                                <i class="fas fa-folder mr-2"></i> {{ $value->cat_name ?? '' }}
-                                </button>
-                            </h2>
-                        </div>
+                        <div class="card accordion-item">
+                            <div class="card-header p-2" id="heading{{ $key }}">
+                                <h2 class="mb-0">
+                                    <button class="btn text-left w-100 {{ $key != 0 ? 'collapsed' : '' }}" type="button"
+                                        data-toggle="collapse" data-target="#collapse{{ $key }}"
+                                        aria-expanded="{{ $key == 0 ? 'true' : 'false' }}"
+                                        aria-controls="collapse{{ $key }}" style="color: #f39548;">
+                                        <i class="fas fa-folder mr-2"></i> {{ $value->cat_name ?? '' }}
+                                    </button>
+                                </h2>
+                            </div>
 
-                        <div id="collapse{{ $key }}" 
-                             class="collapse {{ $key == 0 ? 'show' : '' }}" 
-                             aria-labelledby="heading{{ $key }}" 
-                             data-parent="#accordionExample">
-                            <ul class="list-group list-group-flush">
-                                @foreach ($services as $sKey => $service)
-                                    @php $cat_array = explode('|',$service->cat_id)   @endphp
-                                    @if (in_array($value->id, $cat_array))
-                                        <li class="list-group-item p-2">
-                                            <a href="{{ route('treatment-categories', $service->product_slug) }}" style="color:var(--text-primary) text-decoration: underline;">
-                                                {{ $service->product_name }}
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
+                            <div id="collapse{{ $key }}" class="collapse {{ $key == 0 ? 'show' : '' }}"
+                                aria-labelledby="heading{{ $key }}" data-parent="#accordionExample">
+                                <ul class="list-group list-group-flush">
+                                    @foreach ($services as $sKey => $service)
+                                        @php $cat_array = explode('|',$service->cat_id)   @endphp
+                                        @if (in_array($value->id, $cat_array))
+                                            <li class="list-group-item p-2">
+                                                <a href="{{ route('treatment-categories', $service->product_slug) }}"
+                                                    style="color:var(--text-primary) text-decoration: underline;">
+                                                    {{ $service->product_name }}
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
         </div>
 
-        
+
         <!-- Right Side - Service Selection -->
         <div class="service-selection">
             <div class="card-glow"></div>
@@ -260,8 +249,8 @@
                         <div class="service-card">
                             <div class="service-card-header">
                                 <h3>{{ $value['product_name'] }}</h3>
-                                @if($value['fetures_original_price'] == 1)
-                                <div class="service-price">From $<del>{{ $value['amount'] }}</del></div>
+                                @if ($value['fetures_original_price'] == 1)
+                                    <div class="service-price">From $<del>{{ $value['amount'] }}</del></div>
                                 @endif
 
                                 @if ($value['popular_service'] != null && $value['popular_service'] == 1)
@@ -283,23 +272,23 @@
                                 </div>
                             </div> --}}
                             <div class="service-description">
-    <p>{!! $value['short_description'] !!}</p>
+                                <p>{!! $value['short_description'] !!}</p>
 
-    <div class="hidden-content">
-        <p>{!! $value['product_description'] !!}</p>
+                                <div class="hidden-content">
+                                    <p>{!! $value['product_description'] !!}</p>
 
-        <!-- Move the button here -->
-        <button class="read-more-btn" onclick="toggleReadMore(this)">
-            <span>Read Less</span>
-            <i class="fas fa-chevron-up"></i>
-        </button>
-    </div>
+                                    <!-- Move the button here -->
+                                    <button class="read-more-btn" onclick="toggleReadMore(this)">
+                                        <span>Read Less</span>
+                                        <i class="fas fa-chevron-up"></i>
+                                    </button>
+                                </div>
 
-    <button class="read-more-btn top-btn" onclick="toggleReadMore(this)">
-        <span>Read More</span>
-        <i class="fas fa-chevron-down"></i>
-    </button>
-</div>
+                                <button class="read-more-btn top-btn" onclick="toggleReadMore(this)">
+                                    <span>Read More</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
 
                             <div class="service-footer">
                                 <div class="service-info">
@@ -309,11 +298,13 @@
                                     </div>
                                 </div>
                                 <div class="quantity-controls" style="display: none;">
-                                    <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1,{{$value['min_qty']}})">
+                                    <button class="quantity-btn minus-btn"
+                                        onclick="updateQuantity(this, -1,{{ $value['min_qty'] }})">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <span class="quantity-display">{{$value['min_qty']}}</span>
-                                    <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1,{{$value['max_qty']}})">
+                                    <span class="quantity-display">{{ $value['min_qty'] }}</span>
+                                    <button class="quantity-btn plus-btn"
+                                        onclick="updateQuantity(this, 1,{{ $value['max_qty'] }})">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
@@ -433,72 +424,72 @@
         }
     </script>
     <script>
-    // Function to filter categories/services
-    function performSearch(searchTerm) {
-        searchTerm = searchTerm.toLowerCase();
-        let hasResults = false;
+        // Function to filter categories/services
+        function performSearch(searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            let hasResults = false;
 
-        document.querySelectorAll(".accordion-item").forEach((item) => {
-            let matchFound = false;
+            document.querySelectorAll(".accordion-item").forEach((item) => {
+                let matchFound = false;
 
-            // Check service names inside the category
-            item.querySelectorAll(".list-group-item").forEach((listItem) => {
-                const text = listItem.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    listItem.style.display = "block";
-                    matchFound = true;
+                // Check service names inside the category
+                item.querySelectorAll(".list-group-item").forEach((listItem) => {
+                    const text = listItem.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        listItem.style.display = "block";
+                        matchFound = true;
+                    } else {
+                        listItem.style.display = "none";
+                    }
+                });
+
+                // Show/hide whole category
+                if (matchFound || item.querySelector(".btn-link").textContent.toLowerCase().includes(searchTerm)) {
+                    item.style.display = "block";
+                    hasResults = true;
+
+                    // Expand matched categories
+                    const collapse = item.querySelector(".collapse");
+                    if (collapse && !collapse.classList.contains("show")) {
+                        $(collapse).collapse("show");
+                    }
                 } else {
-                    listItem.style.display = "none";
+                    item.style.display = "none";
                 }
             });
 
-            // Show/hide whole category
-            if (matchFound || item.querySelector(".btn-link").textContent.toLowerCase().includes(searchTerm)) {
-                item.style.display = "block";
-                hasResults = true;
+            // Show/hide clear button
+            document.getElementById("clearCategorySearch").style.display = searchTerm ? "inline-block" : "none";
 
-                // Expand matched categories
-                const collapse = item.querySelector(".collapse");
-                if (collapse && !collapse.classList.contains("show")) {
-                    $(collapse).collapse("show");
-                }
-            } else {
-                item.style.display = "none";
+            // Optional notification (if you have showNotification())
+            if (!hasResults && searchTerm) {
+                console.log("No matching services found");
             }
-        });
-
-        // Show/hide clear button
-        document.getElementById("clearCategorySearch").style.display = searchTerm ? "inline-block" : "none";
-
-        // Optional notification (if you have showNotification())
-        if (!hasResults && searchTerm) {
-            console.log("No matching services found");
         }
-    }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const searchInput = document.getElementById("categorySearch");
-        const clearBtn = document.getElementById("clearCategorySearch");
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchInput = document.getElementById("categorySearch");
+            const clearBtn = document.getElementById("clearCategorySearch");
 
-        searchInput.addEventListener("input", () => {
-            performSearch(searchInput.value);
+            searchInput.addEventListener("input", () => {
+                performSearch(searchInput.value);
+            });
+
+            clearBtn.addEventListener("click", () => {
+                searchInput.value = "";
+                performSearch("");
+            });
         });
 
-        clearBtn.addEventListener("click", () => {
-            searchInput.value = "";
-            performSearch("");
-        });
-    });
 
+        function renderAllServices() {
+            const container = document.querySelector('.service-options');
+            container.innerHTML = '';
 
-    function renderAllServices() {
-    const container = document.querySelector('.service-options');
-    container.innerHTML = '';
+            allServices.forEach(service => {
+                let popularBadge = service.popular_service == 1 ? `<div class="service-badge">Popular</div>` : '';
 
-    allServices.forEach(service => {
-        let popularBadge = service.popular_service == 1 ? `<div class="service-badge">Popular</div>` : '';
-
-        const cardHTML = `
+                const cardHTML = `
         <div class="service-card">
             <div class="service-card-header">
                 <h3>${service.product_name}</h3>
@@ -547,18 +538,17 @@
         </div>
         `;
 
-        container.innerHTML += cardHTML;
-    });
-}
-
-</script>
+                container.innerHTML += cardHTML;
+            });
+        }
+    </script>
 
 
 
     {{-- For Service Search --}}
     <script>
         const allServices = @json($ServiceUnit);
-        
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const serviceContainer = document.querySelector('.service-options');
@@ -607,63 +597,63 @@
         });
 
         function handleSearch(inputElem, dropdownElem, clearBtn = null, isMobile = false) {
-    const query = inputElem.value.trim().toLowerCase();
-    dropdownElem.innerHTML = '';
+            const query = inputElem.value.trim().toLowerCase();
+            dropdownElem.innerHTML = '';
 
-    if (query.length > 0) {
-        if (clearBtn) clearBtn.style.display = 'block';
-        dropdownElem.style.display = 'block';
+            if (query.length > 0) {
+                if (clearBtn) clearBtn.style.display = 'block';
+                dropdownElem.style.display = 'block';
 
-        const filtered = allServices.filter(item =>
-            item.product_name.toLowerCase().includes(query)
-        );
+                const filtered = allServices.filter(item =>
+                    item.product_name.toLowerCase().includes(query)
+                );
 
-        if (filtered.length) {
-            filtered.forEach(item => {
-                const div = document.createElement('div');
-                div.textContent = item.product_name;
-                div.classList.add('suggestion-item');
-                div.onclick = () => {
-                    inputElem.value = item.product_name;
-                    dropdownElem.style.display = 'none';
-                    if (clearBtn) clearBtn.style.display = 'block';
-                    renderServiceCard(item);
-                    if (isMobile) {
-                        document.getElementById('mobileSearchContainer').style.display = 'none';
-                    }
-                };
-                dropdownElem.appendChild(div);
-            });
-        } else {
-            dropdownElem.innerHTML = '<div class="suggestion-item">No matches</div>';
+                if (filtered.length) {
+                    filtered.forEach(item => {
+                        const div = document.createElement('div');
+                        div.textContent = item.product_name;
+                        div.classList.add('suggestion-item');
+                        div.onclick = () => {
+                            inputElem.value = item.product_name;
+                            dropdownElem.style.display = 'none';
+                            if (clearBtn) clearBtn.style.display = 'block';
+                            renderServiceCard(item);
+                            if (isMobile) {
+                                document.getElementById('mobileSearchContainer').style.display = 'none';
+                            }
+                        };
+                        dropdownElem.appendChild(div);
+                    });
+                } else {
+                    dropdownElem.innerHTML = '<div class="suggestion-item">No matches</div>';
+                }
+            } else {
+                // when search box is empty → reset
+                if (clearBtn) clearBtn.style.display = 'none';
+                dropdownElem.style.display = 'none';
+
+                // show all services again
+                renderAllServices();
+            }
+
         }
-    } else {
-        // when search box is empty → reset
-        if (clearBtn) clearBtn.style.display = 'none';
-        dropdownElem.style.display = 'none';
-
-        // show all services again
-        renderAllServices();
-    }
-    
-}
 
 
-const clearBtn = document.getElementById('clearSearch');
+        const clearBtn = document.getElementById('clearSearch');
 
-if (clearBtn) {
-    clearBtn.addEventListener('click', function() {
-        const searchInput = document.getElementById('serviceSearch');
-        const searchDropdown = document.getElementById('searchDropdown');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                const searchInput = document.getElementById('serviceSearch');
+                const searchDropdown = document.getElementById('searchDropdown');
 
-        searchInput.value = '';
-        searchDropdown.style.display = 'none';
-        this.style.display = 'none';
+                searchInput.value = '';
+                searchDropdown.style.display = 'none';
+                this.style.display = 'none';
 
-        // ✅ Show all services again
-        renderAllServices();
-    });
-}
+                // ✅ Show all services again
+                renderAllServices();
+            });
+        }
 
 
         function renderServiceCard(service) {

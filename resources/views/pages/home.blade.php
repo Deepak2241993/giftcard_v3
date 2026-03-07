@@ -1,12 +1,5 @@
 @extends('layouts.front-master')
-@php
-    function getStaticContent($id)
-    {
-        $content = App\Models\StaticContent::find($id);
-        return $content ? $content : 'No Data Found';
-    }
 
-@endphp
 @section('body')
     @push('css')
     <style>
