@@ -96,15 +96,15 @@
     </div>
 
     <div class="quantity-controls" style="display:none;">
-        <button class="quantity-btn minus-btn"
-            onclick="updateQuantity(this,-1,{{ $ServiceUnit->min_qty }})">
+       <button class="quantity-btn minus-btn"
+            onclick="updateQuantity(this,-1,{{ $ServiceUnit->min_qty }},{{ $ServiceUnit->max_qty }})">
             -
         </button>
 
         <span class="quantity-display">{{ $ServiceUnit->min_qty }}</span>
 
         <button class="quantity-btn plus-btn"
-            onclick="updateQuantity(this,1,{{ $ServiceUnit->max_qty }})">
+            onclick="updateQuantity(this,1,{{ $ServiceUnit->min_qty }},{{ $ServiceUnit->max_qty }})">
             +
         </button>
     </div>
@@ -325,15 +325,21 @@
                         <span class="price-display">From $${service.discounted_amount}</span>
                     </div>
                 </div>
-                <div class="quantity-controls" style="display: none;">
-                    <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1,${service.min_qty})">
-                        <i class="fas fa-minus"></i>
+              <div class="quantity-controls" style="display:none;">
+
+                    <button class="quantity-btn minus-btn"
+                    onclick="updateQuantity(this,-1,{{ $ServiceUnit->min_qty }},{{ $ServiceUnit->max_qty }})">
+                    -
                     </button>
-                    <span class="quantity-display">1</span>
-                    <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1,${service.max_qty})">
-                        <i class="fas fa-plus"></i>
+
+                    <span class="quantity-display">{{ $ServiceUnit->min_qty }}</span>
+
+                    <button class="quantity-btn plus-btn"
+                    onclick="updateQuantity(this,1,{{ $ServiceUnit->min_qty }},{{ $ServiceUnit->max_qty }})">
+                    +
                     </button>
-                </div>
+
+                    </div>
                 <button class="book-now-btn" onclick="toggleQuantityControls(this)"
                     data-base-price="${service.discounted_amount}" data-id="${service.id}">
                     <span>Buy Now</span>
