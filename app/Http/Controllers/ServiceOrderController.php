@@ -121,31 +121,30 @@ class ServiceOrderController extends Controller
 public function ServiceRedeemPatientList(Request $request, TransactionHistory $transaction, $id)
 {
     $patient = Patient::findOrFail($id);
+
     $pemail = $patient->email;
     $phone = $patient->phone;
-    $fname = $patient->fname;
-    $lname = $patient->lname;
-
-    // Safely build fullname
-    $fullname = '';
-    if (!empty($fname) && !empty($lname)) {
-        $fullname = strtolower($fname . ' ' . $lname);
-    }
+    $patient_login_id = $patient->patient_login_id;
 
     $query = TransactionHistory::query();
 
-    // Prefer filtering by email if available
-    if (!empty($pemail)) {
-        $query->where('email', $pemail);
-    } elseif (!empty($phone)) {
-        $query->where('phone', $phone);
-    } else {
-        // Return no results if both are missing
-        $query->whereRaw('1 = 0');
-    }
+    $query->where(function ($q) use ($pemail, $phone, $patient_login_id) {
+
+        if (!empty($pemail)) {
+            $q->orWhere('email', $pemail);
+        }
+
+        if (!empty($phone)) {
+            $q->orWhere('phone', $phone);
+        }
+
+        if (!empty($patient_login_id)) {
+            $q->orWhere('patient_login_id', $patient_login_id);
+        }
+    });
 
     $data = $query->orderBy('id', 'DESC')->get();
-
+// dd($data);
     return view('admin.patient.service_redeem_patient_list', compact('data', 'patient'));
 }
 
