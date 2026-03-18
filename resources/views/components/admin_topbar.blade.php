@@ -18,12 +18,6 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
-                {{-- <li class="nav-item dropdown">
-            <a id="dropdownSubMenu1" href="{{ route('patient.index') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Patient Management</a>
-            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-              <li><a href="{{ route('patient.index') }}" class="dropdown-item">Patient List</a></li>           
-            </ul>
-          </li> --}}
 
                 <li class="nav-item">
                     <a href="{{ route('patient.index') }}" class="nav-link">Patient List</a>
@@ -84,9 +78,10 @@
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
                         <li><a href="{{ route('employees.index') }}" class="dropdown-item">Employee List</a></li>
                         <li><a href="{{ route('clinics.index') }}" class="dropdown-item">Clinic Management</a></li>
-                        <li><a href="{{ route('departments.index') }}" class="dropdown-item">Departmane Management</a></li>
+                        <li><a href="{{ route('departments.index') }}" class="dropdown-item">Departmane Management</a>
+                        </li>
                         <li><a href="{{ route('designations.index') }}" class="dropdown-item">Designations Management</a></li>
-
+                        {{-- <li><a href="{{ route('access-control.index') }}" class="dropdown-item">Access Control</a></li> --}}
                     </ul>
                 </li>
 
@@ -209,11 +204,6 @@
                     <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                 </div>
             </li>
-            {{-- <li class="nav-item">
-          <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-            <i class="fas fa-th-large"></i>
-          </a>
-        </li> --}}
         </ul>
     </div>
 </nav>

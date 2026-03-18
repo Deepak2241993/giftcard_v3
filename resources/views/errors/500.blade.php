@@ -1,4 +1,4 @@
-@extends('layouts.master-without-nav')
+@extends('layouts.admin-without-nav')
 @section('title')
     @lang('translation.Error_500')
 @endsection

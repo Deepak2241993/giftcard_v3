@@ -86,6 +86,8 @@ Route::post('/reset-password',[PatientAuthController::class,'ResetPasswordPost']
 Route::get('/email-suggestions', 'PatientController@emailSuggestions')->name('email-suggestions');
 Route::get('/name-suggestions', 'PatientController@nameSuggestions')->name('name-suggestions');
 Route::view('new_template','layouts.front_new');
+
+
 // Patient Login Form
 Route::get('/patient-login',[PatientAuthController::class,'PatientloginView'])->name('patient-login');
 Route::post('/patient-login', [PatientAuthController::class, 'PatientLoginPost'])->name('patient-login');
@@ -98,172 +100,12 @@ Route::post('/login',[LoginController::class,'login'])->name('login-post');
 Route::post('/logout',[LoginController::class,'logout'])->name('logout');
 
 
-//For All Backend Route
-Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function () {
-    Route::get('/admin-dashboard', [DashboardController::class,'adminDashboard'])->name('admin-dashboard');
-    Route::get('/product-dashboard', 'HomeController@ProductDashboard')->name('product-dashboard');
-    Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
-    Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
-    Route::resource('/gift', GiftController::class);
-    Route::post('create-unit-quickly','ServiceUnitController@CreateUnitQuickly')->name('create-unit-quickly');
-    Route::post('/giftcards-history', 'GiftController@history')->name('giftcards-history');
-    Route::get('/giftcards-view', 'GiftController@redeem_view')->name('giftcards-view');
-    Route::get('/giftcards-redeem-view', 'GiftController@history_view')->name('giftcards-redeem-view');
-    Route::post('/giftcards-redeem', 'GiftController@redeem_store')->name('giftcards-redeem');
-    Route::resource('/service-order-history', TransactionHistoryController::class);
-    Route::post('/service-order-update', 'TransactionHistoryController@OrderUpdate')->name('service-order-update');
-    Route::resource('/coupon', GiftCouponController::class);
-    Route::resource('/static-content', StaticContentController::class);
-    Route::resource('/medspa-gift', MedsapGiftController::class);
-    Route::resource('/email-template', EmailTemplateController::class);
-    Route::get('/email-template/{id}/preview', 'EmailTemplateController@preview')->name('email-template.preview');
-    Route::post('/email-template/upload-image','EmailTemplateController@uploadImage')->name('email-template.upload-image');
-    Route::post('/ckeditor-image-post', 'CkeditorController@uploadImage')->name('ckeditor-image-upload');
-    Route::get('/cardgenerated-list','GiftsendController@cardgeneratedList')->name('cardgenerated-list');
-    Route::get('/gift-card-transaction-search','GiftsendController@GifttransactionSearch')->name('gift-card-transaction-search');
-    Route::post('/cardview-route','APIController@cardview')->name('cardview-route');
-    Route::get('/giftcardredeem-view','GiftsendController@giftcardredeemView')->name('giftcardredeem-view');
-    Route::get('/giftcardredeem-from-patientlist/{id}','GiftsendController@giftcardredeemPatientList')->name('giftcardredeemPatientList');
-    Route::get('/redeem-giftcard/{transaction_id}/{user_id}','GiftsendController@RedeemGiftcard')->name('redeem-giftcard');
-    Route::get('/giftcardsearch','GiftsendController@GiftCardSearch')->name('giftcard-search');
-    Route::post('/giftcardredeem','GiftsendController@giftcardredeem')->name('giftcardredeem');
-    Route::post('/giftcardstatment','GiftsendController@giftcardstatment')->name('giftcardstatment');
-    Route::get('/giftcards-sale/{id?}', 'GiftsendController@giftsale')->name('giftcards-sale');
-    Route::post('/giftcancel','GiftsendController@giftcancel')->name('giftcancel');
-    Route::resource('/category', ProductCategoryController::class);
-
-    Route::resource('/product', ProductController::class);
-    Route::get('/service-search','ProductController@ServiceSearch')->name('service-search');
-    Route::get('/unit-search','ProductController@UnitSearch')->name('unit-search');
-    // Single Duplicate
-    Route::get('/product/duplicate/{id}', 'ProductController@duplicate')->name('product.duplicate');
-
-    // Bulk Actions
-    Route::post('/product/bulk-action', 'ProductController@bulkAction')->name('product.bulk.action');
-
-    // Route::get('/service-buy-from-patient/{id}', 'ProductController@ServiceBuyFromPatientPage')->name('service-buy-from-patient');
-
-    Route::view('/email-template-view', 'email.servicePurchaseMail')->name('email-template-view');
-
-    Route::resource('/unit', ServiceUnitController::class);
-    Route::post('/unit/bulk-action', 'ServiceUnitController@bulkAction')->name('unit.bulk.action');
-    Route::get('/unit/duplicate/{id}', 'ServiceUnitController@duplicate')->name('unit.duplicate');
-    Route::get('/unitdelete/{id}','ServiceUnitController@destroy')->name('unitdelete');
-
-
-    Route::resource('/banner', BannerController::class);
-    Route::post('/categories/import', [ProductCategoryImportController::class, 'import'])->name('categories.import');
-    Route::get('/clear-errors', [ProductCategoryImportController::class, 'clearErrors'])->name('clear.errors');
-    Route::post('/services/import', [ProductImportController::class, 'import'])->name('services.import');
-    Route::post('/upload-multiple-images', [ImageUploadController::class, 'uploadMultipleImages'])->name('upload.images');
-    Route::post('/delete-image', [ImageUploadController::class, 'deleteImage']);
-    Route::get('/export-categories', [CategoryExportController::class, 'exportCategories']);
-    Route::get('/export-categories-with-full-data', [CategoryExportController::class, 'exportCategoriesWithAllFields']);
-    Route::get('/export-services', [CategoryExportController::class, 'exportServices']);
-
-    // Service Related Route 
-    Route::get('/service-redeem','ServiceOrderController@ServiceRedeemView')->name('service-redeem-view');
-    Route::get('/service-redeem-patient-list/{id}','ServiceOrderController@ServiceRedeemPatientList')->name('service-redeem-patient-list');
-    Route::post('/redeem-services','ServiceOrderController@ServiceRedeem')->name('redeem-services');
-    Route::get('/search-order-api','ServiceOrderController@SearchOrderApi')->name('search-order-api');
-    Route::post('/redeemcalculation', 'ServiceOrderController@redeemcalculation')->name('redeemcalculation');
-    Route::post('/service-statement', 'ServiceOrderController@getServiceStatement')->name('service-statement');
-    Route::post('/redeemedservice', 'ServiceOrderController@redeemedservice')->name('redeemedservice');
-    Route::post('/rollback-redeemed-service', 'ServiceOrderController@rollbackRedeemedService')->name('rollback-redeemed-service');
-
-
-    Route::get('/patient-search','PatientController@PatientSearch')->name('patient.search');
-    Route::post('/patient-import','PatientController@importPatients')->name('patients.import');
-
-
-    Route::post('/do-cancel', 'ServiceOrderController@DoCancel')->name('do-cancel');
-    Route::get('/cancel-service', 'ServiceOrderController@ServiceCancel')->name('cancel-service');
-    Route::resource('/popular-offers', PopularOfferController::class);
-    Route::post('/giftcard-purchase','GiftsendController@GiftPurchase')->name('giftcard-purchase');
-    Route::get('/giftcard-purchases-success','GiftsendController@GiftPurchaseSuccess')->name('giftcard-purchases-success');
-    Route::post('/giftcard-payment-update','GiftsendController@updatePaymentStatus')->name('giftcard-payment-update');
-    Route::get('/resendmail_view','GiftsendController@Resendmail_view')->name('Resendmail_view');
-    Route::get('/resendmail_preview','GiftsendController@Resendmail_preview')->name('resendmail_preview');
-    Route::post('/resendmail','GiftsendController@Resendmail')->name('resendmail');
-    Route::get('search-keywords-reports','ProductController@KeywordsReports')->name('keywords_reports');
-    Route::get('export-keywords','ProductController@ExportDate')->name('export_date');
-    Route::get('service-cart','PopularOfferController@AdminCartview')->name('service-cart');
-    Route::get('payment-process','PopularOfferController@AdminPaymentProcess')->name('payment-process');
-    Route::post('servic-checkout-process','PopularOfferController@CheckoutProcess')->name('servic-checkout-process');
-    Route::get('cart-cancel','InternalOrderController@CartCancel')->name('cart-cancel');
-    Route::get('change-patient','InternalOrderController@ChangePatient')->name('change-patient');
-
-
-
-    Route::post('internal-service-purchase','StripeController@InternalServicePurchase')->name('InternalServicePurchases');
-    Route::get('/invoice/{transaction_data}', 'PopularOfferController@invoice')->name('service-invoice');
-    Route::get('/giftcards-statement-admin-view/{id}', 'PatientController@GiftcardsStatementAdminView')->name('giftcards-statement-admin-view');
-    Route::resource('/terms', TermController::class);
-    Route::post('/get-units-by-service', "TermController@getUnitsByService")->name('get-units-by-service');
-
-    Route::resource('/program', ProgramController::class);
-    // Single Duplicate
-    Route::get('/program/duplicate/{id}', 'ProgramController@duplicate')->name('program.duplicate');
-
-    // Bulk Action
-    Route::post('/program/bulk-action', 'ProgramController@bulkAction')->name('program.bulk.action');
-
-
-    Route::Get('/program-sale/{id}', 'ProgramController@PatientProgramBuy')->name('program-sale');
-    Route::resource('/product', ProductController::class);
-    Route::resource('/patient', PatientController::class);
-    Route::post('/patient-data','PatientController@PatientData')->name('patient-data');
-
-    // NEW DataTables route (for patient list table)
-    Route::get('/admin/patient/table-data', [PatientController::class, 'patientTableData'])->name('patient.table.data');
-
-
-    // Quick PAtient Create
-    Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'])->name('patient-quick-create');
-
-    // Patient Data Mearge
-        Route::get('patients/merge-preview', [PatientController::class, 'preview'])->name('patients.merge.preview');
-        Route::post('patients/merge-execute', [PatientController::class, 'merge'])->name('patients.merge.execute');
-        Route::get('/patients/merge/preview-swap', [PatientController::class, 'previewSwap'])->name('patients.merge.preview.swap');
-
-
-    // Employee Managemnent Route
-    Route::resource('employees', EmployeeController::class);
-    Route::get('employees-table-data', [EmployeeController::class, 'tableData'])->name('employees.table.data');
-    Route::get('employees.export.pdf', [EmployeeController::class, 'exportPdf'])->name('employees.export.pdf');
-
-    // for Departments
-    Route::resource('departments', DepartmentController::class);
-    Route::post('departments/bulk-action', [DepartmentController::class, 'bulkAction'])->name('departments.bulk.action');
-
-    // for Clinic
-    Route::resource('clinics', ClinicController::class);
-    Route::post('clinics/bulk-action', [ClinicController::class,'bulkAction'])->name('clinics.bulk.action');
-
-    Route::resource('designations', DesignationController::class);
-    
-
-});
-
-// For All Patient Route
-Route::prefix('My-patient')->middleware('auth:patient')->group(function () {
-    Route::get('/dashboard', [PatientController::class, 'PatientDashboard'])->name('patient-dashboard');
-    Route::get('/patient-profile', [PatientController::class, 'PatientProfile'])->name('patient-profile');
-    Route::get('/my-giftcards', [PatientController::class, 'Mygiftcards'])->name('my-giftcards');
-    Route::get('/giftcards-statement/{id}', [PatientController::class, 'GiftcardsStatement'])->name('giftcards-statement');
-    Route::get('/my-services', [PatientController::class, 'Myservices'])->name('my-services');
-    Route::get('/patient-invoice/{transaction_data}', [PatientController::class, 'Patientinvoice'])->name('patient-invoice');
-});
-
-
 // For Employee Panel
-
 Route::prefix('employee')->middleware(['auth:web','role:employee'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'employeeDashboard'])->name('employee.dashboard');
 
 });
 
-    
 // For Cache Clear
 Route::get('/clear', function() {
     Artisan::call('cache:clear ');
