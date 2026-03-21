@@ -81,7 +81,7 @@
                         <li><a href="{{ route('departments.index') }}" class="dropdown-item">Departmane Management</a>
                         </li>
                         <li><a href="{{ route('designations.index') }}" class="dropdown-item">Designations Management</a></li>
-                        {{-- <li><a href="{{ route('access-control.index') }}" class="dropdown-item">Access Control</a></li> --}}
+                        <li><a href="{{ route('access-control.index') }}" class="dropdown-item">Access Control</a></li>
                     </ul>
                 </li>
 

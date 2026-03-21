@@ -232,13 +232,15 @@
         success: function(response) {
 
             // Show success message
-            $('#success-message').text(response.message);
-            $('#success-alert').removeClass('d-none');
-
-            // Hide after 3 seconds
-            setTimeout(function () {
-                $('#success-alert').addClass('d-none');
-            }, 3000);
+           Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: response.message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
 
             // Reset form
             $('#employeeForm')[0].reset();

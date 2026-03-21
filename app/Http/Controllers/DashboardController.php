@@ -308,7 +308,7 @@ class DashboardController extends Controller
         // --------------------------------------------------
         
         return view('employee.dashboard', compact(
-                // Basic counts
+        // Basic counts
         'cancel_deals', 'TotalServiceSale', 'cardnumbers', 'alltransaction', 'user',
         'successTransaction', 'faildTransaction', 'processingTransaction', 'giftCoupon',
         'ProductCategory', 'Product', 'search_keyword',
@@ -346,6 +346,8 @@ class DashboardController extends Controller
     }
 
 
+
+    
 
 
 

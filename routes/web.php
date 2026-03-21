@@ -100,19 +100,3 @@ Route::post('/login',[LoginController::class,'login'])->name('login-post');
 Route::post('/logout',[LoginController::class,'logout'])->name('logout');
 
 
-// For Employee Panel
-Route::prefix('employee')->middleware(['auth:web','role:employee'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'employeeDashboard'])->name('employee.dashboard');
-
-});
-
-// For Cache Clear
-Route::get('/clear', function() {
-    Artisan::call('cache:clear ');
-    Artisan::call('route:clear');
-    Artisan::call('config:clear');
-    Artisan::call('view:clear');
-    echo Artisan::output();
-});
-
-

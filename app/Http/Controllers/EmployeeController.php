@@ -63,7 +63,8 @@ class EmployeeController extends Controller
         'name'       => $request->first_name . ' ' . $request->last_name,
         'email'      => $request->email,
         'password'   => Hash::make($request->phone), // default password
-        'user_type'  => 2,
+        'user_type'  => 'Employee',
+        'role_id'  => 2,
         'user_token' => 'FOREVER-MEDSPA',
     ]);
 

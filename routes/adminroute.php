@@ -80,6 +80,7 @@ Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function ()
     Route::resource('/product', ProductController::class);
     Route::get('/service-search','ProductController@ServiceSearch')->name('service-search');
     Route::get('/unit-search','ProductController@UnitSearch')->name('unit-search');
+
     // Single Duplicate
     Route::get('/product/duplicate/{id}', 'ProductController@duplicate')->name('product.duplicate');
 
@@ -89,7 +90,6 @@ Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function ()
     // Route::get('/service-buy-from-patient/{id}', 'ProductController@ServiceBuyFromPatientPage')->name('service-buy-from-patient');
 
     Route::view('/email-template-view', 'email.servicePurchaseMail')->name('email-template-view');
-
     Route::resource('/unit', ServiceUnitController::class);
     Route::post('/unit/bulk-action', 'ServiceUnitController@bulkAction')->name('unit.bulk.action');
     Route::get('/unit/duplicate/{id}', 'ServiceUnitController@duplicate')->name('unit.duplicate');
@@ -186,7 +186,7 @@ Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function ()
     Route::post('clinics/bulk-action', [ClinicController::class,'bulkAction'])->name('clinics.bulk.action');
 
     Route::resource('designations', DesignationController::class);
-    // Route::resource('designations', DesignationController::class);
+    Route::resource('access-control', AccessControlController::class);
     
 
 });
