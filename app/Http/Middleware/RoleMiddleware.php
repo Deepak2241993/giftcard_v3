@@ -15,11 +15,11 @@ class RoleMiddleware
 
         $user = Auth::user();
 
-        if ($role === 'admin' && $user->user_type != 1) {
+        if ($role === 'admin' && $user->role_id != 1) {
             abort(403);
         }
 
-        if ($role === 'employee' && $user->user_type != 2) {
+        if ($role === 'employee' && $user->role_id != 2) {
             abort(403);
         }
 

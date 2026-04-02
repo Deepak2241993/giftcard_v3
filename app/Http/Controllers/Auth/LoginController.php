@@ -56,6 +56,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'email'    => 'required|email',
             'password' => 'required|min:8',
@@ -68,9 +69,9 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
             $user = Auth::user();
-
+            // dd($user);
             // Redirect based on user type
-            return match ($user->user_type) {
+            return match ($user->role_id) {
                 1 => redirect()->route('admin-dashboard'),       // Admin
                 2 => redirect()->route('employee.dashboard'),   // Employee
                 default => abort(403),
@@ -80,7 +81,6 @@ class LoginController extends Controller
         return redirect()->route('login')
             ->withErrors(['email' => 'Invalid login credentials']);
     }
-
 
     public function logout(Request $request) 
     {

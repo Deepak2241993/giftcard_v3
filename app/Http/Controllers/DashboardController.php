@@ -634,7 +634,7 @@ class DashboardController extends Controller
     $trendCount  = collect(range(1,12))->map(fn($m) => $redemptionTrend[$m] ?? 0);
 
 
-
+    
     // -----------------------------------------------------------------
     // RETURN VIEW
     // -----------------------------------------------------------------
