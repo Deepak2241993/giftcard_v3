@@ -187,6 +187,8 @@ Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function ()
 
     Route::resource('designations', DesignationController::class);
     Route::resource('access-control', AccessControlController::class);
+    Route::get('access-control/get/{id}', [AccessControlController::class, 'getPermissions']);
+    Route::post('access-control/store', [AccessControlController::class, 'storePermissions']);
     
 
 });

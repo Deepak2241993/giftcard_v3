@@ -40,23 +40,23 @@
 
                         @php
                             $modules = [
-                                'service_order' => 'Service Order',
-                                'giftcard_order' => 'Giftcard Order',
-                                'patient' => 'Patient',
-                                'user' => 'User',
-                                'employee' => 'Employee',
-                                'category' => 'Category',
-                                'product' => 'Product',
-                                'services' => 'Services',
-                                'giftredeem' => 'GiftCard redeem',
-                                'serviceredeem' => 'Service redeem',
-                                'terms_and_condition' => 'Terms & Conditions',
-                                'gift_card_coupon' => 'GiftCard Coupon',
-                                'emails_templates' => 'Email Template',
-                                'static_content' => 'Static Content',
-                                'sliders' => 'Sliders',
-                                'program' => 'Program',
-                            ];
+                            'service_orders' => 'Service Orders',
+                            'giftcard_orders' => 'Giftcard Orders',
+                            'patient' => 'Patient',
+                            'user' => 'User',
+                            'employee' => 'Employee',
+                            'category' => 'Category',
+                            'product' => 'Product',
+                            'services' => 'Services',
+                            'giftcard_redeem' => 'GiftCard Redeem',
+                            'service_redeem' => 'Service Redeem',
+                            'terms_and_conditions' => 'Terms & Conditions',
+                            'gift_card_coupons' => 'GiftCard Coupons',
+                            'email_templates' => 'Email Templates',
+                            'static_content' => 'Static Content',
+                            'sliders' => 'Sliders',
+                            'programs' => 'Programs',
+                        ];
                         @endphp
 
                         @foreach($modules as $key => $label)
@@ -68,7 +68,7 @@
                                 <label class="switch">
                                     <input type="checkbox"
                                            name="permissions[]"
-                                           value="{{ $key }}_{{ $action }}">
+                                           value="{{ $action }}_{{ $key }}">
                                     <span class="slider"></span>
                                 </label>
                             </td>
@@ -147,12 +147,15 @@ $('#role_id').change(function () {
 
     $.get("{{ url('admin/access-control/get') }}/" + roleId, function (data) {
 
+        console.log(data); // 🔍 debug
+
         // Uncheck all
         $('input[type=checkbox]').prop('checked', false);
 
-        // ✅ FIXED HERE (important)
+        if (!data || data.length === 0) return;
+
         data.forEach(function (perm) {
-            $('input[value="'+perm+'"]').prop('checked', true);
+            $('input[type="checkbox"][value="' + perm + '"]').prop('checked', true);
         });
 
     });

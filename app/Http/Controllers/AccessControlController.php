@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\RolePermission;
+use App\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
 class AccessControlController extends Controller
@@ -44,49 +45,56 @@ class AccessControlController extends Controller
     /**
      * GET PERMISSIONS BY ROLE
      */
-    public function getPermissions($roleId)
-    {
-        $permissions = RolePermission::where('role_id', $roleId)
-            ->pluck('permission'); // only permission column
+public function getPermissions($roleId)
+{
+    $permissions = RolePermission::where('role_id', $roleId)
+        ->join('permissions', 'permissions.id', '=', 'role_permissions.permission_id')
+        ->pluck('permissions.name');
 
-        return response()->json($permissions);
-    }
+    return response()->json($permissions);
+}
 
     /**
      * STORE / UPDATE PERMISSIONS
      */
-    public function storePermissions(Request $request)
-    {
-        $request->validate([
-            'role_id' => 'required|exists:roles,id',
-        ]);
 
-        $roleId = $request->role_id;
+public function storePermissions(Request $request)
+{
+    $request->validate([
+        'role_id' => 'required|exists:roles,id',
+    ]);
 
-        // DELETE OLD PERMISSIONS
-        RolePermission::where('role_id', $roleId)->delete();
+    $roleId = $request->role_id;
 
-        // INSERT NEW PERMISSIONS
-        if ($request->permissions) {
-            $data = [];
+    // delete old
+    RolePermission::where('role_id', $roleId)->delete();
 
-            foreach ($request->permissions as $perm) {
-                $data[] = [
-                    'role_id' => $roleId,
-                    'permission' => $perm,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
+    if ($request->permissions) {
 
-            RolePermission::insert($data);
+        // 🔥 get permission IDs from DB
+        $permissionIds = Permission::whereIn('name', $request->permissions)
+            ->pluck('id')
+            ->toArray();
+
+        $data = [];
+
+        foreach ($permissionIds as $pid) {
+            $data[] = [
+                'role_id' => $roleId,
+                'permission_id' => $pid,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
         }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Permissions updated successfully!'
-        ]);
+        RolePermission::insert($data);
     }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Permissions updated successfully!'
+    ]);
+}
 
     /**
      * OPTIONAL: DELETE ALL PERMISSIONS OF ROLE

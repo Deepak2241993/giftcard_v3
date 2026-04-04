@@ -15,6 +15,7 @@ use App\Models\Employee;
 use App\Models\TransactionHistory;
 use AuthenticatesUsers;
 use DB;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
