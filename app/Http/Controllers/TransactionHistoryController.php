@@ -14,9 +14,14 @@ class TransactionHistoryController extends Controller
      */
     public function index(TransactionHistory $transaction)
     {
-        if (Auth::user()->user_type == 1) {
+        if (Auth::user()->role_id == 1) {
             $data = $transaction->orderBy('id', 'DESC')->get();
-        } else {
+        } 
+        else if (Auth::user()->role_id == 2) {
+            $data = $transaction->orderBy('id', 'DESC')->get();
+        } 
+        
+        else {
             $id = Auth::user()->id;
             $data = $transaction->where('user_id', $id)->orderBy('id', 'DESC')->get();
         }

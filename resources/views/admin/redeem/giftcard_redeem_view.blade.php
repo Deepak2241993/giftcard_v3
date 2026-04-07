@@ -19,7 +19,7 @@
         <h4><u>Patient Information</u></h4>
         <p>Name: {{ $patient['patient_name'] }} | Email: {{ $patient['email'] }}
         </p>
-        <a href="{{route('cardgenerated-list')}}"class="btn btn-primary">Back To Orders</a>
+        <a href="{{route('giftcards-orders')}}"class="btn btn-primary">Back To Orders</a>
         <a href="{{route('patient.index')}}"class="btn btn-warning">Go to Patient List</a>
     </div><!-- /.container-fluid -->
 </section>

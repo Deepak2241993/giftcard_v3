@@ -18,54 +18,95 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('patient.index') }}" class="nav-link">Patient List</a>
-                </li>
+                @if(hasPermission('view_patient'))
+                        <li class="nav-item">
+                            <a href="{{ roleRoute('patient.index','employee.patient.index') }}" class="nav-link">Patient List</a>
+                        </li>
+                @endif
 
                 <li class="nav-item dropdown">
                     <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" class="nav-link dropdown-toggle">Orders</a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                        <li><a href="{{ route('cardgenerated-list') }}" class="dropdown-item">Giftcard Orders </a></li>
-                        <li><a href="{{ route('service-order-history.index') }}" class="dropdown-item">Service
-                                Orders</a></li>
+                        {{-- <li><a href="{{ route('giftcards-orders') }}" class="dropdown-item">Giftcard Orders </a></li>
+                        <li><a href="{{ route('service-orders.index') }}" class="dropdown-item">Service
+                                Orders</a></li> --}}
+                            
+                     @if(hasPermission('view_giftcard_orders'))
+                        <li>
+                            <a href="{{ roleRoute('giftcards-orders', 'employee.giftcards-orders') }}" class="dropdown-item">
+                                Giftcard Orders
+                            </a>
+                        </li>
+                    @endif
+
+                    @if(hasPermission('view_service_orders'))
+                        <li>
+                            <a href="{{ roleRoute('service-orders.index', 'employee.service-orders.index') }}" class="dropdown-item">
+                                Service Orders
+                            </a>
+                        </li>
+                    @endif
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" class="nav-link dropdown-toggle">Management</a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                        <li><a href="{{ route('category.index') }}" class="dropdown-item">Categories</a></li>
-                        <li><a href="{{ route('unit.index') }}" class="dropdown-item"> Unit Management</a></li>
-                        <li><a href="{{ route('product.index') }}" class="dropdown-item"> Services Management</a></li>
-                        <li><a href="{{ route('terms.index') }}" class="dropdown-item">Terms & Condition</a></li>
-                        <li><a href="{{ route('coupon.index') }}" class="dropdown-item"> Giftcard Coupon</a></li>
-                        <li><a href="{{ route('email-template.index') }}" class="dropdown-item"> Email Template</a>
+                        @if(hasPermission('view_service_orders'))
+                        <li><a href="{{ roleRoute('category.index', 'employee.category.index') }}" class="dropdown-item">Categories</a></li>
+                        @endif
+                        @if(hasPermission('view_units'))
+                        <li><a href="{{ roleRoute('unit.index', 'employee.unit.index') }}" class="dropdown-item"> Unit Management</a></li>
+                        @endif
+                        @if(hasPermission('view_product'))
+                        <li><a href="{{ roleRoute('product.index', 'employee.product.index') }}" class="dropdown-item"> Services Management</a></li>
+                        @endif
+                        @if(hasPermission('view_terms_and_conditions'))
+                        <li><a href="{{ roleRoute('terms.index', 'employee.terms.index') }}" class="dropdown-item">Terms & Condition</a></li>
+                        @endif
+                        @if(hasPermission('view_gift_card_coupons'))
+                        <li><a href="{{ roleRoute('coupon.index', 'employee.coupon.index') }}" class="dropdown-item"> Giftcard Coupon</a></li>
+                        @endif
+                        @if(hasPermission('view_email_templates'))
+                        <li><a href="{{ roleRoute('email-template.index', 'employee.email-template.index') }}" class="dropdown-item"> Email Template</a>
                         </li>
-                        <li><a href="{{ route('static-content.index') }}" class="dropdown-item"> Static Content</a>
+                        @endif
+                        @if(hasPermission('view_static_content'))
+                        <li><a href="{{ roleRoute('static-content.index', 'employee.static-content.index') }}" class="dropdown-item"> Static Content</a>
                         </li>
-                        <li><a href="{{ route('banner.index') }}" class="dropdown-item"> Slider Management</a></li>
+                        @endif
+                        @if(hasPermission('view_sliders'))
+                        <li><a href="{{ roleRoute('banner.index', 'employee.banner.index') }}" class="dropdown-item"> Slider Management</a></li>
+                        @endif
 
                         <li class="dropdown-divider"></li>
 
                         <!-- Level two dropdown-->
+                        @if(hasPermission('view_programs'))
                         <li class="dropdown-submenu dropdown-hover">
                             <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Program
                                 Manage..</a>
                             <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                               @if(hasPermission('view_programs'))
                                 <li>
-                                    <a tabindex="-1" href="{{ route('program.index') }}" class="dropdown-item">Program
+                                    <a tabindex="-1" href="{{ roleRoute('program.index', 'employee.program.index') }}" class="dropdown-item">Program
                                         List</a>
                                 </li>
+                                @endif
+
+                                @if(hasPermission('create_programs'))
                                 <li>
-                                    <a tabindex="-1" href="{{ route('program.create') }}" class="dropdown-item">Make
+                                    <a tabindex="-1" href="{{ roleRoute('program.create', 'employee.program.create') }}" class="dropdown-item">Make
                                         Program</a>
                                 </li>
+                                @endif
 
                             </ul>
                         </li>
+                        @endif
+
                         <!-- End Level two -->
                     </ul>
                 </li>

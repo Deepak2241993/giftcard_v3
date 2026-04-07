@@ -26,6 +26,7 @@ class PermissionSeeder extends Seeder
             'static_content',
             'sliders',
             'programs',
+            'units',
         ];
 
         $actions = ['view', 'create', 'edit', 'delete'];

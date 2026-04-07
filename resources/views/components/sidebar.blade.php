@@ -114,7 +114,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('service-order-history.index') }}" class="nav-link">
+                                <a href="{{ route('service-orders.index') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Service Orders</p>
                                 </a>
@@ -123,7 +123,7 @@
                         </ul>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('cardgenerated-list') }}" class="nav-link">
+                                <a href="{{ route('giftcards-orders') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Giftcard Orders</p>
                                 </a>

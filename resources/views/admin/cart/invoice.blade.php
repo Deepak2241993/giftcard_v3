@@ -29,7 +29,7 @@
         </div>
     <!-- Include the service_invoice.blade.php file here -->
     <a href="{{route('patient.index')}}" class="btn btn-warning ml-4 mt-4">Return to Patient</a>
-    <a href="{{route('service-order-history.index')}}" class="btn btn-primary ml-4 mt-4">Return to Orders</a>
+    <a href="{{route('service-orders.index')}}" class="btn btn-primary ml-4 mt-4">Return to Orders</a>
     @include('invoice.service_invoice', ['transaction_data' => $transaction_data])
     </main>
     <!-- Rest of your content in invoice.blade.php -->

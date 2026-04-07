@@ -42,6 +42,8 @@ class User extends Authenticatable
             return $this->belongsTo(Role::class);
         }
 
+        
+
          // ✅ Direct permission check (BEST PRACTICE)
     public function hasPermission($permission)
     {

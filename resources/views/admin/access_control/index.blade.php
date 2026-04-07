@@ -56,6 +56,7 @@
                             'static_content' => 'Static Content',
                             'sliders' => 'Sliders',
                             'programs' => 'Programs',
+                            'units' => 'Units',
                         ];
                         @endphp
 

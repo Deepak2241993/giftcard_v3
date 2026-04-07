@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-header border-0 d-flex justify-content-between">
                         <h3 class="card-title">Gift Cards Transaction Overview</h3>
-                        <a href="{{ url('admin/cardgenerated-list') }}" class="btn btn-primary btn-sm">See All</a>
+                        <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a>
                     </div>
 
                     <div class="card-body">
@@ -92,7 +92,7 @@
                 <div class="card">
                     <div class="card-header border-0 d-flex justify-content-between">
                         <h3 class="card-title">Service Sales Overview</h3>
-                        <a href="{{ url('admin/service-order-history') }}" class="btn btn-primary btn-sm">See All</a>
+                        <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a>
                     </div>
 
                     <div class="card-body">
@@ -360,7 +360,7 @@
 
                     <div class="card-body">
                         <div style="height:300px;">
-                            <canvas id="service-order-pie"></canvas>
+                            <canvas id="service-orders-pie"></canvas>
                         </div>
 
                         <ul class="mt-3 list-group">
@@ -564,7 +564,7 @@ $(function () {
     // -----------------------------
     // Service Order Pie Chart
     // -----------------------------
-    new Chart(document.getElementById("service-order-pie"), {
+    new Chart(document.getElementById("service-orders-pie"), {
         type: 'pie',
         data: {
             labels: ["Completed", "Pending", "Cancelled"],

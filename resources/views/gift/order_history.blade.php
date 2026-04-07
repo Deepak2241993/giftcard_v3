@@ -255,7 +255,7 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
       </button>
         </div>
         <div class="modal-body">
-            <form method="post" action="{{route('service-order-update')}}">
+            <form method="post" action="{{route('service-orders-update')}}">
                 @csrf
                 <div style="display: flex; flex-direction: column;">
                     <label for="transaction_id_" style="margin-right: 10px;">Transaction id:</label>

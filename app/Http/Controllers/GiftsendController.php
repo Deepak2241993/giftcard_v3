@@ -627,11 +627,11 @@ public function payment_confirmation(Request $request){
 
     if($resultData['status']==200)
     {
-        return redirect('admin/cardgenerated-list');
+        return redirect('admin/giftcards-orders');
     }
     else
     {
-        return redirect('admin/cardgenerated-list');
+        return redirect('admin/giftcards-orders');
     }
  
 }
@@ -640,40 +640,14 @@ public function payment_confirmation(Request $request){
 
 public function cardgeneratedList(Request $request, User $user, GiftcardsNumbers $number, Giftsend $giftsend)
 {
+     
     $token = Auth::user()->user_token;
     $data_arr = ['user_token' => $token];
     $data = json_encode($data_arr);
 
     $result = $this->postAPI('gift-list', $data);
 
-    // if (isset($result['status']) && $result['status'] == 200) {
-    //     $data = $result['result'];
-
-    //     // Convert the data array into a Collection
-    //     $collection = collect($data);
-
-    //     // Get the current page from the request, default to 1 if not set
-    //     $currentPage = LengthAwarePaginator::resolveCurrentPage();
-
-    //     // Define how many items you want per page
-    //     $perPage = 50; // for example, 10 items per page
-
-    //     // Slice the collection to get the items to display in the current page
-    //     $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
-
-    //     // Create our paginator
-    //     $paginatedItems = new LengthAwarePaginator($currentPageItems, $collection->count(), $perPage);
-
-    //     // Set the pagination path
-    //     $paginatedItems->setPath($request->url());
-
-    //     return view('admin.cardnumber.index', compact('paginatedItems'));
-    // } else {
-    //     return view('admin.cardnumber.index')->with('error', 'Something Went Wrong');
-    // }
     
-    //  Above Code is Manual Pagination 
-
     if (isset($result['status']) && $result['status'] == 200) {
         $data = $result['result'];
         return view('admin.cardnumber.index', compact('data'));
