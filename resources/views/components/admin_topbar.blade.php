@@ -18,7 +18,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
-                @if(hasPermission('view_patient'))
+                @if(hasPermission('view_patients'))
                         <li class="nav-item">
                             <a href="{{ roleRoute('patient.index','employee.patient.index') }}" class="nav-link">Patient List</a>
                         </li>
@@ -59,7 +59,7 @@
                         @if(hasPermission('view_units'))
                         <li><a href="{{ roleRoute('unit.index', 'employee.unit.index') }}" class="dropdown-item"> Unit Management</a></li>
                         @endif
-                        @if(hasPermission('view_product'))
+                        @if(hasPermission('view_products'))
                         <li><a href="{{ roleRoute('product.index', 'employee.product.index') }}" class="dropdown-item"> Services Management</a></li>
                         @endif
                         @if(hasPermission('view_terms_and_conditions'))
@@ -72,7 +72,7 @@
                         <li><a href="{{ roleRoute('email-template.index', 'employee.email-template.index') }}" class="dropdown-item"> Email Template</a>
                         </li>
                         @endif
-                        @if(hasPermission('view_static_content'))
+                        @if(hasPermission('view_static_contents'))
                         <li><a href="{{ roleRoute('static-content.index', 'employee.static-content.index') }}" class="dropdown-item"> Static Content</a>
                         </li>
                         @endif
@@ -117,12 +117,22 @@
                     <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" class="nav-link dropdown-toggle">Admin Management</a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                        <li><a href="{{ route('employees.index') }}" class="dropdown-item">Employee List</a></li>
-                        <li><a href="{{ route('clinics.index') }}" class="dropdown-item">Clinic Management</a></li>
-                        <li><a href="{{ route('departments.index') }}" class="dropdown-item">Departmane Management</a>
+                         @if(hasPermission('view_employees'))
+                        <li><a href="{{ roleRoute('employees.index', 'employee.employees.index') }}" class="dropdown-item">Employee List</a></li>
+                        @endif
+                         @if(hasPermission('view_clinics'))
+                        <li><a href="{{ roleRoute('clinics.index', 'employee.clinics.index') }}" class="dropdown-item">Clinic Management</a></li>
+                        @endif
+                         @if(hasPermission('view_departments'))
+                        <li><a href="{{ roleRoute('departments.index', 'employee.departments.index') }}" class="dropdown-item">Departmane Management</a>
+                            @endif
+                            @if(hasPermission('view_designations'))
                         </li>
-                        <li><a href="{{ route('designations.index') }}" class="dropdown-item">Designations Management</a></li>
-                        <li><a href="{{ route('access-control.index') }}" class="dropdown-item">Access Control</a></li>
+                        <li><a href="{{ roleRoute('designations.index', 'employee.designations.index') }}" class="dropdown-item">Designations Management</a></li>
+                        @endif
+                         @if(hasPermission('view_access_controls'))
+                        <li><a href="{{ roleRoute('access-control.index', 'employee.access-control.index') }}" class="dropdown-item">Access Control</a></li>
+                        @endif
                     </ul>
                 </li>
 

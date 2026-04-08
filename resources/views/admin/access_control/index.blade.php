@@ -42,22 +42,27 @@
                             $modules = [
                             'service_orders' => 'Service Orders',
                             'giftcard_orders' => 'Giftcard Orders',
-                            'patient' => 'Patient',
-                            'user' => 'User',
-                            'employee' => 'Employee',
-                            'category' => 'Category',
-                            'product' => 'Product',
+                            'patients' => 'Patient',
+                            'users' => 'User',
+                            'employees' => 'Employee',
+                            'categories' => 'Category',
+                            'products' => 'Product',
                             'services' => 'Services',
                             'giftcard_redeem' => 'GiftCard Redeem',
                             'service_redeem' => 'Service Redeem',
                             'terms_and_conditions' => 'Terms & Conditions',
                             'gift_card_coupons' => 'GiftCard Coupons',
                             'email_templates' => 'Email Templates',
-                            'static_content' => 'Static Content',
+                            'static_contents' => 'Static Content',
                             'sliders' => 'Sliders',
                             'programs' => 'Programs',
                             'units' => 'Units',
+                            'designations' => 'Designations',
+                            'departments' => 'Departments',
+                            'clinics' => 'Clinics',
+                            'access_controls' => 'Access Control',
                         ];
+                            
                         @endphp
 
                         @foreach($modules as $key => $label)
