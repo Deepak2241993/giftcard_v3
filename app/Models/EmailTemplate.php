@@ -40,5 +40,7 @@ class EmailTemplate extends Model
         'template_type',
         'status',
         'subject',
+        'created_by',
+        'updated_by',
     ];
 }

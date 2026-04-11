@@ -7,7 +7,7 @@
 @endphp
 
 <form method="POST"
-      action="{{ $isEdit ? route('email-template.update', $emailTemplate->id) : route('email-template.store') }}"
+      action="{{ $isEdit ? route(RoutePrefix() . 'email-template.update', $emailTemplate->id) : route(RoutePrefix() . 'email-template.store') }}"
       enctype="multipart/form-data">
 @csrf
 @if($isEdit)
@@ -190,7 +190,7 @@ placeholder="Enter email message">
         <input type="text"
                name="subject"
                value="{{ old('subject', $emailTemplate->subject ?? '') }}"
-               placeholder="Template Name"
+               placeholder="Template Subject"
                style="padding:10px; width:300px;">
     </div>
 @if(!isset($emailTemplate) || $emailTemplate->template_type !== 'internal')
@@ -200,7 +200,7 @@ placeholder="Enter email message">
         <input type="text"
                name="template_name"
                value="{{ old('template_name', $emailTemplate->template_name ?? '') }}"
-               placeholder="Template Name"
+               placeholder="Template Name *"
                style="padding:10px; width:300px;">
     </div>
 

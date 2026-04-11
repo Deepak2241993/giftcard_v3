@@ -24,13 +24,20 @@
         <!--begin::Container-->
         <div class="container-fluid">
             <!--begin::Row-->
-            <a href="{{ route('coupon.create') }}"  class="btn btn-block btn-outline-primary">Add More</a>
+          @if (hasPermission('create_gift_card_coupons'))
+            <a href="{{ route(RoutePrefix() . 'coupon.create') }}"  class="btn btn-block btn-outline-primary">Add More</a>
+            @endif
             <div class="card-header">
-                @if(session()->has('error'))
-                    {{ session()->get('error') }}
+               @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
                 @endif
-                @if(session()->has('success'))
-                    {{ session()->get('success') }}
+
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
                 @endif
             </div>
             @if(count($data) > 0)
@@ -63,15 +70,19 @@
                                 <td> {{ $value->status == 1 ? 'Active' : 'Inactive' }}
                                 </td>
                                 <th>
-                                    <a href="{{ route('coupon.edit', $value->id) }}"
+                                    @if (hasPermission('edit_gift_card_coupons'))
+                                    <a href="{{ route(RoutePrefix() . 'coupon.edit', $value->id) }}"
                                          class="btn btn-block btn-outline-primary">Edit</a>
 
-                                    <form action="{{ route('coupon.destroy', $value->id) }}"
+                                    @endif
+                                    @if (hasPermission('delete_gift_card_coupons'))
+                                    <form action="{{ route(RoutePrefix() . 'coupon.destroy', $value->id) }}"
                                         method="POST">
                                         @method('DELETE')
                                         @csrf<!-- Include CSRF token for security -->
                                         <button  class="btn btn-block btn-outline-danger" type="submit">Delete</button>
                                     </form>
+                                    @endif
 
 
 

@@ -40,7 +40,8 @@ class EmailTemplateController extends Controller
 
         /* ---------- FILE UPLOADS ---------- */
         $data = $this->handleUploads($request, $data);
-
+        $data['created_by'] = auth()->user()->id;
+        $data['updated_by'] = auth()->user()->id;
         EmailTemplate::create($data);
 
         return redirect()
@@ -51,8 +52,10 @@ class EmailTemplateController extends Controller
     /* ==============================
      * EDIT TEMPLATE
      * ============================== */
-    public function edit(EmailTemplate $emailTemplate)
+    public function edit(EmailTemplate $emailTemplate,$id)
     {
+            $emailTemplate = EmailTemplate::findOrFail($id);
+            $isEdit = true;
         return view('admin.email_template.create', compact('emailTemplate'));
     }
 
@@ -61,6 +64,7 @@ class EmailTemplateController extends Controller
      * ============================== */
     public function update(Request $request, $id)
     {
+        
         $template = EmailTemplate::findOrFail($id);
         $data = $request->all();
 
@@ -71,7 +75,7 @@ class EmailTemplateController extends Controller
 
         /* ---------- FILE UPLOADS ---------- */
         $data = $this->handleUploads($request, $data, $template);
-
+        $data['updated_by'] = auth()->user()->id;
         $template->update($data);
 
         return back()->with('success', 'Email template updated successfully');

@@ -25,12 +25,14 @@
         <div class="container-fluid">
 
             <!-- ================= ACTION BAR ================= -->
+            @if (hasPermission('create_email_templates'))
             <div class="d-flex justify-content-between mb-3">
-                <a href="{{ route('email-template.create') }}"
+                <a href="{{ route(RoutePrefix() . 'email-template.create') }}"
                    class="btn btn-outline-primary">
                     ➕ Add New Template
                 </a>
             </div>
+            @endif
 
             <!-- ================= FLASH MESSAGE ================= -->
             @if(session('success'))
@@ -101,17 +103,20 @@
                         <!-- ACTION -->
                         <td>
                             <div class="btn-group">
-
-                                <a href="{{ route('email-template.edit', $value->id) }}"
+                                @if(hasPermission('edit_email_templates')) 
+                                <a href="{{ route(RoutePrefix() . 'email-template.edit', $value->id) }}"
                                    class="btn btn-outline-primary btn-sm">
                                     ✏ Edit
                                 </a>
+                                @endif
 
-                                <a href="{{ route('email-template.preview', $value->id) }}?mode=dummy"
+                                    @if(hasPermission('view_email_templates'))
+                                <a href="{{ route(RoutePrefix() . 'email-template.preview', $value->id) }}?mode=dummy"
                                    target="_blank"
                                    class="btn btn-outline-secondary btn-sm">
                                     👁 Preview
                                 </a>
+                                @endif
 
                                 {{-- DELETE (Optional) --}}
                                 {{--

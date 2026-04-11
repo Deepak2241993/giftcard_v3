@@ -31,11 +31,11 @@
                 <!--begin::Row-->
                 <div class="card-body p-4">
                     @if (isset($giftCoupon))
-                        <form method="post" action="{{ route('coupon.update', $giftCoupon->id) }}"
+                        <form method="post" action="{{ route(RoutePrefix() . 'coupon.update', $giftCoupon->id) }}"
                             enctype="multipart/form-data">
                             @method('PUT')
                         @else
-                            <form method="post" action="{{ route('coupon.store') }}" enctype="multipart/form-data">
+                            <form method="post" action="{{ route(RoutePrefix() . 'coupon.store') }}" enctype="multipart/form-data">
                     @endif
 
                     @csrf

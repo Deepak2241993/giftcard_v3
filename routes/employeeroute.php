@@ -291,6 +291,9 @@ Route::delete('/email-template/{id}', [EmailTemplateController::class, 'destroy'
 ->middleware('permission:delete_email_templates')
 ->name('employee.email-template.destroy');
 
+Route::get('/email-template/{id}/preview', [EmailTemplateController::class, 'preview'])->name('employee.email-template.preview')->middleware('permission:view_email_templates');
+Route::post('/email-template/upload-image',[EmailTemplateController::class, 'uploadImage'])->name('employee.email-template.upload-image')->middleware('permission:edit_email_templates');
+
 // ================= BANNER =================
     Route::get('/banner', [BannerController::class, 'index'])
 ->middleware('permission:view_sliders')

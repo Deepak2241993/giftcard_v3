@@ -16,6 +16,7 @@ class GiftCouponController extends Controller
     public function index(GiftCoupon $coupon)
     {
         $data = GiftCoupon::select('gift_coupons.*')
+        ->where('gift_coupons.is_deleted', 0)
         ->orderBy('id', 'DESC') // Use 'orderBy' instead of 'OrderBy'
         ->get();
         return view('coupon.index',compact('data'));
@@ -40,8 +41,10 @@ class GiftCouponController extends Controller
     public function store(Request $request,GiftCoupon $coupon)
     {
         $data=$request->all();
+        $data['created_by']=auth()->user()->id;
+        $data['updated_by']=auth()->user()->id;
         $coupon->create($data);
-        return redirect()->route('coupon.index')->with('message','Gift Coupon Created Successfully');
+        return redirect()->route(RoutePrefix().'coupon.index')->with('message','Gift Coupon Created Successfully');
     }
 
     /**
@@ -78,8 +81,9 @@ class GiftCouponController extends Controller
     {
        $result = $giftCoupon->findOrFail($coupen_id);
         $data=$request->all();
+        $data['updated_by']=auth()->user()->id;
         $result->update($data);
-        return redirect()->route('coupon.index')->with('message','Coupon Update Successfully');
+        return redirect()->route(RoutePrefix().'coupon.index')->with('message','Coupon Update Successfully');
     }
 
     /**
@@ -88,11 +92,16 @@ class GiftCouponController extends Controller
      * @param  \App\Models\GiftCoupon  $giftCoupon
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GiftCoupon $giftCoupon,$coupen_id)
+    public function destroy(GiftCoupon $giftCoupon, $coupen_id)
     {
-        $data=$giftCoupon->findOrFail($coupen_id);
-        $data->delete();
-        return back()->with('message', 'Coupon Deleted Successfully');
+       $data = GiftCoupon::where('id', $coupen_id)->firstOrFail();
+
+        $data->update([
+            'is_deleted' => 1,
+            'deleted_by' => auth()->id(),
+        ]);
+
+        return back()->with('success', 'Coupon Deleted Successfully');
     }
 
 }
