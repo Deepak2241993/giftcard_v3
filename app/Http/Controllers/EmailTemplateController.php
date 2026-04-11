@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EmailTemplate;
 use Illuminate\Http\Request;
-use Purifier;
+use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Storage;
 
 class EmailTemplateController extends Controller
@@ -64,7 +64,7 @@ class EmailTemplateController extends Controller
      * ============================== */
     public function update(Request $request, $id)
     {
-        
+
         $template = EmailTemplate::findOrFail($id);
         $data = $request->all();
 

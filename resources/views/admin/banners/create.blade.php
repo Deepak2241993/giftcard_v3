@@ -31,10 +31,10 @@
             <!--begin::Row-->
             <div class="card-body p-4">
     @if(isset($banner))
-        <form method="post" action="{{ route('banner.update', $banner->id) }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route(RoutePrefix() .'banner.update', $banner->id) }}" enctype="multipart/form-data">
         @method('PUT')
     @else
-        <form method="post" action="{{ route('banner.store') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route(RoutePrefix() .'banner.store') }}" enctype="multipart/form-data">
     @endif
     @csrf
     <div class="row">

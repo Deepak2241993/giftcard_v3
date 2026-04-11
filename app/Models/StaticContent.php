@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class StaticContent extends Model
 {
-    protected $fillable = ['page_name', 'title', 'content'];
+    protected $fillable = ['page_name', 'title', 'content','created_at','updated_at'];
 }

@@ -14,7 +14,9 @@
                 </ol>
             </div>
         </div>
+        @if(hasPermission('create_static_contents')) 
         <a href="{{ route('static-content.create') }}"  class="btn btn-block btn-outline-primary">Add More</a>
+        @endif
     </div><!-- /.container-fluid -->
 </section>
 <section class="content-header">
@@ -74,8 +76,10 @@
                                      
                                         
                                         <td>
-                                            <a href="{{ route('static-content.edit', $value->id) }}"
-                                                 class="btn btn-block btn-outline-primary">Edit</a>
+                                            @if(hasPermission('edit_static_contents'))
+                                                <a href="{{ route(RoutePrefix() . 'static-content.edit', $value->id) }}"
+                                                     class="btn btn-block btn-outline-primary">Edit</a>
+                                            @endif
                                             {{-- <form
                                                 action="{{ route('banner.destroy', $value->id) }}"
                                                 method="POST">

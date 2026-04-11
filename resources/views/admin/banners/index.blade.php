@@ -14,7 +14,9 @@
                 </ol>
             </div>
         </div>
-        <a href="{{ route('banner.create') }}"  class="btn btn-block btn-outline-primary">Add More</a>
+        @if(hasPermission('create_sliders'))
+        <a href="{{ route(RoutePrefix() . 'banner.create') }}"  class="btn btn-block btn-outline-primary">Add More</a>
+        @endif
     </div><!-- /.container-fluid -->
 </section>
 <section class="content-header">
@@ -77,16 +79,20 @@
                                         <td>{{ $value->status ==1 ? 'Active' : 'Inactive' }}
                                         </td>
                                         <td>
-                                            <a href="{{ route('banner.edit', $value->id) }}"
+                                            @if(hasPermission('edit_sliders'))
+                                            <a href="{{ route(RoutePrefix() . 'banner.edit', $value->id) }}"
                                                  class="btn btn-block btn-outline-primary">Edit</a>
+                                            @endif
+                                            @if(hasPermission('delete_sliders'))
                                             <form
-                                                action="{{ route('banner.destroy', $value->id) }}"
+                                                action="{{ route(RoutePrefix() . 'banner.destroy', $value->id) }}"
                                                 method="POST">
                                                 @method('DELETE')
                                                 
                                                   @csrf
                                                 <button  class="btn btn-block btn-outline-danger" type="submit">Delete</button>
                                             </form>
+                                            @endif
                                         </td>
 
 

@@ -17,7 +17,7 @@ class BannerController extends Controller
      */
     public function index(Banner $b)
     {
-        $result =Banner::all();
+        $result =Banner::Where('is_deleted',0)->orderBy('id','DESC')->get();
         return view('admin.banners.index',compact('result'));
     }
 
@@ -56,7 +56,7 @@ class BannerController extends Controller
     ]);
 
     $data = $request->all();
-
+    $data['created_by'] = auth()->user()->id;
     if ($request->hasFile('image')) {
         $image = $request->file('image');
         $destinationPath = '/sliders/';
@@ -109,8 +109,9 @@ class BannerController extends Controller
      * @param  \App\Models\Banner  $banner
      * @return \Illuminate\Http\Response
      */
-    public function edit(Banner $banner)
+    public function edit(Banner $banner,$id)
     {
+        $banner = Banner::where('id', $id)->firstOrFail();
         $unit = ServiceUnit::where('product_is_deleted', 0)
         ->where('status', 1)
         ->get();
@@ -129,14 +130,18 @@ class BannerController extends Controller
      * @param  \App\Models\Banner  $banner
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Banner $banner)
+    public function update(Request $request, Banner $banner, $id)
     {
+        $banner = Banner::where('id', $id)->firstOrFail();
+
+
         // Validate the input
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024', // Max size in KB (1024 KB = 1 MB)
         ]);
     
         $data = $request->all();
+        $data['updated_by'] = auth()->user()->id; // Add updated_by field
     
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -178,9 +183,16 @@ class BannerController extends Controller
      * @param  \App\Models\Banner  $banner
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Banner $banner)
-    {
-        $banner->delete();
-        return redirect(route(RoutePrefix() . 'banner.index'))->with('message','Slider deleted successfully');
-    }
+  public function destroy(Banner $banner, $id)
+{
+    $banner = Banner::where('id', $id)->firstOrFail();
+    $banner->update([
+        'is_deleted' => 1,
+        'deleted_by' => auth()->user()->id,
+    ]);
+
+    return redirect()
+        ->route(RoutePrefix() . 'banner.index')
+        ->with('message', 'Slider deleted successfully');
+}
 }

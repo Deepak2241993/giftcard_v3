@@ -39,6 +39,8 @@ class StaticContentController extends Controller
         $staticContent->page_name = $request->page_name;
         $staticContent->title = $request->title;
         $staticContent->content = $request->content;
+        $staticContent['created_by'] = auth()->user()->id;
+        $staticContent['updated_by'] = auth()->user()->id;
         $staticContent->save();
 
         return redirect()->route(RoutePrefix() . 'static-content.index')
@@ -56,8 +58,10 @@ class StaticContentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(StaticContent $staticContent)
+    public function edit(StaticContent $staticContent, $id)
     {
+        $staticContent = StaticContent::findOrFail($id);
+
         return view('admin.static_content.create', compact('staticContent'));
     }
 
@@ -66,6 +70,7 @@ class StaticContentController extends Controller
      */
     public function update(Request $request, StaticContent $staticContent)
     {
+      $staticContent = StaticContent::findOrFail($request->id);
         $request->validate([
             'page_name' => 'required',
             'title' => 'required',
@@ -75,6 +80,8 @@ class StaticContentController extends Controller
         $staticContent->page_name = $request->page_name;
         $staticContent->title = $request->title;
         $staticContent->content = $request->content;
+
+        $staticContent['updated_by'] = auth()->user()->id;
         $staticContent->save();
 
         return redirect()->route(RoutePrefix() . 'static-content.index')

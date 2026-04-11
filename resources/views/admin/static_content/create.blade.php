@@ -30,11 +30,12 @@
                             <!--begin::Row-->
                             <div class="card-body p-4">
                                 @if (isset($staticContent))
+
                                     <form method="post" enctype="multipart/form-data"
-                                        action="{{ route('static-content.update', $staticContent->id) }}" id="validation">
+                                        action="{{ route(RoutePrefix() . 'static-content.update', $staticContent->id) }}" id="validation">
                                         @method('PUT')
                                     @else
-                                        <form method="post" action="{{ route('static-content.store') }}"
+                                        <form method="post" action="{{ route(RoutePrefix() . 'static-content.store') }}"
                                             enctype="multipart/form-data">
                                 @endif
                                 @csrf
