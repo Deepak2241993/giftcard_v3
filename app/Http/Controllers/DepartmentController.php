@@ -56,7 +56,7 @@ class DepartmentController extends Controller
         ]);
 
         return redirect()
-            ->route('departments.index')
+            ->route(RoutePrefix() . 'departments.index')
             ->with('success', 'Department created successfully.');
     }
 
@@ -114,7 +114,7 @@ class DepartmentController extends Controller
         ]);
 
         return redirect()
-            ->route('departments.index')
+            ->route(RoutePrefix() . 'departments.index')
             ->with('success', 'Department updated successfully.');
     }
 
@@ -129,7 +129,7 @@ class DepartmentController extends Controller
         ]);
 
         return redirect()
-            ->route('departments.index')
+            ->route(RoutePrefix() . 'departments.index')
             ->with('success', 'Department deleted successfully.');
     }
 

@@ -31,10 +31,10 @@
 
             <div class="card-body">
                 @if (isset($term))
-                    <form method="post" action="{{ route('terms.update', $term['id']) }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route(RoutePrefix() . 'terms.update', $term['id']) }}" enctype="multipart/form-data">
                         @method('PUT')
                 @else
-                    <form method="post" action="{{ route('terms.store') }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route(RoutePrefix() . 'terms.store') }}" enctype="multipart/form-data">
                 @endif
                     @csrf
 
@@ -200,7 +200,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: "{{ route('get-units-by-service') }}",
+            url: "{{ route(RoutePrefix() . 'get-units-by-service') }}",
             method: "POST",
             data: {
                 service_ids: selectedServices,

@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\Banner;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 class ServiceUnitController extends Controller
@@ -45,6 +45,7 @@ class ServiceUnitController extends Controller
         $token = Auth::user()->user_token;
         $data = $request->except('_token');
         $data['user_token'] = $token;
+        $data['created_by'] = Auth::user()->id;
         $product_image = [];
 
     if ($request->hasFile('product_image')) {
@@ -70,7 +71,7 @@ class ServiceUnitController extends Controller
 
         $serviceUnit->create($data);
 
-        return redirect('/admin/unit')->with('message', 'Unit Added Successfully');
+        return redirect(route(RoutePrefix() . 'unit.index'))->with('message', 'Unit Added Successfully');
 
     }
 
@@ -88,7 +89,7 @@ class ServiceUnitController extends Controller
             $token = Auth::user()->user_token;
             $updateData = $request->except('_token', '_method');
             $updateData['user_token'] = $token;
-
+        $updateData['updated_by'] = Auth::user()->id;
             // Handle product images if any are uploaded
             $product_image = [];
             if ($request->hasFile('product_image')) {
@@ -127,7 +128,7 @@ class ServiceUnitController extends Controller
             $data->update($updateData);
 
             // Redirect back to the admin unit page with a success message
-            return redirect('/admin/unit')->with('message', 'Unit is updated successfully');
+            return redirect(route(RoutePrefix() . 'unit.index'))->with('message', 'Unit is updated successfully');
         }
 
     
@@ -136,6 +137,7 @@ class ServiceUnitController extends Controller
     public function destroy(Request $request)
     {
         $data = ServiceUnit::find($request->id);
+        $data['deleted_by'] = Auth::user()->id;
         $data->update(['product_is_deleted'=>1]);
         return back()->with('message', 'Unit is Deleted Successfully');
     }

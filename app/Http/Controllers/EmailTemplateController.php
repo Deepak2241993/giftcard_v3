@@ -44,7 +44,7 @@ class EmailTemplateController extends Controller
         EmailTemplate::create($data);
 
         return redirect()
-            ->route('email-template.index')
+            ->route(RoutePrefix() . 'email-template.index')
             ->with('success', 'Email template created successfully');
     }
 
@@ -85,7 +85,7 @@ class EmailTemplateController extends Controller
         $emailTemplate->delete();
 
         return redirect()
-            ->route('email-template.index')
+            ->route(RoutePrefix() . 'email-template.index')
             ->with('success', 'Template deleted successfully');
     }
 

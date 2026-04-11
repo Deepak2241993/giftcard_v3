@@ -28,7 +28,7 @@ class DesignationController extends Controller
         Designation::create($request->only('designation_name', 'level'));
 
         return redirect()
-            ->route('designations.index')
+            ->route(RoutePrefix() . 'designations.index')
             ->with('success', 'Designation created successfully.');
     }
 
@@ -47,7 +47,7 @@ class DesignationController extends Controller
         $designation->update($request->only('designation_name', 'level'));
 
         return redirect()
-            ->route('designations.index')
+            ->route(RoutePrefix() . 'designations.index')
             ->with('success', 'Designation updated successfully.');
     }
 
@@ -56,7 +56,7 @@ class DesignationController extends Controller
         $designation->delete();
 
         return redirect()
-            ->route('designations.index')
+            ->route(RoutePrefix() . 'designations.index')
             ->with('success', 'Designation deleted successfully.');
     }
 }

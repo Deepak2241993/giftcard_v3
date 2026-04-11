@@ -379,14 +379,14 @@ public function Checkout(Request $request)
     try {
       if (isset($_GET['type']) && $_GET['type'] === 'guest') {
         return redirect()
-            ->route('checkout_view')
+            ->route(RoutePrefix() . 'checkout_view')
             ->with('success', 'Please proceed to checkout.');
         }
 
         if (Auth::guard('patient')->check()) {
-            return redirect()->route('checkout_view')->with('success', 'Please proceed to checkout.');
+            return redirect()->route(RoutePrefix() . 'checkout_view')->with('success', 'Please proceed to checkout.');
         } else {
-            return redirect()->route('patient-login')->with('error', 'Please login to continue.');
+            return redirect()->route(RoutePrefix() . 'patient-login')->with('error', 'Please login to continue.');
         }
     } catch (\Exception $e) {
         Log::error('Error during checkout process', [
@@ -600,7 +600,7 @@ public function Checkout(Request $request)
                 }
 
         Mail::to($transaction_data->email)->send(new Mastermail($transaction_data,$template_id=1));
-        return redirect()->route('service-invoice', ['transaction_data' => $transaction_data]);
+        return redirect()->route(RoutePrefix() . 'service-invoice', ['transaction_data' => $transaction_data]);
             } catch (\Exception $e) {
                 DB::rollBack();  // Rollback transaction
                 Log::error('Checkout Process Error: ' . $e->getMessage());

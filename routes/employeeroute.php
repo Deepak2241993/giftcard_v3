@@ -43,24 +43,17 @@ Route::prefix('employee')->middleware(['auth:web','role:employee'])->group(funct
 
     Route::get('/dashboard', [DashboardController::class, 'employeeDashboard'])->name('employee.dashboard');
 
-
-//    For Giftcard Order History
-        Route::get('/giftcards-orders', [GiftsendController::class, 'cardgeneratedList'])
-            ->middleware('permission:view_giftcard_orders')
-            ->name('employee.giftcards-orders');
-
-
 // ================= CATEGORY =================
 Route::get('/category', [ProductCategoryController::class, 'index'])
 ->middleware('permission:view_categories')
 ->name('employee.category.index');
 
 Route::get('/category/create', [ProductCategoryController::class, 'create'])
-->middleware('permission:add_categories')
+->middleware('permission:create_categories')
 ->name('employee.category.create');
 
 Route::post('/category', [ProductCategoryController::class, 'store'])
-->middleware('permission:add_categories')
+->middleware('permission:create_categories')
 ->name('employee.category.store');
 
 Route::get('/category/{id}/edit', [ProductCategoryController::class, 'edit'])
@@ -81,11 +74,11 @@ Route::get('/unit', [ServiceUnitController::class, 'index'])
 ->name('employee.unit.index');
 
 Route::get('/unit/create', [ServiceUnitController::class, 'create'])
-->middleware('permission:add_units')
+->middleware('permission:create_units')
 ->name('employee.unit.create');
 
 Route::post('/unit', [ServiceUnitController::class, 'store'])
-->middleware('permission:add_units')
+->middleware('permission:create_units')
 ->name('employee.unit.store');
 
 Route::get('/unit/{id}/edit', [ServiceUnitController::class, 'edit'])
@@ -100,17 +93,28 @@ Route::delete('/unit/{id}', [ServiceUnitController::class, 'destroy'])
 ->middleware('permission:delete_units')
 ->name('employee.unit.destroy');
 
+Route::get('cart-cancel','InternalOrderController@CartCancel')->name('employee.cart-cancel');
+Route::get('service-cart','PopularOfferController@AdminCartview')->name('employee.service-cart');
+Route::post('cart','PopularOfferController@Cart')->name('employee.cart');
+Route::get('cartview','PopularOfferController@Cartview')->name('employee.cartview');
+Route::post('/cart/remove','PopularOfferController@CartRemove')->name('employee.cartremove');
+Route::post('/update-cart', 'PopularOfferController@updateCart')->name('employee.update-cart');
+Route::get('/unit-search','ProductController@UnitSearch')->name('employee.unit-search');
+Route::post('/unit/bulk-action', 'ServiceUnitController@bulkAction')->name('employee.unit.bulk.action');
+Route::get('/unit/duplicate/{id}', 'ServiceUnitController@duplicate')->name('employee.unit.duplicate');
+Route::get('/unitdelete/{id}','ServiceUnitController@destroy')->name('employee.unitdelete');
+
 // ================= PRODUCT =================
 Route::get('/product', [ProductController::class, 'index'])
 ->middleware('permission:view_products')
 ->name('employee.product.index');
 
 Route::get('/product/create', [ProductController::class, 'create'])
-->middleware('permission:add_products')
+->middleware('permission:create_products')
 ->name('employee.product.create');
 
 Route::post('/product', [ProductController::class, 'store'])
-->middleware('permission:add_products')
+->middleware('permission:create_products')
 ->name('employee.product.store');
 
 Route::get('/product/{id}', [ProductController::class, 'show'])
@@ -128,6 +132,9 @@ Route::put('/product/{id}', [ProductController::class, 'update'])
 Route::delete('/product/{id}', [ProductController::class, 'destroy'])
 ->middleware('permission:delete_products')
 ->name('employee.product.destroy');
+
+Route::get('/product/duplicate/{id}', 'ProductController@duplicate')->name('employee.product.duplicate');
+Route::post('/product/bulk-action', 'ProductController@bulkAction')->name('employee.product.bulk.action');
 
 // ================= SERVICE ORDER =================
 
@@ -248,6 +255,12 @@ Route::delete('/terms/{id}', [TermController::class, 'destroy'])
 ->middleware('permission:delete_terms_and_conditions')
 ->name('employee.terms.destroy');
 
+Route::post('get-units-by-service', [TermController::class, 'getUnitsByService'])
+->middleware('permission:delete_terms_and_conditions')
+->name('employee.get-units-by-service');
+
+
+
    // ================= EMAIL TEMPLATE =================
  
 Route::get('/email-template', [EmailTemplateController::class, 'index'])
@@ -322,15 +335,44 @@ Route::delete('/banner/{id}', [BannerController::class, 'destroy'])
 
     // ================= GIFTCARD =================
     Route::get('/giftcards-orders', [GiftsendController::class, 'cardgeneratedList'])
-        ->middleware('permission:view_giftcard_orders')
-        ->name('employee.giftcards-orders');
+    ->name('employee.giftcards-orders')
+    ->middleware('permission:view_giftcard_orders');
 
-    Route::get('/giftcardsearch', [GiftsendController::class, 'GiftCardSearch'])
-        ->middleware('permission:view_giftcard_orders')
-        ->name('employee.giftcard-search');
+        Route::get('/gift-card-transaction-search', [GiftsendController::class, 'GifttransactionSearch'])
+        ->name('employee.gift-card-transaction-search')
+        ->middleware('permission:view_giftcard_orders');
 
-  
+        Route::get('/giftcardredeem-view', [GiftsendController::class, 'giftcardredeemView'])
+        ->name('employee.giftcardredeem-view')
+        ->middleware('permission:view_giftcard_redeem');
 
+        Route::get('/giftcardredeem-from-patientlist/{id}', [GiftsendController::class, 'giftcardredeemPatientList'])
+        ->name('employee.giftcardredeemPatientList')
+        ->middleware('permission:view_giftcard_redeem');
+
+        Route::get('/redeem-giftcard/{transaction_id}/{user_id}', [GiftsendController::class, 'RedeemGiftcard'])
+        ->name('employee.redeem-giftcard')
+        ->middleware('permission:view_giftcard_redeem');
+
+        Route::get('/giftcardsearch', [GiftsendController::class, 'GiftCardSearch'])
+        ->name('employee.giftcard-search')
+        ->middleware('permission:view_giftcard_redeem');
+
+        Route::post('/giftcardredeem', [GiftsendController::class, 'giftcardredeem'])
+        ->name('employee.giftcardredeem')
+        ->middleware('permission:create_giftcard_redeem');
+
+        Route::post('/giftcardstatment', [GiftsendController::class, 'giftcardstatment'])
+        ->name('employee.giftcardstatment')
+        ->middleware('permission:view_giftcard_redeem');
+
+        Route::get('/giftcards-sale/{id?}', [GiftsendController::class, 'giftsale'])
+        ->name('employee.giftcards-sale')
+        ->middleware('permission:view_giftcard_redeem');
+
+        Route::post('/giftcancel', [GiftsendController::class, 'giftcancel'])
+        ->name('employee.giftcancel')
+        ->middleware('permission:delete_giftcard_redeem');
     
 
     
@@ -368,6 +410,15 @@ Route::delete('/program/{id}', [ProgramController::class, 'destroy'])
 Route::get('/patient', [PatientController::class, 'index'])
 ->middleware('permission:view_patients')
 ->name('employee.patient.index');
+
+Route::get('/patient/table-data', [PatientController::class, 'patientTableData'])
+->middleware('permission:view_patients')
+->name('employee.patient.table.data');
+
+Route::post('/patient-quick-create', [PatientController::class, 'PatientQuickCreate'])
+->middleware('permission:create_patients')
+->name('employee.patient-quick-create');
+
 
 Route::get('/patient/create', [PatientController::class, 'create'])
 ->middleware('permission:create_patients')

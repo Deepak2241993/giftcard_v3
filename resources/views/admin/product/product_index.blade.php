@@ -74,7 +74,7 @@
 
 
 
-
+                @if (hasPermission('create_products'))
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">Upload and Download</h4>
@@ -127,15 +127,24 @@
                 </div> --}}
                     </div>
                 </div>
+                @endif
 
                 
                
                 <div class="mb-3">
+                     @if (hasPermission('delete_products'))
                     <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
+                    @endif
+
+                     @if (hasPermission('edit_products'))
                     <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
                     <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
                     <button id="bulk_duplicate" class="btn btn-secondary btn-sm">Duplicate Selected</button>
-                    <button onclick="window.location.href='{{ route('product.create') }}';" class="btn btn-dark btn-sm">Add More</button>
+                    @endif
+
+                     @if (hasPermission('create_products'))
+                    <button onclick="window.location.href='{{ route(RoutePrefix() . 'product.create') }}';" class="btn btn-dark btn-sm">Add More</button>
+                    @endif
                 </div>
                 <table id="datatable-buttons" class="table table-bordered table-striped">
                     <thead>
@@ -205,16 +214,19 @@
                                 </td>
                                 <td class="text-nowrap">
                                     <div class="d-flex justify-content-center align-items-center me-2">
-                                        <a href="{{ route('product.duplicate', $value['id']) }}"
+                                         @if (hasPermission('edit_products'))
+                                        <a href="{{ route(RoutePrefix() .'product.duplicate', $value['id']) }}"
                                             class="btn btn-sm btn-outline-secondary" title="Duplicate">
                                             <i class="fa fa-copy"></i>
                                         </a>
-                                        <a href="{{ route('product.edit', $value['id']) }}"
+                                        <a href="{{ route(RoutePrefix() .'product.edit', $value['id']) }}"
                                             class="btn btn-sm btn-outline-primary" title="Edit">
                                             <i class="fa fa-edit"></i>
                                         </a>
-
-                                        <form action="{{ route('product.destroy', $value['id']) }}" method="POST">
+                                        @endif
+                                       
+                                        @if (hasPermission('delete_products'))
+                                        <form action="{{ route(RoutePrefix() .'product.destroy', $value['id']) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
@@ -222,6 +234,7 @@
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </td>
 

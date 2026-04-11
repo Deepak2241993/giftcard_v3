@@ -1,5 +1,8 @@
 @extends('layouts.admin_layout')
 @section('body')
+@php
+ $prefix = RoutePrefix(); 
+ @endphp
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -33,11 +36,11 @@
             <div class="card-body p-4">
                 @if(isset($data))
                     <form method="post"
-                        action="{{ route('category.update', $data['id']) }}"
+                        action="{{ route($prefix.'category.update', $data['id']) }}"
                         enctype="multipart/form-data">
                         @method('PUT')
                     @else
-                        <form method="post" action="{{ route('category.store') }}"
+                        <form method="post" action="{{ route($prefix.'category.store') }}"
                             enctype="multipart/form-data">
                 @endif
                 @csrf

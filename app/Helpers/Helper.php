@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use App\Models\StaticContent;
 
+
 if (!function_exists('hasPermission')) {
     function hasPermission($permission)
     {
@@ -42,3 +43,27 @@ if (!function_exists('roleRoute')) {
             : ($employeeRoute ? route($employeeRoute) : route($adminRoute));
     }
 }
+
+// Route prefix Role Based
+if (!function_exists('RoutePrefix')) {
+    function RoutePrefix()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            
+            return '';
+        }
+
+        if ($user->role_id == 1) {
+            return ''; // Admin (no prefix)
+        }
+
+        if ($user->role_id == 2) {
+            return 'employee.'; // Employee prefix
+        }
+
+        return '';
+    }
+}
+

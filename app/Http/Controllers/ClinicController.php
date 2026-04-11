@@ -46,7 +46,7 @@ class ClinicController extends Controller
         // ]);
 
         return redirect()
-            ->route('clinics.index')
+            ->route(RoutePrefix() . 'clinics.index')
             ->with('success', 'Clinic created successfully.');
     }
 
@@ -85,7 +85,7 @@ class ClinicController extends Controller
         // ]);
 
         return redirect()
-            ->route('clinics.index')
+            ->route(RoutePrefix() . 'clinics.index')
             ->with('success', 'Clinic updated successfully.');
     }
 
@@ -97,7 +97,7 @@ class ClinicController extends Controller
         ]);
 
         return redirect()
-            ->route('clinics.index')
+            ->route(RoutePrefix() . 'clinics.index')
             ->with('success', 'Clinic deleted successfully.');
     }
 

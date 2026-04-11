@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Term;
 use App\Models\ServiceUnit;
 use App\Models\Product;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class TermController extends Controller
@@ -63,8 +63,9 @@ class TermController extends Controller
         {
             $data['unit_id'] = null;
         }
+        $data['created_by'] = Auth::user()->id;
         $terms->create($data);
-        return redirect('/admin/terms')->with('message', 'Terms & Condition Added Successfully');
+        return redirect(route(RoutePrefix() . 'terms.index'))->with('message', 'Terms & Condition Added Successfully');
 
     }
 
@@ -85,8 +86,9 @@ class TermController extends Controller
      * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
- public function edit(Term $term)
+ public function edit(Term $term,$id)
 {
+    $term= Term::where('id', $id)->firstOrFail();
     // Same query as create()
     $services = Product::where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
@@ -114,8 +116,9 @@ class TermController extends Controller
      * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Term $term)
+    public function update(Request $request, Term $term, $id)
     {
+        $term = Term::where('id', $id)->firstOrFail();
         $data =$request->all();
         if($request->service_id!='')
         {
@@ -133,9 +136,9 @@ class TermController extends Controller
         {
             $data['unit_id'] = null;
         }
-      
+      $data['updated_by'] = Auth::user()->id;
         $term->update($data);
-        return redirect('/admin/terms')->with('message', 'Terms & Condition updated Successfully');
+        return redirect(route(RoutePrefix() . 'terms.index'))->with('message', 'Terms & Condition updated Successfully');
     }
 
     /**
@@ -144,9 +147,11 @@ class TermController extends Controller
      * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Term $term)
+    public function destroy(Term $term,$id)
     {
-        $term->update(['is_deleted'=>1]);
+        $term = Term::where('id', $id)->firstOrFail();
+        $data['deleted_by'] = Auth::user()->id;
+        $term->update(['is_deleted'=>1,'deleted_by'=>$data['deleted_by']]);
         return back()->with('message', 'Terms & Condition Deleted Successfully');
     }
 

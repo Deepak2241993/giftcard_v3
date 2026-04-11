@@ -41,7 +41,7 @@ class StaticContentController extends Controller
         $staticContent->content = $request->content;
         $staticContent->save();
 
-        return redirect()->route('static-content.index')
+        return redirect()->route(RoutePrefix() . 'static-content.index')
             ->with('success', 'Static content created successfully.');
     }
 
@@ -77,7 +77,7 @@ class StaticContentController extends Controller
         $staticContent->content = $request->content;
         $staticContent->save();
 
-        return redirect()->route('static-content.index')
+        return redirect()->route(RoutePrefix() . 'static-content.index')
             ->with('success', 'Static content updated successfully.');
     }
 

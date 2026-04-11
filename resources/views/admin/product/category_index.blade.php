@@ -1,5 +1,8 @@
 @extends('layouts.admin_layout')
 @section('body')
+@php
+ $prefix = RoutePrefix(); 
+ @endphp
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -71,6 +74,8 @@
                         </ul>
                     </div>
                 @endif
+
+                @if (hasPermission('create_categories'))
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-header">
@@ -109,31 +114,29 @@
                                         <button type="button" class="btn btn-outline-primary w-100 mt-3" data-toggle="modal" data-target="#media_modal">Media Upload</button>
                                     </div>
                                 </div>
-                                {{-- <div class="col-md-4 mb-4">
-                                    <!-- Search Form -->
-                                    <h5>Search</h5>
-                                    <form method="GET" action="{{ route('category.index') }}" class="d-flex w-100">
-                                        @csrf
-                                        <input type="text" class="form-control" id="cat_name" name="cat_name" placeholder="Deals Name" aria-label="Deals Name">
-                                        <input type="hidden" id="user_token" name="user_token" value="{{ Auth::user()->user_token }}">
-                                        <button type="submit" class="btn btn-outline-success ml-2">Search</button>
-                                    </form>
-                                </div>
-                 --}}
+                                
                               
                             </div>
                              
                         </div>
                     </div>
                 </div>
+                @endif
                 
                 
 <div class="card">
     <div class="card-body">
+        @if (hasPermission('create_categories'))
         <div class="col-md-2">
-                                    <!-- Add More Button -->
-                                    <a href="{{ route('category.create') }}" class="btn btn-dark w-100">Add More</a>
-                                </div>
+            <!-- Add More Button -->
+            <a href="{{ route($prefix . 'category.create') }}" class="btn btn-dark w-100">Add More</a>
+        </div>
+        @else
+        <div class="col-md-2">
+            <!-- Add More Button (Disabled) -->
+            <button class="btn btn-dark w-100" disabled>Add More</button>
+        </div>
+        @endif
                 @if ($paginator->isEmpty())
                     <p>No categories found.</p>
                 @else
@@ -156,32 +159,34 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $value['cat_name'] ?? 'NULL' }}
                                     </td>
-                                    {{-- <td>
-                                        @if (isset($value['cat_image']))
-                                            <img src="{{ $value['cat_image'] }}" style="height:100px; width:100px;" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
-                                        @else
-                                            No Image
-                                        @endif
-                                    </td> --}}
                                     <td>{!! mb_strimwidth($value['cat_description'] ?? 'NULL', 0, 200, '...') !!}</td>
-                                    {{-- <td>{{ isset($value['deal_start_date']) ? date('m-d-Y h:i:s', strtotime($value['deal_start_date'])) : 'No Date' }}
-                                    <td>{{ isset($value['deal_end_date']) ? date('m-d-Y h:i:s', strtotime($value['deal_end_date'])) : 'No Date' }}
-                                    </td> --}}
+                                   
                                     <td>{{ isset($value['created_at']) ? date('m-d-Y h:i:s', strtotime($value['created_at'])) : 'No Date' }}
                                     </td>
                                     <td>
-                                        <a href="{{ route('category.edit', $value['id']) }}"
+                                         @if (hasPermission('edit_categories'))
+                                        <a href="{{ route($prefix . 'category.edit', $value['id']) }}"
                                         class="btn btn-sm btn-outline-primary" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        
-                                        <form action="{{ route('category.destroy', $value['id']) }}" method="POST" style="display:inline;">
+                                        @else
+                                        <button class="btn btn-sm btn-outline-primary" title="Edit" disabled>
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        @endif
+                                         @if (hasPermission('delete_categories'))
+                                        <form action="{{ route($prefix . 'category.destroy', $value['id']) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-outline-danger" type="submit" title="Delete" onclick="return confirm('Are you sure?')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
+                                        @else
+                                        <button class="btn btn-sm btn-outline-danger" title="Delete" disabled>
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        @endif
                                     </td>
 
                                 </tr>

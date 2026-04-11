@@ -33,10 +33,10 @@
             <!--begin::Row-->
             <div class="card-body p-4">
                 @if(isset($data))
-                    <form method="post"action="{{ route('unit.update', $data['id']) }}"enctype="multipart/form-data">
+                    <form method="post"action="{{ route( RoutePrefix() . 'unit.update', $data['id']) }}"enctype="multipart/form-data">
                         @method('PUT')
                     @else
-                        <form method="post" action="{{ route('unit.store') }}"
+                        <form method="post" action="{{ route( RoutePrefix() . 'unit.store') }}"
                             enctype="multipart/form-data">
                 @endif
                 @csrf

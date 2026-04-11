@@ -22,11 +22,13 @@
     <div class="container-fluid">
 
         {{-- Top Bar --}}
+        @if (hasPermission('create_terms_and_conditions'))
         <div class="d-flex justify-content-end mb-3">
-            <a href="{{ route('terms.create') }}" class="btn btn-primary">
+            <a href="{{ route(routePrefix() . 'terms.create') }}" class="btn btn-primary">
                 + Add Term
             </a>
         </div>
+        @endif
 
         {{-- Alerts --}}
         @if (session('message'))
@@ -103,13 +105,16 @@
 
                                 {{-- Action Buttons --}}
                                 <td class="text-center">
-
-                                    <a href="{{ route('terms.edit', $value->id) }}"
+                                     @if (hasPermission('edit_terms_and_conditions'))
+                                    <a href="{{ route(routePrefix() . 'terms.edit', $value->id) }}"
                                        class="btn btn-sm btn-outline-primary me-1">
                                         Edit
                                     </a>
+                                    @endif
 
-                                    <form action="{{ route('terms.destroy', $value->id) }}"
+                                     @if (hasPermission('delete_terms_and_conditions'))
+
+                                    <form action="{{ route(routePrefix() . 'terms.destroy', $value->id) }}"
                                           method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
@@ -118,6 +123,7 @@
                                             Delete
                                         </button>
                                     </form>
+                                    @endif
 
                                 </td>
                             </tr>

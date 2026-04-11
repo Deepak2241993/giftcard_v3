@@ -83,7 +83,7 @@ class BannerController extends Controller
 
     if ($result) {
         Log::info('Banner successfully created', ['banner_data' => $data]);
-        return redirect(route('banner.index'))->with(['success' => 'Slider is created successfully']);
+        return redirect(route(RoutePrefix() . 'banner.index'))->with(['success' => 'Slider is created successfully']);
     } else {
         Log::error('Failed to create banner', ['banner_data' => $data]);
         return back()->with(['error' => 'Failed to create banner.']);
@@ -168,7 +168,7 @@ class BannerController extends Controller
         // Update the banner
         $banner->update($data);
     
-        return redirect(route('banner.index'))->with('message', 'Slider updated successfully');
+        return redirect(route(RoutePrefix() . 'banner.index'))->with('message', 'Slider updated successfully');
     }
     
 
@@ -181,6 +181,6 @@ class BannerController extends Controller
     public function destroy(Banner $banner)
     {
         $banner->delete();
-        return redirect(route('banner.index'))->with('message','Slider deleted successfully');
+        return redirect(route(RoutePrefix() . 'banner.index'))->with('message','Slider deleted successfully');
     }
 }

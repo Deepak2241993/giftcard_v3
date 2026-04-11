@@ -9,14 +9,23 @@ use App\Models\GiftcardsNumbers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use App\Models\TimelineEvent;
 use App\Imports\PatientsImport;
 use Maatwebsite\Excel\Facades\Excel;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Yajra\DataTables\DataTables;
-use DB;
-use Session;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Events\EventLogin;
+use App\Events\EventPatientLogout;
+use App\Events\EventPatientCreated;
+use Illuminate\Support\Facades\DB;
+use App\Mail\PatientCredentialsMail;
+use App\Mail\Mastermail;
+use Illuminate\Support\Facades\Log;
 
 class PatientController extends Controller
 {
@@ -29,9 +38,6 @@ class PatientController extends Controller
     {
         return view('admin.patient.index'); // No data loaded here
     }
-
-
-
 
 public function patientTableData(Request $request)
 {
@@ -59,21 +65,25 @@ public function patientTableData(Request $request)
         })
 
         ->addColumn('action', function ($row) {
+            $prefix = RoutePrefix();
             return '
                 <div class="btn-group mb-2">
-                    <a href="'.route('patient.edit',$row->id).'" class="btn btn-outline-primary btn-sm">
-                        <i class="fa fa-user"></i>
-                    </a>
-                    <a href="'.route('giftcards-sale').'?patient_id='.$row->id.'" class="btn btn-outline-success btn-sm">
-                        <i class="fa fa-gift"></i>
-                    </a>
-                    <a href="'.route('product.index').'?patient_id='.$row->id.'" class="btn btn-outline-info btn-sm">
-                        <i class="fa fa-dna"></i>
-                    </a>
-                    <a href="'.route('program.index').'?patient_id='.$row->id.'" class="btn btn-outline-warning btn-sm">
-                        <i class="fa fa-stethoscope"></i>
-                    </a>
-                </div>';
+            <a href="'.route($prefix.'patient.edit',$row->id).'" class="btn btn-outline-primary btn-sm">
+                <i class="fa fa-user"></i>
+            </a>
+
+            <a href="'.route($prefix.'giftcards-sale').'?patient_id='.$row->id.'" class="btn btn-outline-success btn-sm">
+                <i class="fa fa-gift"></i>
+            </a>
+
+            <a href="'.route($prefix.'product.index').'?patient_id='.$row->id.'" class="btn btn-outline-info btn-sm">
+                <i class="fa fa-dna"></i>
+            </a>
+
+            <a href="'.route($prefix.'program.index').'?patient_id='.$row->id.'" class="btn btn-outline-warning btn-sm">
+                <i class="fa fa-stethoscope"></i>
+            </a>
+        </div>';
         })
 
         ->addColumn('status_badge', function ($row) {
@@ -743,7 +753,7 @@ public function patientTableData(Request $request)
                     ->where('patient_login_id', $merge->patient_login_id)
                     ->update([
                         'patient_login_id' => $keep->patient_login_id,
-                        'updated_by'       => auth()->id(),
+                        'updated_by'       => Auth::id(),
                         'updated_at'       => now(),
                     ]);
 
@@ -751,7 +761,7 @@ public function patientTableData(Request $request)
                     ->where('patient_login_id', $merge->patient_login_id)
                     ->update([
                         'patient_login_id' => $keep->patient_login_id,
-                        'updated_by'       => auth()->id(),
+                        'updated_by'       => Auth::id(),
                         'updated_at'       => now(),
                     ]);
 
@@ -764,7 +774,7 @@ public function patientTableData(Request $request)
                     'phone'       => null,
                     'status'      => 2, // merged / inactive
                     'is_deleted'  => 1,
-                    'updated_by'  => auth()->id(),
+                    'updated_by'  => Auth::id(),
                     'updated_at'  => now(),
                 ]);
 
@@ -778,7 +788,7 @@ public function patientTableData(Request $request)
                         'lname'      => $request->keep_data['lname']  ?? $keep->lname,
                         'email'      => $request->keep_data['email']  ?? $keep->email,
                         'phone'      => $request->keep_data['phone']  ?? $keep->phone,
-                        'updated_by' => auth()->id(),
+                        'updated_by' => Auth::id(),
                         'updated_at' => now(),
                     ]);
                 }
@@ -792,7 +802,7 @@ public function patientTableData(Request $request)
                 ->update([
                     'status'     => 2, // Merged
                     'gift_send_to' => $keep->patient_login_id,
-                    'updated_by'=> auth()->id(),
+                    'updated_by'=> Auth::id(),
                     'updated_at'=> now(),
                 ]);
 
@@ -802,7 +812,7 @@ public function patientTableData(Request $request)
                 ->update([
                     'status'     => 2, // Merged
                     'receipt_email' => $keep->patient_login_id,
-                    'updated_by'=> auth()->id(),
+                    'updated_by'=> Auth::id(),
                     'updated_at'=> now(),
                 ]);
 
@@ -874,6 +884,63 @@ public function patientTableData(Request $request)
         ]);
     }
 
+
+
+    // for Quick patient creation from POS
+    public function PatientQuickCreate(Request $request, Patient $patient)
+    {
+        $validator = Validator::make($request->all(), [
+            'fname' => 'required|string|max:255',
+            'email' => 'required|email|unique:patients,email',
+        ], [], [
+            'fname.required' => 'First name is required',
+            'email.required' => 'Please enter Email, this is a required field',
+            'email.email' => 'Please enter a valid email address',
+            'email.unique' => 'This email is already registered',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $randomPassword = Str::random(10);
+            $data = $request->except('_token');
+            $data['password'] = Hash::make($randomPassword);
+            $data['user_token'] = 'FOREVER-MEDSPA';
+            $data['status'] = 1;
+            $full_name = $request->fname . " " . $request->lname;
+
+            $result = $patient->create($data);
+
+            $result['plain_password'] = $randomPassword;
+            $result['full_name'] = $full_name;
+
+            if ($result) {
+                try {
+                    Mail::to($request->email)->send(new Mastermail($result->patient_login_id, $template_id = 12));
+                } catch (\Exception $e) {
+                    Log::error('Email sending failed: ' . $e->getMessage());
+                }
+
+                // Commit the transaction
+                DB::commit();
+
+                // Fire the event
+                event(new EventPatientCreated($result));
+
+                return response()->json(['success' => true, 'message' => 'Patient created successfully. Credentials sent to email.']);
+            }
+
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Failed to create patient.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'An unexpected error occurred.']);
+        }
+    }
 
 }
 

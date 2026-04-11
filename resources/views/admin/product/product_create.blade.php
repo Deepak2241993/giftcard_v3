@@ -31,11 +31,11 @@
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body p-4">
                         @if (isset($data))
-                            <form method="post" action="{{ route('product.update', $data['id']) }}"
+                            <form method="post" action="{{ route(RoutePrefix() .'product.update', $data['id']) }}"
                                 enctype="multipart/form-data">
                                 @method('PUT')
                             @else
-                                <form method="post" action="{{ route('product.store') }}" enctype="multipart/form-data">
+                                <form method="post" action="{{ route(RoutePrefix() .'product.store') }}" enctype="multipart/form-data">
                         @endif
                         @csrf
                         <div class="row">

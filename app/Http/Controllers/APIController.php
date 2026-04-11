@@ -1530,6 +1530,15 @@ public function category_update(Request $request, $id)
  *              example="FOREVER-MEDSPA"
  *          )
  *      ),
+ *      @OA\Parameter(
+ *          in="query",
+ *          name="deleted_by",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer",
+ *              example="1"
+ *          )
+ *      ),
  *      @OA\Response(response="200", description="Success: Product category found"),
  *      @OA\Response(response="401", description="Unauthorized"),
  *      @OA\Response(response="403", description="Forbidden"),
@@ -1540,11 +1549,15 @@ public function category_update(Request $request, $id)
 
 public function categoryDelete(Request $request, $id)
 {
+
     $token = $request->user_token;
+    $deleted_by = $request->deleted_by;
     $category = ProductCategory::where('user_token', $token)
     ->where('id', $id)
-    ->first();       
+    ->first();   
+        
     $category['cat_is_deleted']=1;   
+    $category['deleted_by']=$deleted_by;   
     if (!$category) {
         return response()->json(['msg' => 'Sorry, no product category found!', 'status' => 404], 404);
     }
@@ -1701,6 +1714,11 @@ public function categoryDelete(Request $request, $id)
  *                      type="integer",
  *                      example="1"
  *                  ),
+ *                      @OA\Property(
+ *                      property="created_by",
+ *                      type="integer",
+ *                      example="1"
+ *                  ),
  *              )
  *          )
  *      ),
@@ -1765,6 +1783,15 @@ public function categoryDelete(Request $request, $id)
  *              example="FOREVER-MEDSPA"
  *          )
  *      ),
+ *      @OA\Parameter(
+ *          in="query",
+ *          name="deleted_by",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer",
+ *              example=1
+ *          )
+ *      ),
  *      @OA\Response(response="200", description="Success: Product found"),
  *      @OA\Response(response="401", description="Unauthorized"),
  *      @OA\Response(response="403", description="Forbidden"),
@@ -1780,6 +1807,7 @@ public function productDelete(Request $request, $id)
                                ->where('id', $id)
                                ->first();
       $product['product_is_deleted']=1; 
+    $product['deleted_by']= $request->deleted_by;
     if (!$product) {
         return response()->json(['msg' => 'Sorry, no product product found!', 'status' => 404], 404);
     }
@@ -1940,6 +1968,11 @@ public function productDelete(Request $request, $id)
  *                      type="integer",
  *                      example="1"
  *                  ),
+ *                   @OA\Property(
+ *                      property="updated_by",
+ *                      type="integer",
+ *                      example="1"
+ *                  ),
  *              )
  *          )
  *      ),
@@ -1953,7 +1986,7 @@ public function product_update(Request $request, $id)
 {
 
     $token = $request->user_token;
-    $data=$request->all();    
+    $data=$request->all(); 
     $product = Product::where('user_token', $token)
                                ->where('product_is_deleted', 0)
                                ->where('id', $id)

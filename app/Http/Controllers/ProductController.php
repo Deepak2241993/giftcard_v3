@@ -9,8 +9,9 @@ use App\Models\Search_keyword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Auth;
-use Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -50,28 +51,7 @@ class ProductController extends Controller
             }
         return view('admin.product.product_index', compact('products', 'images'));
     }
-    // public function ServiceBuyFromPatientPage(Request $request, Product $product,$id)
-    // {
-    //     $token = Auth::user()->user_token;
-
-    //     // Prepare data for API request
-    //     $data_arr = [
-    //         'user_token' => $token,
-    //         'service_name' => $request->input('service_name'),
-    //         'product_slug' => $request->input('product_slug')
-    //     ];
-
-    //     $data = json_encode($data_arr);
-
-    //     // Make API request
-    //     $apiResponse = $this->postAPI('product-list', $data);
-    //     $products = $apiResponse['result']; // Array of products
-
-    //     // Image Show
-    //     $images = Storage::files('public/images');
-
-    //     return view('admin.product.product_index', compact('products', 'images','id'));
-    // }
+    
 
 
     /**
@@ -107,6 +87,7 @@ class ProductController extends Controller
 
     // Add the user's token to the data
     $data['user_token'] = $token;
+    $data['created_by'] = Auth::user()->id;
     $data['cat_id']=implode('|',$request->cat_id);
     if($request->unit_id!='')
     {
@@ -139,18 +120,6 @@ class ProductController extends Controller
     }
     
 
-    
-    //  Discount Calcultion
-        // if($request->discounted_amount !=null && $request->amount )
-        // {
-        // $price = $request->discounted_amount;
-        // $original_price = $request->amount;
-        // $discount_percentage = round((($original_price - $price) / $original_price) * 100);
-        // $data['discount_rate'] = $discount_percentage;
-        // }
-    //  Discount Code End
-
-    // dd($data);
     // Send data to API endpoint using cURL
     $curl = curl_init();
     // Set cURL options
@@ -188,7 +157,7 @@ class ProductController extends Controller
     // Check the result of the API call
     if ($result && isset($result['status']) && $result['status'] == 200) {
         // Redirect with success message if the API call was successful
-        return redirect(route('product.index'))->with('success', $result['msg']);
+        return redirect(route(RoutePrefix() . 'product.index'))->with('success', $result['msg']);
     } else {
         // Redirect back with error message if the API call failed
         return redirect()->back()->with('error', $result['msg']);
@@ -235,11 +204,13 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product,$id)
     {
+        
         $token= Auth::user()->user_token;
         $data = $request->except('_token','_method');
         $data['user_token'] = $token;
+        $data['updated_by'] = Auth::user()->id;
         $data['cat_id']=implode('|',$request->cat_id);
         if($request->unit_id!='')
         {
@@ -271,22 +242,12 @@ if ($request->hasFile('product_image')) {
     $data['product_image'] = $finalImageUrl;
 }
 
-        
-    //  Discount Calcultion
-    // if($request->discounted_amount !=null && $request->amount )
-    // {
-    //     $price = $request->discounted_amount;
-    //     $original_price = $request->amount;
-    //     $discount_percentage = round((($original_price - $price) / $original_price) * 100);
-    //     $data['discount_rate'] = $discount_percentage;
-    //     $data['session_number'] = $request->session_number;
-    // }
-    //  Discount Code End
 
-        $data = json_encode($data);
-        $data = $this->postAPI('product-update/'.$product->id,$data);
-        // dd($data);
-        return redirect(route('product.index'))->with('success', $data['msg']);
+
+$data = json_encode($data);
+
+$data = $this->postAPI('product-update/' . $id,$data);
+        return redirect(route(RoutePrefix() .'product.index'))->with('success', $data['msg']);
     }
 
     /**
@@ -301,14 +262,14 @@ if ($request->hasFile('product_image')) {
         $token = Auth::user()->user_token;
             
         // Prepare data for API call
-        $data_arr = ['user_token'=>$token, 'id'=>$id];
+        $data_arr = ['user_token'=>$token, 'id'=>$id, 'deleted_by' => Auth::user()->id];
         $data = json_encode($data_arr);
         
         // Make API call to delete category
         $response = $this->postAPI('productDelete/' . $id, $data);
      // Check if API call was successful
      if ($response && isset($response['status']) && $response['status']==200) {
-         return redirect(route('product.index'))->with('success', $response['msg']);
+         return redirect(route(RoutePrefix() . 'product.index'))->with('success', $response['msg']);
      }
       else {
          // If deletion fails, handle the error appropriately

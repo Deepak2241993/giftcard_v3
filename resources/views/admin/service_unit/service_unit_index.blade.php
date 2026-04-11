@@ -23,103 +23,133 @@
         <div class="app-content">
             <!--begin::Container-->
             <div class="container-fluid">
-                
-<div class="card">
-    <div class="card-body">
-        <div class="mb-3">
-        <button id="bulk_duplicate" class="btn btn-secondary btn-sm">Duplicate Selected</button>
-        <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
-        <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
-        <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
-        <button onclick="window.location.href='{{ route('unit.create') }}';" class="btn btn-dark btn-sm">Add More</button>
-    </div>
 
-                
-                @if (session('message'))
-                    <div class="alert alert-success mt-4">
-                        {{ session('message') }}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            @if (hasPermission('create_units'))
+                                <button id="bulk_duplicate" class="btn btn-secondary btn-sm">Duplicate Selected</button>
+                            @endif
+
+                            @if (hasPermission('edit_units'))
+                                <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
+                                <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
+                            @endif
+                            @if (hasPermission('delete_units'))
+                                <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
+                            @endif
+                            @if (hasPermission('create_units'))
+                                <button onclick="window.location.href='{{ route(RoutePrefix() . 'unit.create') }}';"
+                                    class="btn btn-dark btn-sm">Add More</button>
+                            @endif
+                        </div>
+
+
+                        @if (session('message'))
+                            <div class="alert alert-success mt-4">
+                                {{ session('message') }}
+                            </div>
+                        @endif
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        <table id="datatable-buttons" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="select_all"></th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">Unit Name
+                                    </th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Page Url">Front Page
+                                        URL</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Orignal Price">
+                                        Orignal Price</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Discounted Price">
+                                        Discounted Price</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Status">Status</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="data-table-body">
+                                @foreach ($result as $value)
+                                    <tr>
+                                        <td><input type="checkbox" class="unit_checkbox" value="{{ $value->id }}"></td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            @if (Session::has('internal_patient_id'))
+                                                <a class="btn btn-sm btn-outline-primary"
+                                                    onclick="addcart({{ $value['id'] }}, {{ Session::has('internal_patient_id') ?? Session::get('internal_patient_id') }})">Buy</a>
+                                            @else
+                                                <a class="btn btn-sm btn-outline-primary"
+                                                    onclick="addcart({{ $value['id'] }})">Buy</a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ $value->product_name ? $value->product_name : 'N/A' }}
+                                        </td>
+                                        <td>
+                                            <a target="_blank"
+                                                href="{{ $value->product_slug ? url('/services/' . $value->product_slug) : 'N/A' }}">{{ $value->product_slug ? url('/serviceunit/' . $value->product_slug) : 'N/A' }}</a>
+                                        </td>
+                                        <td>{{ $value->amount }}</td>
+                                        <td>{{ $value->discounted_amount }}</td>
+                                        <td>{!! $value->status == 1
+                                            ? "<span class='badge bg-success'>Active</span>"
+                                            : "<span class='badge bg-danger'>Inactive</span>" !!}</td>
+                                        @if (hasPermission('create_units'))
+                                            <td class="text-nowrap">
+                                                <a href="{{ route(RoutePrefix() .'unit.duplicate', $value['id']) }}"
+                                                    class="btn btn-sm btn-outline-secondary" title="Duplicate">
+                                                    <i class="fas fa-copy"></i>
+                                                </a>
+                                        @endif
+                                        @if (hasPermission('edit_units'))
+                                            <a href="{{ route(RoutePrefix() .'unit.edit', $value['id']) }}"
+                                                class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endif
+                                        @if (hasPermission('delete_units'))
+                                            <a href="{{ route(RoutePrefix() .'unitdelete', $value['id']) }}"
+                                                class="btn btn-sm btn-outline-danger" title="Delete"
+                                                onclick="return confirm('Are you sure?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        @endif
+
+
+                                        </td>
+
+
+
+                                        <!-- Button trigger modal -->
+
+
+
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+
+                        </table>
                     </div>
-                @endif
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <table id="datatable-buttons" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                             <th><input type="checkbox" id="select_all"></th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Buy">Buy</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">Unit Name</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Page Url">Front Page URL</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Orignal Price">Orignal Price</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Discounted Price">Discounted Price</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Status">Status</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Action">Action</th>
-
-                        </tr>
-                    </thead>
-                    <tbody id="data-table-body">
-                        @foreach ($result as $value)
-                            <tr>
-                                   <td><input type="checkbox" class="unit_checkbox" value="{{ $value->id }}"></td>
-                                <td>{{ $loop->iteration }}</td>
-                               <td>
-                                 @if(Session::has('internal_patient_id'))
-                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ Session::has('internal_patient_id') ?? Session::get('internal_patient_id') }})">Buy</a>
-                                @else
-                                <a class="btn btn-sm btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
-                                @endif
-                                </td>
-                                <td>
-                                    {{ $value->product_name ? $value->product_name: 'N/A' }}
-                                </td>
-                                 <td>
-                                   <a target="_blank" href="{{ $value->product_slug ? url('/services/'.$value->product_slug) : 'N/A' }}">{{ $value->product_slug ? url('/serviceunit/'.$value->product_slug) : 'N/A' }}</a>
-                                </td>
-                                <td>{{ $value->amount }}</td>
-                                <td>{{ $value->discounted_amount }}</td>
-                                <td>{!! $value->status == 1 
-    ? "<span class='badge bg-success'>Active</span>" 
-    : "<span class='badge bg-danger'>Inactive</span>" 
-!!}</td>
-
-                                 <td class="text-nowrap">
-                                     <a href="{{ route('unit.duplicate', $value['id']) }}" 
-       class="btn btn-sm btn-outline-secondary" 
-       title="Duplicate">
-        <i class="fas fa-copy"></i>
-    </a>
-                                    <a href="{{ route('unit.edit', $value['id']) }}" class="btn btn-sm btn-outline-primary" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-
-                                    <a href="{{ route('unitdelete', $value['id']) }}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure?')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-
-                                    
-                                </td>
-                                
-
-
-                                <!-- Button trigger modal -->
-
-
-
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    
-                </table>
-            </div>
-        </div>
+                </div>
                 {{-- {{ $result->links() }} --}}
                 <!--end::Row-->
                 <!-- /.Start col -->
@@ -138,7 +168,7 @@
             $('#staticBackdrop_' + id).modal('show');
 
             $.ajax({
-                url: '{{ route('cardview-route') }}',
+                url: '{{ (RoutePrefix() . 'cardview-route') }}',
                 method: "post",
                 dataType: "json",
                 data: {
@@ -163,9 +193,9 @@
         }
     </script>
     <script>
-       function addcart(id,patient_id) {
+        function addcart(id, patient_id) {
             $.ajax({
-                url: '{{ route('cart') }}',
+                url: '{{ route(RoutePrefix() . 'cart') }}',
                 method: "post",
                 dataType: "json",
                 data: {
@@ -282,40 +312,43 @@
                 console.error("Could not copy text: ", error);
             });
         }
+
         function SearchView() {
-    var service_name = $('#service_name').val();
-    $.ajax({
-        url: '{{ route('unit-search') }}', // API endpoint
-        method: "GET",
-        dataType: "json",
-        data: {
-            service_name: service_name,
-        },
-        success: function (response) {
-            if (response.status === 'success' && response.data.data.length > 0) {
-                var tableBody = $('#data-table-body'); // ID of your table body
-                tableBody.empty(); // Clear existing rows
+            var service_name = $('#service_name').val();
+            $.ajax({
+                url: '{{ route(RoutePrefix() . 'unit-search') }}', // API endpoint
+                method: "GET",
+                dataType: "json",
+                data: {
+                    service_name: service_name,
+                },
+                success: function(response) {
+                    if (response.status === 'success' && response.data.data.length > 0) {
+                        var tableBody = $('#data-table-body'); // ID of your table body
+                        tableBody.empty(); // Clear existing rows
 
-                // Loop through the response data and populate the table
-                $.each(response.data.data, function (key, value) {
-                    // Format date
-                    var updatedDate = value.updated_at
-                        ? new Date(value.updated_at).toLocaleString('en-US', {
-                              month: '2-digit',
-                              day: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit',
-                          })
-                        : 'N/A';
+                        // Loop through the response data and populate the table
+                        $.each(response.data.data, function(key, value) {
+                            // Format date
+                            var updatedDate = value.updated_at ?
+                                new Date(value.updated_at).toLocaleString('en-US', {
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                }) :
+                                'N/A';
 
-                    // Handle product images dynamically
-                    var productImages = value.product_image ? value.product_image.split('|') : [];
-                    var firstImage = productImages.length > 0 ? productImages[0] : '{{ url("/No_Image_Available.jpg") }}';
+                            // Handle product images dynamically
+                            var productImages = value.product_image ? value.product_image.split('|') :
+                            [];
+                            var firstImage = productImages.length > 0 ? productImages[0] :
+                                '{{ url('/No_Image_Available.jpg') }}';
 
-                    // Append rows
-                    tableBody.append(`
+                            // Append rows
+                            tableBody.append(`
                         <tr>
                             <td>${key + 1}</td>
                             <td><a class="btn btn-block btn-outline-primary" onclick="addcart(${value.id})">Buy</a></td>
@@ -334,106 +367,106 @@
                             </td>
                         </tr>
                     `);
-                });
-            } else {
-                // Handle empty results
-                $('#data-table-body').empty().append('<tr><td colspan="9">No results found.</td></tr>');
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-            alert('An error occurred while fetching data.');
-        },
-    });
-}
+                        });
+                    } else {
+                        // Handle empty results
+                        $('#data-table-body').empty().append('<tr><td colspan="9">No results found.</td></tr>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching data.');
+                },
+            });
+        }
     </script>
 
-<script>
-    $(function () {
-      $("#datatable-buttons").DataTable({
-        "responsive": true, "lengthChange": true, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-    });
-  </script>
-  
-  {{-- For Bluk Action Script --}}
-  <script>
-  // SELECT ALL CHECKBOX
-$('#select_all').on('click', function () {
-    $('.unit_checkbox').prop('checked', this.checked);
-});
+    <script>
+        $(function() {
+            $("#datatable-buttons").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
 
-// GET SELECTED IDs
-function getSelectedIDs() {
-    let ids = [];
-    $('.unit_checkbox:checked').each(function () {
-        ids.push($(this).val());
-    });
-    return ids;
-}
+    {{-- For Bluk Action Script --}}
+    <script>
+        // SELECT ALL CHECKBOX
+        $('#select_all').on('click', function() {
+            $('.unit_checkbox').prop('checked', this.checked);
+        });
 
-// BULK DELETE
-$('#bulk_delete').on('click', function () {
-    let ids = getSelectedIDs();
-
-    if (ids.length === 0) {
-        alert("Please select at least one item");
-        return;
-    }
-    if (!confirm("Are you sure you want to delete selected items?")) return;
-
-    bulkAction("delete", ids);
-});
-
-// BULK ACTIVE
-$('#bulk_active').on('click', function () {
-    let ids = getSelectedIDs();
-    if (ids.length === 0) return alert("Select at least one item");
-    bulkAction("active", ids);
-});
-
-// BULK INACTIVE
-$('#bulk_inactive').on('click', function () {
-    let ids = getSelectedIDs();
-    if (ids.length === 0) return alert("Select at least one item");
-    bulkAction("inactive", ids);
-});
-
-// BULK DUPLICATE
-$('#bulk_duplicate').on('click', function () {
-    let ids = getSelectedIDs();
-    if (ids.length === 0) return alert("Please select at least one product");
-    bulkAction("duplicate", ids);
-});
-
-// MAIN BULK ACTION AJAX
-function bulkAction(type, ids) {
-    $.ajax({
-        url: "{{ route('unit.bulk.action') }}",
-        type: "POST",
-        data: {
-            _token: "{{ csrf_token() }}",
-            action_type: type,
-            ids: ids
-        },
-        success: function (response) {
-            alert(response.message);
-            location.reload();
+        // GET SELECTED IDs
+        function getSelectedIDs() {
+            let ids = [];
+            $('.unit_checkbox:checked').each(function() {
+                ids.push($(this).val());
+            });
+            return ids;
         }
-    });
-}
 
+        // BULK DELETE
+        $('#bulk_delete').on('click', function() {
+            let ids = getSelectedIDs();
 
-</script>
-  {{-- End For Bluk Action Script --}}
+            if (ids.length === 0) {
+                alert("Please select at least one item");
+                return;
+            }
+            if (!confirm("Are you sure you want to delete selected items?")) return;
+
+            bulkAction("delete", ids);
+        });
+
+        // BULK ACTIVE
+        $('#bulk_active').on('click', function() {
+            let ids = getSelectedIDs();
+            if (ids.length === 0) return alert("Select at least one item");
+            bulkAction("active", ids);
+        });
+
+        // BULK INACTIVE
+        $('#bulk_inactive').on('click', function() {
+            let ids = getSelectedIDs();
+            if (ids.length === 0) return alert("Select at least one item");
+            bulkAction("inactive", ids);
+        });
+
+        // BULK DUPLICATE
+        $('#bulk_duplicate').on('click', function() {
+            let ids = getSelectedIDs();
+            if (ids.length === 0) return alert("Please select at least one product");
+            bulkAction("duplicate", ids);
+        });
+
+        // MAIN BULK ACTION AJAX
+        function bulkAction(type, ids) {
+            $.ajax({
+                url: "{{ route(RoutePrefix() . 'unit.bulk.action') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    action_type: type,
+                    ids: ids
+                },
+                success: function(response) {
+                    alert(response.message);
+                    location.reload();
+                }
+            });
+        }
+    </script>
+    {{-- End For Bluk Action Script --}}
 @endpush

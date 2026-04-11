@@ -58,7 +58,7 @@ class ProgramController extends Controller
             $data['unit_id'] = implode('|', $data['unit_id']);
         }
         $program->create($data);
-        return redirect(route('program.index'))->with('message', 'Program Created Successfully');
+        return redirect(route(RoutePrefix() .'program.index'))->with('message', 'Program Created Successfully');
 
     }
 
@@ -100,7 +100,7 @@ class ProgramController extends Controller
             $data['unit_id'] = implode('|', $data['unit_id']);
         }
         $program->update($data);
-        return redirect(route('program.index'))->with('message', 'Program Updated Successfully');
+        return redirect(route(RoutePrefix() . 'program.index'))->with('message', 'Program Updated Successfully');
     }
 
     /**
@@ -112,7 +112,7 @@ class ProgramController extends Controller
     public function destroy(Program $program)
     {
         $program->update(['is_deleted'=>1]);
-        return redirect(route('program.index'))->with('message', 'Program Deleted Successfully');
+        return redirect(route(RoutePrefix() .'program.index'))->with('message', 'Program Deleted Successfully');
 
     }
 

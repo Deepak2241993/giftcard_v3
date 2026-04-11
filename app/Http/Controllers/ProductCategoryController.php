@@ -7,8 +7,8 @@ use App\Models\ServiceUnit;
 use App\Models\Banner;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Auth;
-use Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -117,6 +117,7 @@ class ProductCategoryController extends Controller
 
     // Add the user's token to the data
     $data['user_token'] = $token;
+    $data['created_by'] = Auth::user()->id;
 
     if ($request->hasFile('cat_image')) {
         $folder = str_replace(" ", "_", $token);
@@ -172,7 +173,7 @@ class ProductCategoryController extends Controller
     // Check the result of the API call
     if ($result && isset($result['status']) && $result['status'] == 200) {
         // Redirect with success message if the API call was successful
-        return redirect(route('category.index'))->with('success', $result['msg']);
+        return redirect(route(RoutePrefix() . 'category.index'))->with('success', $result['msg']);
     } else {
         // Redirect back with error message if the API call failed
         return redirect()->back()->with('error', $result['msg']);
@@ -217,6 +218,7 @@ public function update(Request $request,$id)
 {
     $token= Auth::user()->user_token;
     $data = $request->except('_token','_method');
+    $data['updated_by'] = Auth::user()->id;
     $data['user_token'] = $token;
 
     if ($request->hasFile('cat_image')) {
@@ -239,7 +241,7 @@ public function update(Request $request,$id)
     $data = json_encode($data);
     $data = $this->postAPI('category-update/'.$id,$data);
 
-    return redirect(route('category.index'))->with('success', $data['msg']);
+    return redirect(route(RoutePrefix() . 'category.index'))->with('success', $data['msg']);
 }
 
 
@@ -258,14 +260,13 @@ public function update(Request $request,$id)
             $token = Auth::user()->user_token;
             
             // Prepare data for API call
-            $data_arr = ['user_token'=>$token, 'id'=>$id];
-            $data = json_encode($data_arr);
-            
+            $data_arr = ['user_token'=>$token, 'id'=>$id, 'deleted_by' => Auth::user()->id];
+            $data = json_encode($data_arr);         
             // Make API call to delete category
             $response = $this->postAPI('categoryDelete/' . $id, $data);
          // Check if API call was successful
          if ($response && isset($response['status']) && $response['status']==200) {
-             return redirect(route('category.index'))->with('success', $response['msg']);
+             return redirect(route(RoutePrefix() . 'category.index'))->with('success', $response['msg']);
          }
           else {
              // If deletion fails, handle the error appropriately

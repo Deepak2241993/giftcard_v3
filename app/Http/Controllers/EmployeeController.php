@@ -93,6 +93,7 @@ class EmployeeController extends Controller
         'is_deleted'     => 0,
         'created_by'     => auth()->id(),   // ✅ fixed
         'updated_by'     => auth()->id(),
+
     ]);
 
         return response()->json([
@@ -157,7 +158,7 @@ class EmployeeController extends Controller
         // ]);
 
         return redirect()
-            ->route('employees.index')
+            ->route(RoutePrefix() . 'employees.index')
             ->with('success', 'Employee updated successfully.');
     }
 
@@ -173,7 +174,7 @@ class EmployeeController extends Controller
         ]);
 
         return redirect()
-            ->route('employees.index')
+            ->route(RoutePrefix() . 'employees.index')
             ->with('success', 'Employee deleted successfully.');
     }
 
@@ -208,7 +209,7 @@ class EmployeeController extends Controller
         $employee->roles()->sync($request->roles ?? []);
 
         return redirect()
-            ->route('employees.edit', $employee->id)
+            ->route(RoutePrefix() . 'employees.edit', $employee->id)
             ->with('success', 'Employee roles updated successfully.');
     }
 

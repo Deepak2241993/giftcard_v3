@@ -9,7 +9,12 @@ use App\Models\Product;
 class ProductCategory extends Model
 {
     use HasFactory;
-    protected $fillable=['id','cat_name', 'cat_description', 'cat_image', 'cat_order_by', 'meta_title', 'meta_description', 'meta_keywords', 'cat_is_deleted', 'user_token', 'status', 'parent_id', 'created_at', 'updated_at','slug','deal_start_date','deal_end_date'];
+    protected $fillable=['id','cat_name', 'cat_description', 'cat_image', 'cat_order_by', 'meta_title', 'meta_description', 'meta_keywords', 'cat_is_deleted', 'user_token', 'status', 'parent_id', 'created_at', 'updated_at','slug','deal_start_date','deal_end_date','created_by','updated_by','deleted_by'];
+
+     public function products()
+    {
+        return $this->hasMany(Product::class, 'cat_id', 'id');
+    }
 
 
     // Define the relationship with Product Table, where 'cat_id' in Product table refers to 'id' in ProductCategory table
