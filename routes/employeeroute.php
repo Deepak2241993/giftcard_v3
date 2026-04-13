@@ -409,6 +409,10 @@ Route::delete('/program/{id}', [ProgramController::class, 'destroy'])
 ->middleware('permission:delete_programs')
 ->name('employee.program.destroy');
 
+Route::get('/program/duplicate/{id}', 'ProgramController@duplicate')->name('employee.program.duplicate')->middleware('permission:create_programs');
+// Bulk Action
+Route::post('/program/bulk-action', 'ProgramController@bulkAction')->name('employee.program.bulk.action')->middleware('permission:edit_programs');
+Route::Get('/program-sale/{id}', 'ProgramController@PatientProgramBuy')->name('employee.program-sale');
     // ================= PATIENT =================
 Route::get('/patient', [PatientController::class, 'index'])
 ->middleware('permission:view_patients')

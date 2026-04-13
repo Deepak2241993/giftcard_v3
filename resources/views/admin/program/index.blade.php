@@ -51,12 +51,18 @@
                 <div class="scroll-container">
                     <div style="overflow: scroll">
                         {{-- <div class="scroll-content"> --}}
-<div class="mb-3">
-    <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
-    <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
-    <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
-    <button id="bulk_duplicate" class="btn btn-secondary btn-sm">Duplicate Selected</button>
-</div>
+                <div class="mb-3">
+                     @if(hasPermission('delete_programs'))
+                    <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
+                    @endif
+                    @if(hasPermission('edit_programs'))
+                    <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
+                    <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
+                    @endif
+                    @if(hasPermission('create_programs'))
+                    <button id="bulk_duplicate" class="btn btn-secondary btn-sm">Duplicate Selected</button>
+                    @endif
+                </div>
                             <table id="datatable-buttons" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -107,20 +113,23 @@
                                       <td class="text-nowrap">
                                     @if(!@isset($id))
                                         <div class="d-flex">
+                                        @if(hasPermission('create_programs'))
                                         {{-- Duplicate Button --}}
-                                        <a href="{{ route('program.duplicate', $value->id) }}" 
+                                        <a href="{{ route(RoutePrefix() .'program.duplicate', $value->id) }}" 
                                         class="btn btn-sm btn-outline-secondary me-2" title="Duplicate">
                                             <i class="fa fa-copy"></i>
                                         </a>
-
+                                        @endif
+                                        @if(hasPermission('edit_programs'))
                                         {{-- Edit --}}
-                                        <a href="{{ route('program.edit', $value->id) }}" 
+                                        <a href="{{ route(RoutePrefix() .'program.edit', $value->id) }}" 
                                         class="btn btn-sm btn-outline-primary me-2">
                                             <i class="fa fa-edit"></i>
                                         </a>
-
+                                        @endif
+                                        @if(hasPermission('delete_programs'))
                                         {{-- Delete --}}
-                                        <form action="{{ route('program.destroy', $value->id) }}" method="POST">
+                                        <form action="{{ route(RoutePrefix() .'program.destroy', $value->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 
@@ -129,6 +138,7 @@
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
+                                        @endif
 
                                     </div>
                                     @endisset

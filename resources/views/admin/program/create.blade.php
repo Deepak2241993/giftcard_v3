@@ -30,12 +30,13 @@
             <div class="container-fluid">
                 <!--begin::Row-->
                 <div class="card-body p-4">
+                   
                     @if (isset($program))
-                        <form method="post" action="{{ route('program.update', $program->id) }}"
+                        <form method="post" action="{{ route(RoutePrefix() .'program.update', $program->id) }}"
                             enctype="multipart/form-data">
                             @method('PUT')
                         @else
-                            <form method="post" action="{{ route('program.store') }}" enctype="multipart/form-data">
+                            <form method="post" action="{{ route(RoutePrefix() .'program.store') }}" enctype="multipart/form-data">
                     @endif
                     @csrf
                     <div class="row">

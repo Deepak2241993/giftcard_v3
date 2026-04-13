@@ -57,6 +57,7 @@ class ProgramController extends Controller
         if (isset($data['unit_id']) && is_array($data['unit_id'])) {
             $data['unit_id'] = implode('|', $data['unit_id']);
         }
+        $data['created_by'] = auth()->user()->id;
         $program->create($data);
         return redirect(route(RoutePrefix() .'program.index'))->with('message', 'Program Created Successfully');
 
@@ -79,8 +80,9 @@ class ProgramController extends Controller
      * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
-    public function edit(Program $program)
+    public function edit(Program $program,$id)
     {
+        $program = Program::where('id', $id)->firstOrFail();
         $units = ServiceUnit::where('status',1)->where('product_is_deleted',0)->get();
         $selectedUnits = explode('|',$program->unit_id);
         return view('admin.program.create',compact('units','program','selectedUnits'));
@@ -93,12 +95,14 @@ class ProgramController extends Controller
      * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Program $program)
+    public function update(Request $request, Program $program, $id)
     {
+        $program = Program::where('id', $id)->firstOrFail();
         $data = $request->all();
         if (isset($data['unit_id']) && is_array($data['unit_id'])) {
             $data['unit_id'] = implode('|', $data['unit_id']);
         }
+        $data['updated_by'] = auth()->user()->id;
         $program->update($data);
         return redirect(route(RoutePrefix() . 'program.index'))->with('message', 'Program Updated Successfully');
     }
@@ -109,9 +113,11 @@ class ProgramController extends Controller
      * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Program $program)
+    public function destroy(Program $program,$id)
     {
-        $program->update(['is_deleted'=>1]);
+        $program = Program::where('id', $id)->firstOrFail();
+
+        $program->update(['is_deleted'=>1,'deleted_by'=>auth()->user()->id]);
         return redirect(route(RoutePrefix() .'program.index'))->with('message', 'Program Deleted Successfully');
 
     }

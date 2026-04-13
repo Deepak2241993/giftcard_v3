@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Program extends Model
 {
     use HasFactory;
-    protected $fillable=['program_name', 'status', 'created_at', 'updated_at', 'unit_id', 'is_deleted'];
+    protected $fillable=['program_name', 'status', 'created_at', 'updated_at', 'unit_id', 'is_deleted','created_by','updated_by','deleted_by'];
 
 }
