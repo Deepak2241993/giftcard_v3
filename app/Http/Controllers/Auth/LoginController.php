@@ -72,8 +72,8 @@ class LoginController extends Controller
             // dd($user);
             // Redirect based on user type
             return match ($user->role_id) {
-                1 => redirect()->route('admin-dashboard'),       // Admin
-                2 => redirect()->route('employee.dashboard'),   // Employee
+                1 => redirect()->route(RoutePrefix() . 'dashboard'),       // Admin
+                2 => redirect()->route(RoutePrefix() . 'dashboard'),   // Employee
                 default => abort(403),
             };
         } 

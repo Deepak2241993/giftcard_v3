@@ -85,10 +85,11 @@
 
                     </tbody>
                 </table>
-
+                    @if(hasPermission('edit_access_controls'))
                 <button type="button" class="btn btn-primary mt-3" onclick="savePermissions()">
                     Save Permissions
                 </button>
+                @endif
 
             </form>
 
@@ -143,7 +144,6 @@ input:checked + .slider:before {
 
 <script>
 
-// ✅ LOAD PERMISSIONS
 $('#role_id').change(function () {
 
     let roleId = $(this).val();
@@ -151,11 +151,11 @@ $('#role_id').change(function () {
 
     if (!roleId) return;
 
-    $.get("{{ url('admin/access-control/get') }}/" + roleId, function (data) {
+    let url = "{{ route(RoutePrefix().'access-control.get-permissions', ['id' => '__id__']) }}";
+    url = url.replace('__id__', roleId);
 
-        console.log(data); // 🔍 debug
+    $.get(url, function (data) {
 
-        // Uncheck all
         $('input[type=checkbox]').prop('checked', false);
 
         if (!data || data.length === 0) return;
@@ -169,12 +169,11 @@ $('#role_id').change(function () {
 });
 
 
-// ✅ SAVE PERMISSIONS
 function savePermissions() {
 
     let formData = $('#permissionForm').serialize();
 
-    if(!$('#hidden_role_id').val()){
+    if (!$('#hidden_role_id').val()) {
         Swal.fire({
             icon: 'warning',
             title: 'Please select role first'
@@ -183,7 +182,7 @@ function savePermissions() {
     }
 
     $.ajax({
-        url: "{{ url('admin/access-control/store') }}",
+        url: "{{ route(RoutePrefix().'access-control.store-permissions') }}",
         method: "POST",
         data: formData,
         success: function (response) {

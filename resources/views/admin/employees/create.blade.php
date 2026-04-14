@@ -5,7 +5,7 @@
 {{-- ================= HEADER ================= --}}
 <section class="content-header">
     <div class="container-fluid">
-        <a href="{{ route('employees.export.pdf', $employee->id) }}" class="btn btn-danger btn-sm float-right">
+        <a href="{{ route(RoutePrefix() . 'employees.export.pdf', $employee->id) }}" class="btn btn-danger btn-sm float-right">
             <i class="fa fa-file-pdf"></i> Export PDF
         </a>
         <div class="row mb-2">
@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('employees.index') }}">Employees</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route(RoutePrefix() . 'employees.index') }}">Employees</a></li>
                     <li class="breadcrumb-item active">Profile</li>
                 </ol>
             </div>
@@ -81,7 +81,7 @@
 
 {{-- ================= PROFILE UPDATE ================= --}}
 <div class="active tab-pane" id="profile">
-<form method="POST" action="{{ route('employees.update', $employee->id) }}">
+<form method="POST" action="{{ route(RoutePrefix() . 'employees.update', $employee->id) }}">
 @csrf
 @method('PUT')
 
@@ -261,7 +261,7 @@
     <button class="btn btn-info">
         <i class="fa fa-save"></i> Update Employee
     </button>
-    <a href="{{ route('employees.index') }}" class="btn btn-secondary">
+    <a href="{{ route(RoutePrefix() . 'employees.index') }}" class="btn btn-secondary">
         Back
     </a>
 </div>

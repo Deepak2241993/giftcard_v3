@@ -376,6 +376,9 @@ Route::delete('/banner/{id}', [BannerController::class, 'destroy'])
         Route::post('/giftcancel', [GiftsendController::class, 'giftcancel'])
         ->name('employee.giftcancel')
         ->middleware('permission:delete_giftcard_redeem');
+
+           
+    
     
 
     
@@ -451,6 +454,15 @@ Route::delete('/patient/{id}', [PatientController::class, 'destroy'])
 ->middleware('permission:delete_patients')
 ->name('employee.patient.destroy');
 
+
+Route::post('/patient-import','PatientController@importPatients')->name('employee.patients.import')->middleware('permission:create_patients');
+// Patient Data Mearge
+Route::get('patients/merge-preview', [PatientController::class, 'preview'])->name('employee.patients.merge.preview');
+Route::post('patients/merge-execute', [PatientController::class, 'merge'])->name('employee.patients.merge.execute');
+Route::get('/patients/merge/preview-swap', [PatientController::class, 'previewSwap'])->name('employee.patients.merge.preview.swap');
+Route::post('/patient-quick-create',[PatientController::class,'PatientQuickCreate'])->name('employee.patient-quick-create');
+    
+
     // ================= EMPLOYEES =================
     Route::get('/employees', [EmployeeController::class, 'index'])
 ->middleware('permission:view_employees')
@@ -479,6 +491,8 @@ Route::put('/employees/{id}', [EmployeeController::class, 'update'])
 Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])
 ->middleware('permission:delete_employees')
 ->name('employee.employees.destroy');
+Route::get('employees-table-data', [EmployeeController::class, 'tableData'])->name('employee.employees.table.data')->middleware('permission:view_employees');
+Route::get('employees.export.pdf', [EmployeeController::class, 'exportPdf'])->name('employee.employees.export.pdf')->middleware('permission:edit_employees');
 
     // ================= DESIGNATIONS =================
     Route::get('/designations', [DesignationController::class, 'index'])
@@ -511,32 +525,42 @@ Route::delete('/designations/{id}', [DesignationController::class, 'destroy'])
 
     // ================= ACCESS CONTROL =================
  Route::get('/access-controls', [AccessControlController::class, 'index'])
-->middleware('permission:view_access_control')
+->middleware('permission:view_access_controls')
 ->name('employee.access-control.index');
 
 Route::get('/access-controls/create', [AccessControlController::class, 'create'])
-->middleware('permission:create_access_control')
+->middleware('permission:create_access_controls')
 ->name('employee.access-control.create');
 
 Route::post('/access-controls', [AccessControlController::class, 'store'])
-->middleware('permission:create_access_control')
+->middleware('permission:create_access_controls')
 ->name('employee.access-control.store');
 
 Route::get('/access-controls/{id}', [AccessControlController::class, 'show'])
-->middleware('permission:view_access_control')
+->middleware('permission:view_access_controls')
 ->name('employee.access-control.show');
 
 Route::get('/access-controls/{id}/edit', [AccessControlController::class, 'edit'])
-->middleware('permission:edit_access_control')
+->middleware('permission:edit_access_controls')
 ->name('employee.access-control.edit');
 
 Route::put('/access-controls/{id}', [AccessControlController::class, 'update'])
-->middleware('permission:edit_access_control')
+->middleware('permission:edit_access_controls')
 ->name('employee.access-control.update');
 
 Route::delete('/access-controls/{id}', [AccessControlController::class, 'destroy'])
-->middleware('permission:delete_access_control')
+->middleware('permission:delete_access_controls')
 ->name('employee.access-control.destroy');
+
+Route::prefix('employee')->name('employee.')->group(function () {
+
+    Route::get('access-control/get/{id}', [AccessControlController::class, 'getPermissions'])
+        ->name('access-control.get-permissions');
+
+    Route::post('access-control/store', [AccessControlController::class, 'storePermissions'])
+        ->name('access-control.store-permissions');
+
+});
 
     // ================= DEPARTMENTS =================
   Route::get('/departments', [DepartmentController::class, 'index'])
@@ -627,5 +651,23 @@ Route::put('/popular-offers/{id}', [PopularOfferController::class, 'update'])
 Route::delete('/popular-offers/{id}', [PopularOfferController::class, 'destroy'])
 ->middleware('permission:delete_popular_offers')
 ->name('employee.popular-offers.destroy');
+
+
+    Route::get('/service-redeem','ServiceOrderController@ServiceRedeemView')->name('employee.service-redeem-view');
+    Route::get('/service-redeem-patient-list/{id}','ServiceOrderController@ServiceRedeemPatientList')->name('employee.service-redeem-patient-list');
+    Route::post('/redeem-services','ServiceOrderController@ServiceRedeem')->name('employee.redeem-services');
+    Route::get('/search-order-api','ServiceOrderController@SearchOrderApi')->name('employee.search-order-api');
+    Route::post('/redeemcalculation', 'ServiceOrderController@redeemcalculation')->name('employee.redeemcalculation');
+    Route::post('/service-statement', 'ServiceOrderController@getServiceStatement')->name('employee.service-statement');
+    Route::post('/redeemedservice', 'ServiceOrderController@redeemedservice')->name('employee.redeemedservice');
+    Route::post('/rollback-redeemed-service', 'ServiceOrderController@rollbackRedeemedService')->name('employee.rollback-redeemed-service');
+
+    Route::post('/do-cancel', 'ServiceOrderController@DoCancel')->name('employee.do-cancel');
+    Route::get('/cancel-service', 'ServiceOrderController@ServiceCancel')->name('employee.cancel-service');
+    Route::post('/cardview-route','APIController@cardview')->name('employee.cardview-route');
+    Route::get('services/{product_slug}/{unitslug}','ServiceUnitController@UnitPageDetails')->name('employee.unit-details');
+    Route::get('productdetails/{slug}','ProductController@productdetails')->name('employee.productdetails');
+    Route::get('/employee-dashboard', [DashboardController::class,'employeeDashboard'])->name('employee.dashboard');
+
 
 });

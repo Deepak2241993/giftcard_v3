@@ -93,6 +93,10 @@ class EmployeeController extends Controller
         'is_deleted'     => 0,
         'created_by'     => auth()->id(),   // ✅ fixed
         'updated_by'     => auth()->id(),
+        'created_at'     => now(),
+        'updated_at'     => now(),
+        'created_by'     => auth()->id(),   // ✅ fixed
+        'updated_by'     => auth()->id(),
 
     ]);
 
@@ -144,7 +148,7 @@ class EmployeeController extends Controller
             'email'      => 'nullable|email|unique:employees,email,' . $employee->id,
             'phone'      => 'required|string|max:15',
         ]);
-
+        $employee['updated_by'] = auth()->id();
         $employee->update($request->all());
         // $employee->update([
         //     'clinic_id'      => $request->clinic_id,
@@ -170,7 +174,9 @@ class EmployeeController extends Controller
         $employee = Employee::findOrFail($id);
 
         $employee->update([
-            'is_deleted' => 1
+            'is_deleted' => 1,
+            'updated_by' => auth()->id(),
+            'deleted_by' => now(),
         ]);
 
         return redirect()
@@ -214,29 +220,44 @@ class EmployeeController extends Controller
     }
 
      public function tableData()
-        {
-            $employees = Employee::where('is_deleted', 0)->latest();
-        
-            return DataTables::of($employees)
-                ->addIndexColumn()
-                ->addColumn('employee_name', function ($row) {
-                    return $row->first_name . ' ' . $row->last_name;
-                })
-                ->addColumn('status_badge', function ($row) {
-                    return $row->status
-                        ? '<span class="badge badge-success">Active</span>'
-                        : '<span class="badge badge-danger">Inactive</span>';
-                })
-                ->addColumn('action', function ($row) {
-                    return '
-                <a class="btn btn-sm btn-info mr-1"  href="'.route('employees.edit',$row->id).'" > <i class="fa fa-edit"></i></a>
-                    
-                        <button class="btn btn-sm btn-danger"
+{
+    $employees = Employee::where('is_deleted', 0)->latest();
+
+    return DataTables::of($employees)
+        ->addIndexColumn()
+
+        ->addColumn('employee_name', function ($row) {
+            return $row->first_name . ' ' . $row->last_name;
+        })
+
+        ->addColumn('status_badge', function ($row) {
+            return $row->status
+                ? '<span class="badge badge-success">Active</span>'
+                : '<span class="badge badge-danger">Inactive</span>';
+        })
+
+        ->addColumn('action', function ($row) {
+
+            $btn = '';
+
+            if (hasPermission('edit_employees')) {
+                $btn .= '<a class="btn btn-sm btn-info mr-1" href="' 
+                    . route(RoutePrefix() . 'employees.edit', $row->id) . '">
+                        <i class="fa fa-edit"></i>
+                    </a>';
+            }
+
+            if (hasPermission('delete_employees')) {
+                $btn .= '<button class="btn btn-sm btn-danger"
                             onclick="deleteEmployee(' . $row->id . ')">
                             <i class="fa fa-trash"></i>
                         </button>';
-                })
-                ->rawColumns(['action', 'status_badge'])
-                ->make(true);
-        }
+            }
+
+            return $btn;
+        })
+
+        ->rawColumns(['action', 'status_badge'])
+        ->make(true);
+}
 }

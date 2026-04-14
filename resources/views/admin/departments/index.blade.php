@@ -24,10 +24,17 @@
 
 {{-- ACTION BUTTONS --}}
 <div class="mb-3">
+    @if(hasPermission('edit_departments'))
     <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
     <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
+    @endif
+
+    @if(hasPermission('delete_departments'))
     <button id="bulk_delete" class="btn btn-danger btn-sm">Delete Selected</button>
-    <a href="{{ route('departments.create') }}" class="btn btn-dark btn-sm">Add Department</a>
+    @endif
+    @if(hasPermission('create_departments'))
+    <a href="{{ route(RoutePrefix() . 'departments.create') }}" class="btn btn-dark btn-sm">Add Department</a>
+    @endif
 </div>
 
 @if(session('success'))
@@ -60,12 +67,15 @@
                     : "<span class='badge bg-danger'>Inactive</span>" !!}
             </td>
             <td class="text-nowrap">
-                <a href="{{ route('departments.edit', $department->id) }}"
+                @if(hasPermission('edit_departments'))
+                <a href="{{ route(RoutePrefix() . 'departments.edit', $department->id) }}"
                    class="btn btn-sm btn-outline-primary">
                     <i class="fas fa-edit"></i>
                 </a>
+                @endif
 
-                <form action="{{ route('departments.destroy', $department->id) }}"
+                @if(hasPermission('delete_departments'))
+                <form action="{{ route(RoutePrefix() . 'departments.destroy', $department->id) }}"
                       method="POST"
                       style="display:inline;"
                       onsubmit="return confirm('Are you sure?')">
@@ -75,6 +85,7 @@
                         <i class="fas fa-trash"></i>
                     </button>
                 </form>
+                @endif
             </td>
         </tr>
         @endforeach

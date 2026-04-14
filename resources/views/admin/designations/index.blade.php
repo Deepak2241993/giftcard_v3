@@ -12,9 +12,11 @@
 <div class="card">
 <div class="card-body">
 
-<a href="{{ route('designations.create') }}" class="btn btn-dark btn-sm mb-3">
+    @if(hasPermission('create_designations'))
+<a href="{{ route(RoutePrefix() . 'designations.create') }}" class="btn btn-dark btn-sm mb-3">
     Add Designation
 </a>
+  @endif  
 
 @if(session('success'))
 <div class="alert alert-success">{{ session('success') }}</div>
@@ -38,12 +40,14 @@
         <span class="badge bg-info">Level {{ $designation->level }}</span>
     </td>
     <td>
-        <a href="{{ route('designations.edit', $designation->id) }}"
+        @if(hasPermission('edit_designations'))
+        <a href="{{ route(RoutePrefix() . 'designations.edit', $designation->id) }}"
            class="btn btn-sm btn-outline-primary">
             <i class="fas fa-edit"></i>
         </a>
-
-        <form action="{{ route('designations.destroy', $designation->id) }}"
+    @endif
+    @if(hasPermission('delete_designations'))
+        <form action="{{ route(RoutePrefix() . 'designations.destroy', $designation->id) }}"
               method="POST"
               style="display:inline"
               onsubmit="return confirm('Delete this designation?')">
@@ -52,6 +56,7 @@
                 <i class="fas fa-trash"></i>
             </button>
         </form>
+    @endif
     </td>
 </tr>
 @endforeach

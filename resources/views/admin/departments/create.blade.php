@@ -41,10 +41,10 @@
 
 {{-- FORM START --}}
 @if(isset($department))
-<form method="POST" action="{{ route('departments.update', $department->id) }}">
+<form method="POST" action="{{ route(RoutePrefix() . 'departments.update', $department->id) }}">
 @method('PUT')
 @else
-<form method="POST" action="{{ route('departments.store') }}">
+<form method="POST" action="{{ route(RoutePrefix() . 'departments.store') }}">
 @endif
 @csrf
 
@@ -104,7 +104,7 @@
         {{ isset($department) ? 'Update Department' : 'Create Department' }}
     </button>
 
-    <a href="{{ route('departments.index') }}" class="btn btn-secondary ml-2">
+    <a href="{{ route(RoutePrefix() . 'departments.index') }}" class="btn btn-secondary ml-2">
         Back
     </a>
 </div>

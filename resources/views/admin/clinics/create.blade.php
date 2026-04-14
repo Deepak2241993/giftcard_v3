@@ -13,7 +13,7 @@
 <div class="card-body">
 
 <form method="POST"
-      action="{{ isset($clinic) ? route('clinics.update',$clinic->id) : route('clinics.store') }}">
+      action="{{ isset($clinic) ? route(RoutePrefix() . 'clinics.update',$clinic->id) : route(RoutePrefix() . 'clinics.store') }}">
 @csrf
 @if(isset($clinic)) @method('PUT') @endif
 
@@ -73,7 +73,7 @@
     <button class="btn btn-outline-primary">
         {{ isset($clinic) ? 'Update' : 'Create' }}
     </button>
-    <a href="{{ route('clinics.index') }}" class="btn btn-secondary">Back</a>
+    <a href="{{ route(RoutePrefix() . 'clinics.index') }}" class="btn btn-secondary">Back</a>
 </div>
 
 </div>

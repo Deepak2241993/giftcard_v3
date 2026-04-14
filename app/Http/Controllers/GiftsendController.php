@@ -353,13 +353,11 @@ else{
     public function giftcardredeemPatientList(Request $request, $id)
     {
         $token = Auth::user()->user_token;
-
         // Get patient info
         $patient = Patient::findOrFail($id);
         $patient_email = $patient->email;
         $patient_username = $patient->patient_login_id;
         $patient_full_name = $patient->fname ." ".$patient->lname;
-
         // Find related giftcard transactions
         $giftcard_transaction = Giftsend::where(function ($query) use ($patient_username, $patient_email) {
             $query->where('gift_send_to', $patient_username)

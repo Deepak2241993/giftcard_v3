@@ -9,7 +9,7 @@ class Employee extends Model
     protected $table = 'employees';
 
     protected $fillable = [
-        'emp_id', 'first_name', 'last_name', 'email', 'phone','gender','dob', 'address', 'city', 'state', 'zip', 'country', 'salary', 'hire_date', 'clinic_id','designation_id', 'department_id','employment_type','employee_code','status','created_at','updated_at','is_deleted','created_by','updated_by','user_id'
+        'emp_id', 'first_name', 'last_name', 'email', 'phone','gender','dob', 'address', 'city', 'state', 'zip', 'country', 'salary', 'hire_date', 'clinic_id','designation_id', 'department_id','employment_type','employee_code','status','created_at','updated_at','is_deleted','created_by','updated_by','user_id','deleted_by',
     ];
 
 

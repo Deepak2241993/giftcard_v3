@@ -98,8 +98,8 @@
                                 <li class="nav-item"><a class="nav-link" href="#giftcards" data-toggle="tab">Giftcards Orders</a></li>
                                 {{-- <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services Orders</a></li> --}}
                                 <li class="nav-item"><a class="nav-link" href="#buysection" data-toggle="tab">Buy</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{route('giftcardredeemPatientList',['id'=>$patient->id])}}">Giftcard Redeem</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{route('service-redeem-patient-list',['id'=>$patient->id])}}">Service Redeem</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{route(RoutePrefix() .'giftcardredeemPatientList',['id'=>$patient->id])}}">Giftcard Redeem</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{route(RoutePrefix() .'service-redeem-patient-list',['id'=>$patient->id])}}">Service Redeem</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -226,7 +226,7 @@
                                 <div class="active tab-pane" id="settings">
                                     <h4 class="mb-4">Profile Settings</h4>
                                     <form class="form-horizontal" method="post"
-                                        action="{{ route('patient.update', $patient->id) }}" novalidate="novalidate"
+                                        action="{{ route(RoutePrefix() .'patient.update', $patient->id) }}" novalidate="novalidate"
                                         enctype="multipart/form-data">
                                         @method('PUT')
                                         @csrf
@@ -372,7 +372,7 @@
 
                                                                                     </td>
                                                                                     <td>
-                                                                                        <a type="button" class="btn btn-block btn-outline-dark" href="{{route('giftcards-statement-admin-view', $value['id'])}}">
+                                                                                        <a type="button" class="btn btn-block btn-outline-dark" href="{{route(RoutePrefix() .'giftcards-statement-admin-view', $value['id'])}}">
                                                                             History
                                                                         </a>
                                                                                        
@@ -484,7 +484,7 @@
                                                                                 <td>
                                                                                     <a type="button"
                                                                                         class="btn btn-block btn-outline-dark"
-                                                                                        href="{{ route('giftcards-statement-admin-view', $value['id']) }}">
+                                                                                        href="{{ route(RoutePrefix() .'giftcards-statement-admin-view', $value['id']) }}">
                                                                                         History
                                                                                     </a>
 
@@ -647,10 +647,10 @@
                                         <div class="col-12 col-sm-12">
                                             <div class="card card-primary card-outline card-tabs">
                                                 <div class="card-header p-0 pt-1 border-bottom-0 m-4">
-                                                   <a href="{{ route('giftcards-sale') }}?patient_id={{ $patient->id }}" class="btn btn-primary">Giftcard Buy</a>
-                                                   <a href="{{ route('product.index') }}?patient_id={{ $patient->id }}" class="btn btn-dark">Service & Deals Sale</a>
-                                                   <a href="{{ route('program.index') }}?patient_id={{ $patient->id }}" class="btn btn-warning">Program Sale</a>
-                                                   <a href="{{ route('unit.index') }}?patient_id={{ $patient->id }}" class="btn btn-success">Unit Sale</a>
+                                                   <a href="{{ route(RoutePrefix() .'giftcards-sale') }}?patient_id={{ $patient->id }}" class="btn btn-primary">Giftcard Buy</a>
+                                                   <a href="{{ route(RoutePrefix() .'product.index') }}?patient_id={{ $patient->id }}" class="btn btn-dark">Service & Deals Sale</a>
+                                                   <a href="{{ route(RoutePrefix() .'program.index') }}?patient_id={{ $patient->id }}" class="btn btn-warning">Program Sale</a>
+                                                   <a href="{{ route(RoutePrefix() .'unit.index') }}?patient_id={{ $patient->id }}" class="btn btn-success">Unit Sale</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -753,7 +753,7 @@
 
             // AJAX request to fetch data
             $.ajax({
-                url: '{{ route('service-statement') }}',
+                url: '{{ route(RoutePrefix() .'service-statement') }}',
                 method: "post",
                 dataType: "json",
                 data: {
@@ -850,7 +850,7 @@
             $('#staticBackdrop_' + id).modal('show');
 
             $.ajax({
-                url: '{{ route('cardview-route') }}',
+                url: '{{ route(RoutePrefix() .'cardview-route') }}',
                 method: "post",
                 dataType: "json",
                 data: {
@@ -895,8 +895,8 @@
 
         function seturl(data) {
             // Define the base URLs with placeholders for dynamic segments
-            var unitBaseUrl = @json(route('unit-details', ['product_slug' => 'placeholder', 'unitslug' => 'placeholder']));
-            var productDetailsBaseUrl = @json(route('productdetails', ['slug' => 'placeholder']));
+            var unitBaseUrl = @json(route(RoutePrefix() .'unit-details', ['product_slug' => 'placeholder', 'unitslug' => 'placeholder']));
+            var productDetailsBaseUrl = @json(route(RoutePrefix() .'productdetails', ['slug' => 'placeholder']));
 
             if (data === 'unit') {
                 var deals = $('#deals').val(); // Get the value of the deals field

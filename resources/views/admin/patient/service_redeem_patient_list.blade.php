@@ -39,8 +39,8 @@
          <h4><u>Patient Information</u></h4>
         <p>Name:  {{$patient->fname??''}} {{$patient->lname??''}} <br>Email:  {{$patient->email??''}} <br> Phone:  {{$patient->phone??''}}<br> UserName: {{$patient->patient_login_id??''}}
         </p>
-        <a href="{{route('patient.index')}}"class="btn btn-primary">Go to Patient List</a>
-        <a href="{{route('patient.edit',$patient->id)}}"class="btn btn-dark">Go to Profile</a>
+        <a href="{{route(RoutePrefix() .'patient.index')}}"class="btn btn-primary">Go to Patient List</a>
+        <a href="{{route(RoutePrefix() .'patient.edit',$patient->id)}}"class="btn btn-dark">Go to Profile</a>
     </section>
     <section class="content-header">
 

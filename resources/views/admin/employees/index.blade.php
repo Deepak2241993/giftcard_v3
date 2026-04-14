@@ -2,10 +2,11 @@
 @section('body')
     <div class="container-fluid">
         <h3 class="mb-3">All Employees</h3>
-
-        <button class="btn btn-secondary mb-3" data-toggle="modal" data-target="#createEmployee">
-            Create Employee
-        </button>
+        @if (hasPermission('create_employees'))
+            <button class="btn btn-secondary mb-3" data-toggle="modal" data-target="#createEmployee">
+                Create Employee
+            </button>
+        @endif
         <div id="success-alert" class="alert alert-success d-none">
             <span id="success-message"></span>
         </div>
@@ -41,14 +42,8 @@
                             {{-- Employee ID --}}
                             <div class="col-md-6 mb-2">
                                 <label>Employee ID</label>
-                               <input
-    class="form-control"
-    type="text"
-    name="emp_id"
-    maxlength="6"
-    pattern="[0-9]*"
-    inputmode="numeric"
->
+                                <input class="form-control" type="text" name="emp_id" maxlength="6" pattern="[0-9]*"
+                                    inputmode="numeric">
                             </div>
 
 
@@ -62,7 +57,7 @@
                             {{-- Last Name --}}
                             <div class="col-md-6 mb-2">
                                 <label>Last Name</label>
-                                <input class="form-control" name="last_name" >
+                                <input class="form-control" name="last_name">
                                 <small class="text-danger" id="error-last_name"></small>
                             </div>
 
@@ -217,47 +212,47 @@
 @push('script')
     <script>
         function createEmployee() {
-    let formData = new FormData(document.getElementById('employeeForm'));
-    $('.text-danger').text('');
+            let formData = new FormData(document.getElementById('employeeForm'));
+            $('.text-danger').text('');
 
-    $.ajax({
-        url: "{{ route('employees.store') }}",
-        method: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        success: function(response) {
+            $.ajax({
+                url: "{{ route(RoutePrefix() . 'employees.store') }}",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(response) {
 
-            // Show success message
-           Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: response.message,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        });
+                    // Show success message
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
 
-            // Reset form
-            $('#employeeForm')[0].reset();
+                    // Reset form
+                    $('#employeeForm')[0].reset();
 
-            // Close modal
-            $('#createEmployee').modal('hide');
+                    // Close modal
+                    $('#createEmployee').modal('hide');
 
-            // Reload DataTable
-            $('#datatable-buttons').DataTable().ajax.reload();
-        },
-        error: function(xhr) {
-            $.each(xhr.responseJSON.errors, function(key, val) {
-                $('#error-' + key).text(val[0]);
+                    // Reload DataTable
+                    $('#datatable-buttons').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    $.each(xhr.responseJSON.errors, function(key, val) {
+                        $('#error-' + key).text(val[0]);
+                    });
+                }
             });
         }
-    });
-}
 
 
         function deleteEmployee(id) {
@@ -265,7 +260,7 @@
             if (!confirm('Delete this employee?')) return;
 
             $.ajax({
-                url: "{{ url('admin/employees') }}/" + id,
+                url: "{{ url(RoutePrefix() . '/employees') }}/" + id,
                 method: "DELETE",
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -283,7 +278,7 @@
             $('#datatable-buttons').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('employees.table.data') }}",
+                ajax: "{{ route(RoutePrefix() . 'employees.table.data') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         orderable: false

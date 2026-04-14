@@ -44,7 +44,7 @@ use App\Http\Controllers\ProductController;
 //For All Backend Route
 Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function () {
 
-    Route::get('/admin-dashboard', [DashboardController::class,'adminDashboard'])->name('admin-dashboard');
+    Route::get('/admin-dashboard', [DashboardController::class,'adminDashboard'])->name('dashboard');
     Route::get('/product-dashboard', 'HomeController@ProductDashboard')->name('product-dashboard');
     Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
@@ -145,8 +145,17 @@ Route::resource('designations', DesignationController::class);
 // ================= ACCESS CONTROL =================
 // Role & permission management
 Route::resource('access-control', AccessControlController::class);
-Route::get('access-control/get/{id}', [AccessControlController::class, 'getPermissions']);
-Route::post('access-control/store', [AccessControlController::class, 'storePermissions']);
+Route::get('access-control/get/{id}', [AccessControlController::class, 'getPermissions'])->name('access-control.get-permissions');;
+Route::post('access-control/store', [AccessControlController::class, 'storePermissions'])->name('access-control.store-permissions');;
+
+// Route::prefix('admin')->name('admin.')->group(function () {
+
+//     Route::get('access-control/get/{id}', [AccessControlController::class, 'getPermissions'])
+//         ->name('access-control.get-permissions');
+
+//     Route::post('access-control/store', [AccessControlController::class, 'storePermissions'])
+//         ->name('access-control.store-permissions');
+// });
 
 // ================= DEPARTMENTS =================
 // Department management

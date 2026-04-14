@@ -138,8 +138,9 @@ public function patientTableData(Request $request)
      * @param  \App\Models\Patient  $patient
      * @return \Illuminate\Http\Response
      */
-    public function edit(Patient $patient, Request $request, TransactionHistory $transaction)
+    public function edit(Patient $patient, Request $request, TransactionHistory $transaction,$id)
     {
+        $patient = Patient::find($id);
         if(isset($_GET['patient_id']))
             {
                 $request->session()->put('internal_patient_id', $request->get('patient_id'));
@@ -205,7 +206,6 @@ public function patientTableData(Request $request)
             ->where('email', $patient_email)
             ->orderBy('id', 'DESC')
             ->paginate(10);
-
         // -----------------------------
         // Return to View
         // -----------------------------

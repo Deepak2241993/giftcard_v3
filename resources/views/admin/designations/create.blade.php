@@ -25,8 +25,8 @@
 
 <form method="POST"
       action="{{ isset($designation)
-                ? route('designations.update', $designation->id)
-                : route('designations.store') }}">
+                ? route(RoutePrefix() . 'designations.update', $designation->id)
+                : route(RoutePrefix() . 'designations.store') }}">
 
     @csrf
     @isset($designation)
@@ -70,7 +70,7 @@
                 {{ isset($designation) ? 'Update' : 'Create' }}
             </button>
 
-            <a href="{{ route('designations.index') }}" class="btn btn-secondary">
+            <a href="{{ route(RoutePrefix() . 'designations.index') }}" class="btn btn-secondary">
                 Back
             </a>
         </div>

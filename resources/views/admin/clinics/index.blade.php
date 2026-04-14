@@ -15,10 +15,16 @@
 <div class="card-body">
 
 <div class="mb-3">
+    @if (hasPermission('edit_clinics'))
     <button id="bulk_active" class="btn btn-success btn-sm">Mark Active</button>
     <button id="bulk_inactive" class="btn btn-warning btn-sm">Mark Inactive</button>
+    @endif
+    @if (hasPermission('delete_clinics'))
     <button id="bulk_delete" class="btn btn-danger btn-sm">Delete</button>
+    @endif
+    @if (hasPermission('create_clinics'))
     <a href="{{ route('clinics.create') }}" class="btn btn-dark btn-sm">Add Clinic</a>
+    @endif
 </div>
 
 @if(session('success'))
@@ -51,9 +57,12 @@
             : "<span class='badge bg-danger'>Inactive</span>" !!}
     </td>
     <td>
+        @if(hasPermission('edit_clinics'))
         <a href="{{ route('clinics.edit', $clinic->id) }}" class="btn btn-sm btn-outline-primary">
             <i class="fas fa-edit"></i>
         </a>
+        @endif
+        @if(hasPermission('delete_clinics'))
         <form method="POST" action="{{ route('clinics.destroy', $clinic->id) }}"
               style="display:inline" onsubmit="return confirm('Are you sure?')">
             @csrf @method('DELETE')
@@ -61,6 +70,7 @@
                 <i class="fas fa-trash"></i>
             </button>
         </form>
+        @endif
     </td>
 </tr>
 @endforeach

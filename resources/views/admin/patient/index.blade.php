@@ -253,7 +253,7 @@
                 </div>
                 <span class="p-4"><a href="{{ url('/PatientDummy.csv') }}" download>Download Sample Data</a></span>
                 <div class="modal-body">
-                    <form action="{{ route('patients.import') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route(RoutePrefix() .'patients.import') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label>Select CSV File</label>
@@ -440,7 +440,7 @@
             const ids = Array.from(selectedPatients);
 
             $.ajax({
-                url: "{{ route('patients.merge.preview') }}",
+                url: "{{ route(RoutePrefix() .'patients.merge.preview') }}",
                 type: "GET",
                 data: {
                     'ids[]': ids
@@ -487,7 +487,7 @@
 
             // 2️⃣ Reload preview from server (CORRECT WAY)
             $.ajax({
-                url: "{{ route('patients.merge.preview.swap') }}",
+                url: "{{ route(RoutePrefix() .'patients.merge.preview.swap') }}",
                 type: "GET",
                 data: {
                     keep_id: keepId,
@@ -538,7 +538,7 @@
 
             const keepData = collectKeepPatientData();
 
-            $.post("{{ route('patients.merge.execute') }}", {
+            $.post("{{ route(RoutePrefix() .'patients.merge.execute') }}", {
                 _token: "{{ csrf_token() }}",
                 keep_id: keepId,
                 merge_id: mergeId,
@@ -563,7 +563,7 @@
             $("#spinner").removeClass("d-none");
 
             $.ajax({
-                url: "{{ auth()->user()->role_id == 1 ? route('patient-quick-create') : route('employee.patient-quick-create') }}",
+                url: "{{ auth()->user()->role_id == 1 ? route(RoutePrefix() .'patient-quick-create') : route(RoutePrefix() .'patient-quick-create') }}",
                 type: "POST",
                 data: formData,
                 processData: false,
@@ -635,7 +635,7 @@
             var table = $("#datatable-buttons").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ auth()->user()->role_id == 1 ? route('patient.table.data') : route('employee.patient.table.data') }}",
+                ajax: "{{ auth()->user()->role_id == 1 ? route(RoutePrefix() .'patient.table.data') : route(RoutePrefix().'patient.table.data') }}",
                 columns: [{
                         data: 'id',
                         orderable: false,

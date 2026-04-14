@@ -30,7 +30,11 @@ class ClinicController extends Controller
             'email'       => 'nullable|email',
             'status'      => 'required|boolean',
         ]);
-        Clinic::create($request->all());
+        $data = $request->all();
+        $data['is_deleted'] = 0;
+        $data['created_by'] = auth()->id();
+        $data['updated_by'] = auth()->id();
+        Clinic::create($data);
         // Clinic::create([
         //     'clinic_name' => $request->clinic_name,
         //     'address'     => $request->address,
@@ -71,6 +75,9 @@ class ClinicController extends Controller
             'email'       => 'nullable|email',
             'status'      => 'required|boolean',
         ]);
+        $data = $request->all();
+        $data['updated_by'] = auth()->id();
+
         $clinic->update($request->all());
         // $clinic->update([
         //     'clinic_name' => $request->clinic_name,
@@ -94,6 +101,7 @@ class ClinicController extends Controller
         $clinic->update([
             'is_deleted' => 1,
             'updated_by' => auth()->id(),
+            'deleted_by' => auth()->id(),
         ]);
 
         return redirect()
@@ -107,15 +115,15 @@ class ClinicController extends Controller
         $ids = $request->ids;
 
         if ($request->action_type === 'delete') {
-            Clinic::whereIn('id', $ids)->update(['is_deleted' => 1]);
+            Clinic::whereIn('id', $ids)->update(['is_deleted' => 1, 'updated_by' => auth()->id(), 'deleted_by' => auth()->id()]);
         }
 
         if ($request->action_type === 'active') {
-            Clinic::whereIn('id', $ids)->update(['status' => 1]);
+            Clinic::whereIn('id', $ids)->update(['status' => 1, 'updated_by' => auth()->id()]);
         }
 
         if ($request->action_type === 'inactive') {
-            Clinic::whereIn('id', $ids)->update(['status' => 0]);
+            Clinic::whereIn('id', $ids)->update(['status' => 0, 'updated_by' => auth()->id()]);
         }
 
         return response()->json(['message' => 'Action completed successfully']);
