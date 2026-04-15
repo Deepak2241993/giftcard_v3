@@ -125,6 +125,7 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
     $pemail = $patient->email;
     $phone = $patient->phone;
     $patient_login_id = $patient->patient_login_id;
+    // dd($patient_login_id);
 
     $query = TransactionHistory::query();
 
@@ -138,7 +139,7 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
             $q->orWhere('phone', $phone);
         }
 
-        if (!empty($patient_login_id)) {
+        if ($patient_login_id != 'null' && $patient_login_id != '') {
             $q->orWhere('patient_login_id', $patient_login_id);
         }
     });
