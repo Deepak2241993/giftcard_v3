@@ -121,7 +121,7 @@
                                                         onclick="cardview({{ $value['id'] }},'{{ $value['transaction_id'] }}')">
                                                         View Card
                                                     </a>
-                                                      <a href="{{ route('redeem-giftcard',['transaction_id'=> $value['transaction_id'],'user_id'=> $value['id']]) }}" class="btn btn-block btn-outline-success">Redeem Giftcard</a>
+                                                      <a href="{{ route(RoutePrefix() . 'redeem-giftcard',['transaction_id'=> $value['transaction_id'],'user_id'=> $value['id']]) }}" class="btn btn-block btn-outline-success">Redeem Giftcard</a>
 
                                                     @else
                                                     <a type="button"  class="btn btn-block btn-outline-danger">
@@ -132,7 +132,7 @@
                                                 </td>
                                                 <td>
                                                     @if ($value['payment_status'] == 'succeeded')
-                                                        <a href="{{ route('Resendmail_view', ['id' => $value['id']]) }}"
+                                                        <a href="{{ route(RoutePrefix() . 'Resendmail_view', ['id' => $value['id']]) }}"
                                                              class="btn btn-block btn-outline-dark" id="mailsend_{{ $value['id'] }}">Mail
                                                             Resend</a>
                                                         
@@ -303,7 +303,7 @@
             button.attr('disabled', true);
             button.find('.spinner-border').show();
             $.ajax({
-                url: '{{ route('giftcard-payment-update') }}',
+                url: '{{ route(RoutePrefix() . 'giftcard-payment-update') }}',
                 method: "post",
                 dataType: "json",
                 data: {
@@ -338,7 +338,7 @@
             $('#staticBackdrop_' + id).modal('show');
 
             $.ajax({
-                url: '{{ route('cardview-route') }}',
+                url: '{{ route(RoutePrefix() . 'cardview-route') }}',
                 method: "post",
                 dataType: "json",
                 data: {
@@ -371,7 +371,7 @@
             // spinner code end
 
             $.ajax({
-                url: '{{ route('Resendmail_view') }}',
+                url: '{{ route(RoutePrefix() . 'Resendmail_view') }}',
                 method: "post",
                 dataType: "json",
                 data: {

@@ -519,9 +519,9 @@ else{
                     $statement['giftCardHolderDetails']['your_name'] = $fullname ;
                 }
             }
-            
-           
-            Mail::to($statement['giftCardHolderDetails']['gift_send_to'])->send(new GiftCardStatement($statement));
+       
+           $tomail = $statement['giftCardHolderDetails']['gift_send_to'];
+            Mail::to($tomail)->send(new Mastermail($statement,$template_id=14));
         }
 
         return $result;

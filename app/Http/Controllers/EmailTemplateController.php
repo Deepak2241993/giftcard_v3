@@ -421,6 +421,69 @@ class EmailTemplateController extends Controller
         "event_id" => null
         ];
     break;
+
+       case 14: // Gift Redeem Statement Mail
+        $maildata = (object) [
+
+    // ✅ Keep result as ARRAY (Blade uses $item['key'])
+    'result' => [
+        [
+            'transaction_id' => 'card_1T2nLYHXhy3bfGAtrtsUKugt',
+            'user_token' => 'FOREVER-MEDSPA',
+            'giftnumber' => 'FEMS-17715694852',
+            'amount' => 100,
+            'comments' => 'test',
+            'actual_paid_amount' => 100,
+            'updated_at' => '2026-02-20T06:38:05.000000Z',
+        ],
+        [
+            'transaction_id' => 'CANCEL20260103014357',
+            'user_token' => 'FOREVER-MEDSPA',
+            'giftnumber' => 'FEMS-17715694852', // ✅ FIXED (same card number)
+            'amount' => 0,
+            'comments' => 'cancel',
+            'actual_paid_amount' => 0, // ✅ avoid null (safer for number_format)
+            'updated_at' => '2026-01-03T06:43:58.000000Z',
+        ],
+    ],
+
+    // ✅ Summary fields
+    'TotalAmount' => 94,
+    'actual_paid_amount' => 94,
+    'status' => 200,
+    'success' => 'Gift History Found Successfully',
+
+    // ✅ MUST be OBJECT
+    'receiverAndSenderDetails' => (object) [
+        'id' => 2,
+        'future_mail_status' => 0,
+        'qty' => 1,
+        'amount' => '100.00',
+        'your_name' => 'Deepak 1 kumar', // typo fix
+        'recipient_name' => 'Deepak Shashwat Prasad',
+        'message' => 'test',
+        'gift_card_send_type' => 'other',
+        'in_future' => null,
+        'usertype' => 'regular',
+        'status' => 2,
+        'coupon_code' => null,
+        'gift_send_to' => 'deepakprasad224@gmail.com',
+        'receipt_email' => 'Deepak',
+        'discount' => 0,
+        'transaction_id' => 'card_1T2nLYHXhy3bfGAtrtsUKugt',
+        'payment_status' => 'succeeded',
+        'payment_time' => '1771569476',
+        'transaction_amount' => 100,
+        'user_token' => 'FOREVER-MEDSPA',
+        'payment_mode' => 'Payment Gateway',
+        'event_id' => null,
+        'updated_at' => '2026-02-20T07:29:40.000000Z',
+        'created_at' => '2026-02-20T06:37:47.000000Z',
+        'updated_by' => '1',
+    ],
+];
+
+break;
     default:
         // Default preview data
         $maildata = (object) [

@@ -93,6 +93,8 @@ Route::delete('/unit/{id}', [ServiceUnitController::class, 'destroy'])
 ->middleware('permission:delete_units')
 ->name('employee.unit.destroy');
 
+Route::post('create-unit-quickly','ServiceUnitController@CreateUnitQuickly')->name('employee.create-unit-quickly');
+
 Route::get('cart-cancel','InternalOrderController@CartCancel')->name('employee.cart-cancel');
 Route::get('service-cart','PopularOfferController@AdminCartview')->name('employee.service-cart');
 Route::post('cart','PopularOfferController@Cart')->name('employee.cart');
@@ -377,7 +379,8 @@ Route::delete('/banner/{id}', [BannerController::class, 'destroy'])
         ->name('employee.giftcancel')
         ->middleware('permission:delete_giftcard_redeem');
 
-           
+    Route::get('/resendmail_view','GiftsendController@Resendmail_view')->name('employee.Resendmail_view');
+    Route::post('/giftcard-payment-update','GiftsendController@updatePaymentStatus')->name('employee.giftcard-payment-update');
     
     
 
@@ -416,7 +419,8 @@ Route::get('/program/duplicate/{id}', 'ProgramController@duplicate')->name('empl
 // Bulk Action
 Route::post('/program/bulk-action', 'ProgramController@bulkAction')->name('employee.program.bulk.action')->middleware('permission:edit_programs');
 Route::Get('/program-sale/{id}', 'ProgramController@PatientProgramBuy')->name('employee.program-sale');
-    // ================= PATIENT =================
+    
+// ================= PATIENT =================
 Route::get('/patient', [PatientController::class, 'index'])
 ->middleware('permission:view_patients')
 ->name('employee.patient.index');
@@ -454,8 +458,9 @@ Route::delete('/patient/{id}', [PatientController::class, 'destroy'])
 ->middleware('permission:delete_patients')
 ->name('employee.patient.destroy');
 
-
+Route::get('/giftcards-statement-admin-view/{id}', 'PatientController@GiftcardsStatementAdminView')->name('employee.giftcards-statement-admin-view');
 Route::post('/patient-import','PatientController@importPatients')->name('employee.patients.import')->middleware('permission:create_patients');
+Route::post('/patient-data','PatientController@PatientData')->name('employee.patient-data');
 // Patient Data Mearge
 Route::get('patients/merge-preview', [PatientController::class, 'preview'])->name('employee.patients.merge.preview');
 Route::post('patients/merge-execute', [PatientController::class, 'merge'])->name('employee.patients.merge.execute');
@@ -668,6 +673,8 @@ Route::delete('/popular-offers/{id}', [PopularOfferController::class, 'destroy']
     Route::get('services/{product_slug}/{unitslug}','ServiceUnitController@UnitPageDetails')->name('employee.unit-details');
     Route::get('productdetails/{slug}','ProductController@productdetails')->name('employee.productdetails');
     Route::get('/employee-dashboard', [DashboardController::class,'employeeDashboard'])->name('employee.dashboard');
+
+    Route::post('internal-service-purchase','StripeController@InternalServicePurchase')->name('employee.InternalServicePurchases');
 
 
 });

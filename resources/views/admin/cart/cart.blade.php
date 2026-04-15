@@ -145,19 +145,19 @@ $amount = 0;
                   Create Unit And to Cart
                   </button>
                   <button type="button" class="btn btn-primary"
-                     onclick="location.href='{{ route('program.index') }}';">
+                     onclick="location.href='{{ route(RoutePrefix() . 'program.index') }}';">
                   Buy Programs
                   </button>
                   <button type="button" class="btn btn-warning"
-                     onclick="location.href='{{ route('unit.index') }}';">
+                     onclick="location.href='{{ route(RoutePrefix() . 'unit.index') }}';">
                   Buy Unit
                   </button>
                   <button type="button" class="btn btn-dark"
-                     onclick="location.href='{{ route('product.index') }}';">
+                     onclick="location.href='{{ route(RoutePrefix() . 'product.index') }}';">
                   Buy Services
                   </button>
                   <button type="button" class="btn btn-danger"
-                     onclick="location.href='{{ route('cart-cancel') }}';">
+                     onclick="location.href='{{ route(RoutePrefix() . 'cart-cancel') }}';">
                   Cancel Order
                   </button>
                </div>
@@ -176,7 +176,7 @@ $amount = 0;
                </button>
             </div>
             <div class="modal-body">
-               <form method="post" action="{{ route('create-unit-quickly') }}" enctype="multipart/form-data">
+               <form method="post" action="{{ route(RoutePrefix() . 'create-unit-quickly') }}" enctype="multipart/form-data">
                   @csrf
                   <div class="row">
                      <div class="mb-3 col-lg-6 self">
@@ -749,7 +749,7 @@ $amount = 0;
    function removeFromCart(id) {
        // alert(id);
        $.ajax({
-           url: '{{ route('cartremove') }}',
+           url: '{{ route(RoutePrefix() . 'cartremove') }}',
            method: "POST",
            dataType: "json",
            data: {
@@ -776,7 +776,7 @@ $amount = 0;
    
    function findPatientData(id) {
    $.ajax({
-   url: '{{ route('patient-data') }}', // Laravel route
+   url: '{{ route(RoutePrefix() . 'patient-data') }}', // Laravel route
    method: "POST",
    dataType: "json",
    data: {
@@ -1011,7 +1011,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // AJAX Request
         $.ajax({
-            url: "{{ route('InternalServicePurchases') }}",
+            url: "{{ route(RoutePrefix() . 'InternalServicePurchases') }}",
             type: "POST",
             data: formData,
             success: function (response) {
@@ -1070,7 +1070,7 @@ document.addEventListener("DOMContentLoaded", function () {
    
    // Send AJAX request to update the cart
    $.ajax({
-   url: '{{ route('update-cart') }}',
+   url: '{{ route(RoutePrefix() . 'update-cart') }}',
    method: 'POST',
    data: {
        quantity: quantity,
@@ -1161,7 +1161,7 @@ document.addEventListener("DOMContentLoaded", function () {
    $("#spinner").removeClass("d-none");
    
    $.ajax({
-       url: "{{ route('patient-quick-create') }}",
+       url: "{{ route(RoutePrefix() . 'patient-quick-create') }}",
        type: "POST",
        data: formData,
        processData: false,

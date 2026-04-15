@@ -139,7 +139,7 @@
 
                 @if (count(session()->get('cart', [])) > 0)
                     <li class="nav-item">
-                        <button onclick="window.location.href='{{ route('service-cart') }}'" type="button"
+                        <button onclick="window.location.href='{{ route(RoutePrefix() . 'service-cart') }}'" type="button"
                             data-toggle="dropdown" data-loading-text="Loading..."
                             class="btn btn-block btn-inverse btn-block btn-lg dropdown-toggle"><i
                                 class="fa fa-shopping-bag"></i> <span id="cart-total"

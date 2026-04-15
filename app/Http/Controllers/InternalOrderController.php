@@ -13,7 +13,7 @@ class InternalOrderController extends Controller
         $request->session()->forget('internal_patient_id');
 
         // Redirect to a specific page with a success message
-        return redirect()->route('patient.index')->with('success', 'Cart has been canceled and cleared.');
+        return redirect()->route(RoutePrefix() . 'patient.index')->with('success', 'Cart has been canceled and cleared.');
     }
 
     public function ChangePatient(Request $request)

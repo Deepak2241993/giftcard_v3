@@ -161,7 +161,7 @@
 
 
 
-
+                                           
                                             {{-- For Additional Services --}}
                                             @switch($template->id)
                                                 @case(1)
@@ -212,6 +212,10 @@
                                                  @break
                                                     @case(13)
                                                     @include('email.include.resendemail')
+                                                @break
+                                                @break
+                                                @case(14)
+                                                    @include('email.include.giftcardRedeemStatement')
                                                 @break
 
                                                 @default

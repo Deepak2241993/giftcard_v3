@@ -115,7 +115,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="get" action="{{route('giftcard-search') }}">
+                <form method="get" action="{{route(RoutePrefix().'giftcard-search') }}">
                     <div style="display: flex; flex-direction: column;">
                         <label for="giftnumber_" style="margin-right: 10px;">Gift Number:</label>
                         <input  class="giftnumber_ form-control"type="text" id="giftnumber_" name="giftnumber" value="" style="margin-right: 20px;" readonly>
@@ -150,7 +150,7 @@
               </button>
                 </div>
                 <div class="modal-body">
-                    <form method="get" action="{{route('giftcard-search') }}">
+                    <form method="get" action="{{route(RoutePrefix().'giftcard-search') }}">
                         <div style="display: flex; flex-direction: column;">
                             <label for="cancel_giftnumber_" style="margin-right: 10px;">Gift Number:</label>
                             <input  class="cancel_giftnumber_ form-control"type="text" id="cancel_giftnumber_" name="giftnumber" value="" style="margin-right: 20px;" readonly>
@@ -201,7 +201,7 @@
     $('.Statment').attr('id', 'Statment_' + id);
 
     $.ajax({
-        url: '{{ route('giftcardstatment') }}',
+        url: '{{ route(RoutePrefix() . "giftcardstatment") }}',
         method: "post",
         dataType: "json",
         data: {
@@ -331,7 +331,7 @@ function redeemgiftcard(event) {
     button.find('.spinner-border').show();
     // spinner code end
         $.ajax({
-            url: '{{ route('giftcardredeem') }}',
+            url: '{{ route(RoutePrefix() . "giftcardredeem") }}',
             method: "post",
             dataType: "json",
             data: {
@@ -396,7 +396,7 @@ function cancelgiftcard(event) {
     // Proceed with AJAX request only if input is valid
     if (isValid) {
         $.ajax({
-            url: '{{ route('giftcancel') }}',
+            url: '{{ route(RoutePrefix() . "giftcancel") }}',
             method: "post",
             dataType: "json",
             data: {
