@@ -138,9 +138,9 @@ public function patientTableData(Request $request)
      * @param  \App\Models\Patient  $patient
      * @return \Illuminate\Http\Response
      */
-    public function edit(Patient $patient, Request $request, TransactionHistory $transaction,$id)
+    public function edit(Patient $patient, Request $request, TransactionHistory $transaction)
     {
-        $patient = Patient::find($id);
+        // $patient = Patient::find($id);
         if(isset($_GET['patient_id']))
             {
                 $request->session()->put('internal_patient_id', $request->get('patient_id'));
