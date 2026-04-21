@@ -28,7 +28,7 @@
     </tr>
     
     <!-- TABLE BODY -->
-    @foreach (($maildata->result) as $key => $item)
+    @foreach (($maildata['result']) as $key => $item)
     <tr style="background-color:{{ $key % 2 == 0 ? '#ffffff' : '#fafafa' }};">
         
         <td style="padding:10px;text-align:center;border:1px solid #dddddd;">

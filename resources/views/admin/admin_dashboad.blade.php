@@ -7,8 +7,8 @@
             GIFT CARD TRANSACTION OVERVIEW
         ================================= -->
         <div class="row">
-            <div class="col-lg-12 mb-4">
-                <div class="card">
+            <div class="col-lg-6 mb-4">
+                <div class="card mt-4">
                     <div class="card-header border-0 d-flex justify-content-between">
                         <h3 class="card-title">Gift Cards Transaction Overview</h3>
                         <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a>
@@ -18,7 +18,7 @@
                         <div class="row">
 
                             <!-- Today -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-info">
                                     <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
                                     <div class="info-box-content">
@@ -29,7 +29,7 @@
                             </div>
 
                             <!-- Yesterday -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-warning">
                                     <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
                                     <div class="info-box-content">
@@ -40,7 +40,7 @@
                             </div>
 
                             <!-- Last 7 Days -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-success">
                                     <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
                                     <div class="info-box-content">
@@ -51,7 +51,7 @@
                             </div>
 
                             <!-- Last Month -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-danger">
                                     <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
                                     <div class="info-box-content">
@@ -65,7 +65,7 @@
 
                         <div class="row mt-3">
                             <!-- This Month -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-primary">
                                     <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
                                     <div class="info-box-content">
@@ -80,15 +80,64 @@
 
                 </div>
             </div>
-        </div>
 
+            {{-- Redeem Section --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card mt-4">
+                    <div class="card-header border-0 d-flex justify-content-between">
+                        <h3 class="card-title">Gift Redeem Status</h3>
+                        {{-- <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a> --}}
+                    </div>
 
+                    <div class="card-body">
+                        <div class="row">
 
-        <!-- ================================
+                            <!-- Today -->
+                            <div class="col-md-4">
+                                <div class="info-box bg-info">
+                                    <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Not Redeemed</span>
+                                        <span class="info-box-number">{{ $notRedeemed }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Yesterday -->
+                            <div class="col-md-4">
+                                <div class="info-box bg-warning">
+                                    <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Partial Redeemed</span>
+                                        <span class="info-box-number">{{ $partialRedeemed }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Last 7 Days -->
+                            <div class="col-md-4">
+                                <div class="info-box bg-success">
+                                    <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Fully Redeemed</span>
+                                        <span class="info-box-number">{{ $fullyRedeemed }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                           
+
+                        </div>                       
+
+                    </div>
+
+                </div>
+            </div>
+            {{-- Redeem Section End  --}}
+             <!-- ================================
             SERVICE SALES OVERVIEW
-        ================================= -->
-        <div class="row">
-            <div class="col-lg-12 mb-4">
+            ================================= -->
+            <div class="col-lg-6 mb-4">
                 <div class="card">
                     <div class="card-header border-0 d-flex justify-content-between">
                         <h3 class="card-title">Service Sales Overview</h3>
@@ -99,7 +148,7 @@
                         <div class="row">
 
                             <!-- Today -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-info">
                                     <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
                                     <div class="info-box-content">
@@ -110,7 +159,7 @@
                             </div>
 
                             <!-- Yesterday -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-warning">
                                     <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
                                     <div class="info-box-content">
@@ -121,7 +170,7 @@
                             </div>
 
                             <!-- Last 7 Days -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-success">
                                     <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
                                     <div class="info-box-content">
@@ -132,7 +181,7 @@
                             </div>
 
                             <!-- Last Month -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-danger">
                                     <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
                                     <div class="info-box-content">
@@ -146,7 +195,7 @@
 
                         <div class="row mt-3">
                             <!-- This Month -->
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="info-box bg-primary">
                                     <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
                                     <div class="info-box-content">
@@ -161,7 +210,75 @@
 
                 </div>
             </div>
+
+            {{-- For Service Redeem Status --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header border-0 d-flex justify-content-between">
+                        <h3 class="card-title">Service Redeem Status</h3>
+                        {{-- <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a> --}}
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+
+                            <!-- Total Purchased Services -->
+                            <div class="col-md-4">
+                                <div class="info-box bg-info">
+                                    <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Total Purchased Services</span>
+                                        <span class="info-box-number">{{ $totalPurchasedServices }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Not Redeemed -->
+                            <div class="col-md-4">
+                                <div class="info-box bg-warning">
+                                    <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Not Redeemed</span>
+                                        <span class="info-box-number">{{ $notRedeemedServices }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Partial Redeemed -->
+                            <div class="col-md-4">
+                                <div class="info-box bg-success">
+                                    <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Partial Redeemed</span>
+                                        <span class="info-box-number">{{ $partialRedeemedServices }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Last Month -->
+                            <div class="col-md-4">
+                                <div class="info-box bg-danger">
+                                    <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Fully Redeemed</span>
+                                        <span class="info-box-number">{{ $fullyRedeemedServices }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        
+
+                    </div>
+
+                </div>
+            </div>
         </div>
+
+
+
+       
 
 
 
@@ -385,19 +502,7 @@
                 </div>
             </div>
         </div>
-{{-- GIftCard Metrix --}}
-        <div class="row mt-4">
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h3 class="card-title">Giftcard Status Overview</h3>
-                </div>
 
-                <div class="card-body">
-                    <canvas id="giftcard-pie-chart" height="200"></canvas>
-                </div>
-            </div>
-
-        </div>
         <div class="card mt-4">
             <div class="card-header">
                 <h3 class="card-title">Last 12 Months Redemption Trend</h3>
@@ -596,39 +701,5 @@ $(function () {
 });
 </script>
 
-{{-- For Giftcard Metrix --}}
-<script>
-    var gcPie = new Chart(document.getElementById('giftcard-pie-chart').getContext('2d'), {
-    type: "pie",
-    data: {
-        labels: ["Sold", "Redeemed", "Cancelled"],
-        datasets: [{
-            data: [
-                {{ $totalGiftcardsSold }},
-                {{ $totalGiftcardsRedeemed }},
-                {{ $totalGiftcardsCancelled }}
-            ],
-            backgroundColor: ["#007bff", "#28a745", "#dc3545"]
-        }]
-    }
-});
-
-
-
-new Chart(document.getElementById('giftcard-redemption-trend-chart'), {
-    type: "line",
-    data: {
-        labels: @json($trendMonths),
-        datasets: [{
-            label: "Redeemed",
-            data: @json($trendCount),
-            borderColor: "#28a745",
-            fill: false,
-            borderWidth: 2
-        }]
-    }
-});
-
-</script>
 
 @endpush

@@ -130,6 +130,7 @@
                                         style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
                                         <div
                                             style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+                                         
                                             @php
                                                 $message = $template->message_email ?? '';
 
@@ -146,10 +147,10 @@
                                                         $maildata->receiverAndSenderDetails->your_name ?? '',
                                                         $maildata->result[1]['giftnumber'] ?? '',
                                                         trim(($maildata->fname ?? '') . ' ' . ($maildata->lname ?? '')),
-                                                         $maildata->user_name ?? '',
+                                                        $maildata->user_name ?? '',
                                                         $maildata->password ?? '',
                                                         
-
+                                                    
                                                     ],
                                                     $message
                                                 );

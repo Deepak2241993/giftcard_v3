@@ -423,7 +423,7 @@ class EmailTemplateController extends Controller
     break;
 
        case 14: // Gift Redeem Statement Mail
-        $maildata = (object) [
+        $maildata = [
 
     // ✅ Keep result as ARRAY (Blade uses $item['key'])
     'result' => [
@@ -435,6 +435,7 @@ class EmailTemplateController extends Controller
             'comments' => 'test',
             'actual_paid_amount' => 100,
             'updated_at' => '2026-02-20T06:38:05.000000Z',
+            
         ],
         [
             'transaction_id' => 'CANCEL20260103014357',
@@ -444,6 +445,7 @@ class EmailTemplateController extends Controller
             'comments' => 'cancel',
             'actual_paid_amount' => 0, // ✅ avoid null (safer for number_format)
             'updated_at' => '2026-01-03T06:43:58.000000Z',
+            
         ],
     ],
 
@@ -454,7 +456,7 @@ class EmailTemplateController extends Controller
     'success' => 'Gift History Found Successfully',
 
     // ✅ MUST be OBJECT
-    'receiverAndSenderDetails' => (object) [
+    'receiverAndSenderDetails' =>  [
         'id' => 2,
         'future_mail_status' => 0,
         'qty' => 1,

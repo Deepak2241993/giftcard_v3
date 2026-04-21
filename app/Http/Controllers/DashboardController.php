@@ -14,7 +14,7 @@ use App\Models\ServiceRedeem;
 use App\Models\Employee;
 use App\Models\TransactionHistory;
 use AuthenticatesUsers;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -303,7 +303,7 @@ class DashboardController extends Controller
     $trendMonths = collect(range(1,12))->map(fn($m) => date("M", mktime(0,0,0,$m,1)));
     $trendCount  = collect(range(1,12))->map(fn($m) => $redemptionTrend[$m] ?? 0);
 
-
+   
         // --------------------------------------------------
         // RETURN VIEW
         // --------------------------------------------------
@@ -342,7 +342,11 @@ class DashboardController extends Controller
         // Campaign / deals revenue
         'campaignRevenue', 'totalDealsRevenue',
         // Giftcard metrics
-            'totalGiftcardsSold','totalGiftcardsRedeemed','totalGiftcardsCancelled','redemptionRatio','soldValue','redeemedValue','trendMonths','trendCount'
+            'totalGiftcardsSold','totalGiftcardsRedeemed','totalGiftcardsCancelled','redemptionRatio','soldValue','redeemedValue','trendMonths','trendCount',
+            //  For Giftcard Redeem Status
+            'notRedeemed',
+            'partialRedeemed',
+            'fullyRedeemed',
         ));
     }
 
@@ -634,6 +638,86 @@ class DashboardController extends Controller
     $trendMonths = collect(range(1,12))->map(fn($m) => date("M", mktime(0,0,0,$m,1)));
     $trendCount  = collect(range(1,12))->map(fn($m) => $redemptionTrend[$m] ?? 0);
 
+ // Giftcard status summary
+        $giftcardStatus = DB::table('giftcards_numbers')
+            ->select(
+                'giftnumber',
+                DB::raw("SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) as total_purchase"),
+                DB::raw("SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END) as total_redeem")
+            )
+            ->groupBy('giftnumber')
+            ->get();
+
+        $notRedeemed = 0;
+        $partialRedeemed = 0;
+        $fullyRedeemed = 0;
+
+        foreach ($giftcardStatus as $card) {
+
+            $purchase = $card->total_purchase;
+            $redeem   = $card->total_redeem;
+            $remaining = $purchase - $redeem;
+
+            if ($redeem == 0) {
+                $notRedeemed++;
+            } elseif ($remaining == 0) {
+                $fullyRedeemed++;
+            } else {
+                $partialRedeemed++;
+            }
+        }
+
+
+        // For Service Redeem Status
+
+// STEP 1: Summary Query (Correct)
+$redeems = DB::table('service_redeems')
+    ->select(
+        'order_id',
+        'product_id',
+        DB::raw('SUM(number_of_session_use) as total_redeem')
+    )
+    ->groupBy('order_id', 'product_id');
+
+
+$services = DB::table('service_orders as so')
+    ->leftJoinSub($redeems, 'sr', function ($join) {
+        $join->on('so.order_id', '=', 'sr.order_id')
+             ->on('so.service_id', '=', 'sr.product_id');
+    })
+    ->select(
+        'so.order_id',
+        'so.service_id',
+        DB::raw('SUM(so.qty) as total_purchase'),
+        DB::raw('COALESCE(sr.total_redeem,0) as total_redeem')
+    )
+    ->where(function($q){
+        $q->where('so.is_deleted', 0)
+          ->orWhereNull('so.is_deleted');
+    })
+    ->groupBy('so.order_id', 'so.service_id', 'sr.total_redeem')
+    ->get();
+
+
+$totalPurchasedServices   = $services->count();
+$notRedeemedServices      = 0;
+$partialRedeemedServices  = 0;
+$fullyRedeemedServices    = 0;
+
+foreach ($services as $s) {
+
+    $purchase = (int) $s->total_purchase;
+    $redeem   = (int) $s->total_redeem;
+
+    if ($redeem == 0) {
+        $notRedeemedServices++;
+    } elseif ($purchase == $redeem) {
+        $fullyRedeemedServices++;
+    } else {
+        $partialRedeemedServices++;
+    }
+}
+
 
     
     // -----------------------------------------------------------------
@@ -675,6 +759,13 @@ class DashboardController extends Controller
         'campaignRevenue', 'totalDealsRevenue',
         // Giftcard metrics
             'totalGiftcardsSold','totalGiftcardsRedeemed','totalGiftcardsCancelled','redemptionRatio','soldValue','redeemedValue','trendMonths','trendCount'
+            ,// For Giftcard Redeem Status
+            'notRedeemed','partialRedeemed','fullyRedeemed',
+            // For Service Redeem Status
+            'totalPurchasedServices',
+            'notRedeemedServices',
+            'partialRedeemedServices',
+            'fullyRedeemedServices',
     ));
 }
 
