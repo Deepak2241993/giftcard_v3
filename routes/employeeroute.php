@@ -381,6 +381,10 @@ Route::delete('/banner/{id}', [BannerController::class, 'destroy'])
 
     Route::get('/resendmail_view','GiftsendController@Resendmail_view')->name('employee.Resendmail_view');
     Route::post('/giftcard-payment-update','GiftsendController@updatePaymentStatus')->name('employee.giftcard-payment-update');
+
+    Route::post('/giftcard-purchase','GiftsendController@GiftPurchase')->name('employee.giftcard-purchase');
+    Route::get('/giftcard-purchases-success','GiftsendController@GiftPurchaseSuccess')->name('employee.giftcard-purchases-success');
+    Route::get('/invoice/{transaction_data}', 'PopularOfferController@invoice')->name('employee.service-invoice');
     
     
 
@@ -466,6 +470,7 @@ Route::get('patients/merge-preview', [PatientController::class, 'preview'])->nam
 Route::post('patients/merge-execute', [PatientController::class, 'merge'])->name('employee.patients.merge.execute');
 Route::get('/patients/merge/preview-swap', [PatientController::class, 'previewSwap'])->name('employee.patients.merge.preview.swap');
 Route::post('/patient-quick-create',[PatientController::class,'PatientQuickCreate'])->name('employee.patient-quick-create');
+Route::get('change-patient','InternalOrderController@ChangePatient')->name('employee.change-patient');
     
 
     // ================= EMPLOYEES =================

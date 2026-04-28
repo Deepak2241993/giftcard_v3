@@ -344,9 +344,9 @@ class DashboardController extends Controller
         // Giftcard metrics
             'totalGiftcardsSold','totalGiftcardsRedeemed','totalGiftcardsCancelled','redemptionRatio','soldValue','redeemedValue','trendMonths','trendCount',
             //  For Giftcard Redeem Status
-            'notRedeemed',
-            'partialRedeemed',
-            'fullyRedeemed',
+            // 'notRedeemed',
+            // 'partialRedeemed',
+            // 'fullyRedeemed',
         ));
     }
 

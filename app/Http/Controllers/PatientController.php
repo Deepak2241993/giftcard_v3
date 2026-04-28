@@ -68,19 +68,19 @@ public function patientTableData(Request $request)
             $prefix = RoutePrefix();
             return '
                 <div class="btn-group mb-2">
-            <a href="'.route($prefix.'patient.edit',$row->id).'" class="btn btn-outline-primary btn-sm">
+            <a href="'.route($prefix.'patient.edit',$row->id).'" class="btn btn-outline-primary btn-sm" title="View Patient">
                 <i class="fa fa-user"></i>
             </a>
 
-            <a href="'.route($prefix.'giftcards-sale').'?patient_id='.$row->id.'" class="btn btn-outline-success btn-sm">
+            <a href="'.route($prefix.'giftcards-sale').'?patient_id='.$row->id.'" class="btn btn-outline-success btn-sm" title="Purchase Giftcard">
                 <i class="fa fa-gift"></i>
             </a>
 
-            <a href="'.route($prefix.'product.index').'?patient_id='.$row->id.'" class="btn btn-outline-info btn-sm">
+            <a href="'.route($prefix.'product.index').'?patient_id='.$row->id.'" class="btn btn-outline-info btn-sm" title="Purchase Products">
                 <i class="fa fa-dna"></i>
             </a>
 
-            <a href="'.route($prefix.'program.index').'?patient_id='.$row->id.'" class="btn btn-outline-warning btn-sm">
+            <a href="'.route($prefix.'program.index').'?patient_id='.$row->id.'" class="btn btn-outline-warning btn-sm" title="Purchase Programs">
                 <i class="fa fa-stethoscope"></i>
             </a>
         </div>';

@@ -188,7 +188,7 @@
             },
             success: function(response) {
                 if (response.success) {
-                    location.href = "{{ route('service-cart') }}";
+                    location.href = "{{ route(RoutePrefix() . 'service-cart') }}";
                 } else {
                     $('.showbalance').html(response.error).show();
                 }

@@ -366,7 +366,7 @@
                                     </div>
                                 @endif
                                 <form id="msform" class="some_one_else_div" Method="post"
-                                    action="{{ route('giftcard-purchase') }}">
+                                    action="{{ route(RoutePrefix() .'giftcard-purchase') }}">
                                     @csrf
                                     <!-- progressbar -->
                                     <ul id="progressbar">
@@ -585,7 +585,7 @@
 
                                 {{-- For Self Purchase Form --}}
                                 <form id="msform" class="self_div" Method="post"
-                                    action="{{ route('giftcard-purchase') }}">
+                                    action="{{ route(RoutePrefix() .'giftcard-purchase') }}">
                                     @csrf
                                     <!-- progressbar -->
                                     <ul id="progressbar">

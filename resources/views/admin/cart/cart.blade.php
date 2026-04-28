@@ -515,7 +515,7 @@ $amount = 0;
                                  <input type="text" class="form-control" value="{{$patient->phone??''}}" readonly id="phone" name="phone"
                                     Placeholder="Phone">
                               </div>
-                              <button type="button" class="btn btn-primary mt-4" onclick="location.href='{{ route('change-patient') }}';">Change Patient</button>
+                              <button type="button" class="btn btn-primary mt-4" onclick="location.href='{{ route(RoutePrefix() . 'change-patient') }}';">Change Patient</button>
                            </div>
                            {{--  Table Data --}}
                            <h5 class="mb-4 mt-4">Patient Giftcards </h5>
@@ -1017,8 +1017,13 @@ document.addEventListener("DOMContentLoaded", function () {
             success: function (response) {
 
                 if (response.invoice_id) {
-                    window.location.href = "{{ url('/admin/invoice') }}/" + response.invoice_id;
-                }
+
+            // ✅ Correct way
+            let url = "{{ route(RoutePrefix() . 'service-invoice', ':id') }}";
+            url = url.replace(':id', response.invoice_id);
+
+            window.location.href = url;
+        }
             },
             error: function (xhr) {
 

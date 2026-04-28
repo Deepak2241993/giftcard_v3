@@ -10,7 +10,7 @@ use App\Models\ServiceUnit;
 use App\Models\Giftsend;
 use App\Models\TransactionHistory;
 use Illuminate\Support\Facades\Auth;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Mail;
 use Illuminate\Support\Facades\DB;
 use App\Mail\Mastermail;

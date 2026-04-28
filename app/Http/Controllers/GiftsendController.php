@@ -171,12 +171,15 @@ class GiftsendController extends Controller
        
         // find User exist or not
         else{
-            $patientreceiver = Patient::where('email',$request->gift_send_to)->first();
+            if($request->gift_send_to) {
+                $patientreceiver = Patient::where('email', '=', $request->gift_send_to)->first();
                 $data_arr['gift_send_to'] = $patientreceiver->patient_login_id ?? $data_arr['gift_send_to'];
-                
+            }
 
-             $patientsender = Patient::where('email',$request->receipt_email)->first();
+             if($request->receipt_email) {
+                $patientsender = Patient::where('email', '=', $request->receipt_email)->first();
                 $data_arr['receipt_email'] = $patientsender->patient_login_id ?? $data_arr['receipt_email'];
+            }
             
            
            
@@ -575,7 +578,7 @@ else{
          try {
              // Call the API
              $resultData = $this->postAPI('gift-purchase-from-store', $data);
-     
+        // dd($resultData);
              if (isset($resultData['result'])) {
                  $result = (object) $resultData['result'];
      
@@ -583,7 +586,7 @@ else{
                  event(new GiftcardsBuyFromCenter(['data' => $result]));
      
                  // Redirect with transaction details
-                 return redirect()->route('giftcard-purchases-success')
+                 return redirect()->route(RoutePrefix() . 'giftcard-purchases-success')
                      ->with('transaction_details', $result);
              } else {
                  return redirect()->back()
@@ -611,7 +614,7 @@ public function GiftPurchaseSuccess()
     }
     else{
 
-        return redirect()->route('giftcards-sale');
+        return redirect()->route(RoutePrefix() . 'giftcards-sale');
     }
 }
 

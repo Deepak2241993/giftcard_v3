@@ -61,7 +61,7 @@
   <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-       <x-sidebar/>
+       {{-- <x-sidebar/> --}}
     <!-- Content Wrapper. Contains page content -->
     <div class="container content-wrapper" style="overflow-x: auto; overflow-y: auto; max-height: 100vh; max-width: 100%;">
  

@@ -16,6 +16,7 @@ use App\Mail\GeftcardMail;
 use App\Mail\GiftReceipt;
 use Auth;
 use Mail;
+use App\Mail\Mastermail;
 use Session;
 use Illuminate\Support\Facades\Log;
 use App\Events\TimelineGiftcardRedeem;
@@ -903,11 +904,12 @@ public function gift_purchase(Request $request, Giftsend $giftsend, GiftCoupon $
                 $patient_data = Patient::where('patient_login_id',$result->receipt_email)->first();
                 if($patient_data)
                 {
-                    Mail::to($patient_data->email)->send(new GiftReceipt($result));
+                    
+                    Mail::to($patient_data->email)->send(new Mastermail($result,$template_id=9));
                     Log::info('GiftReceipt email sent successfully to: ' . $patient_data->email);
                 }
                 else{
-                    Mail::to($result->receipt_email)->send(new GiftReceipt($result));
+                    Mail::to($result->receipt_email)->send(new Mastermail($result,$template_id=9));
                     Log::info('GiftReceipt email sent successfully to: ' . $result->receipt_email);
                 }
                
@@ -922,11 +924,11 @@ public function gift_purchase(Request $request, Giftsend $giftsend, GiftCoupon $
 
             if($patient_data)
             {
-                Mail::to($patient_data->email)->send(new GeftcardMail($result));
+                Mail::to($patient_data->email)->send(new Mastermail($result,$template_id=9));
                 Log::info('GeftcardMail email sent successfully to: ' . $patient_data->email);
             }
             else{
-                Mail::to($gift_send_to)->send(new GeftcardMail($result));
+                Mail::to($gift_send_to)->send(new Mastermail($result,$template_id=9));
                 Log::info('GeftcardMail email sent successfully to: ' . $gift_send_to);
             }
           
@@ -1037,7 +1039,8 @@ public function payment_confirmation(Request $request, Giftsend $giftsend,Giftca
 
             $gift_send_to = $get_updated_result->gift_send_to;
             $tomail = $get_updated_result->receipt_email;
-            Mail::to($gift_send_to)->send(new GeftcardMail($get_updated_result));
+            Mail::to($gift_send_to)->send(new Mastermail($get_updated_result, $template_id = 9));
+           
 
         return response()->json(['status' => 200, 'success' => 'Gift Card Sent On Your Email Id.'], 200);
       
