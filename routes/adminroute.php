@@ -48,6 +48,7 @@ Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function ()
     Route::get('/product-dashboard', 'HomeController@ProductDashboard')->name('product-dashboard');
     Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
+    Route::get('/unit-history-of-patient/{unitid}', [DashboardController::class, 'UnitHistoryOfPatient'])->name('unit-history-of-patient');
     
     // ================= SERVICE ORDER HISTORY =================
 // Handles service order listing, details, create, update, delete

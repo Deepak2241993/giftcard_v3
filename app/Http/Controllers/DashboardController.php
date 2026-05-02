@@ -12,6 +12,8 @@ use App\Models\GiftcardRedeem;
 use App\Models\Search_keyword;
 use App\Models\ServiceRedeem;
 use App\Models\Employee;
+use App\Models\ServiceUnit;
+use App\Models\Banner;
 use App\Models\TransactionHistory;
 use AuthenticatesUsers;
 use Illuminate\Support\Facades\DB;
@@ -195,10 +197,10 @@ class DashboardController extends Controller
                                     ->count();
 
     // Service orders (TransactionHistory)
-    $serviceTotalOrders     = TransactionHistory::count();
-    $serviceCompletedOrders = TransactionHistory::where('payment_status', 'paid')->count();
-    $servicePendingOrders   = TransactionHistory::whereNull('payment_status')->count();
-    $serviceCancelledOrders = TransactionHistory::whereNotNull('payment_status')
+    $TotalTransactions     = TransactionHistory::count();
+    $transactioncompleted = TransactionHistory::where('payment_status', 'paid')->count();
+    $TransactionPending   = TransactionHistory::whereNull('payment_status')->count();
+    $transactioncancelled = TransactionHistory::whereNotNull('payment_status')
                                 ->where('payment_status', '!=', 'paid')
                                 ->count();
     // (Adjust the above status logic if you use explicit "pending / cancelled" values)
@@ -334,7 +336,7 @@ class DashboardController extends Controller
 
         // Order-tracking metrics (for pie charts)
         'giftcardTotalOrders', 'giftcardCompletedOrders', 'giftcardPendingOrders', 'giftcardCancelledOrders',
-        'serviceTotalOrders', 'serviceCompletedOrders', 'servicePendingOrders', 'serviceCancelledOrders',
+        'TotalTransactions', 'transactioncompleted', 'TransactionPending', 'transactioncancelled',
 
         // Most-sold products + product-wise sales
         'topProducts', 'productSalesReport',
@@ -530,10 +532,10 @@ class DashboardController extends Controller
                                     ->count();
 
     // Service orders (TransactionHistory)
-    $serviceTotalOrders     = TransactionHistory::count();
-    $serviceCompletedOrders = TransactionHistory::where('payment_status', 'paid')->count();
-    $servicePendingOrders   = TransactionHistory::whereNull('payment_status')->count();
-    $serviceCancelledOrders = TransactionHistory::whereNotNull('payment_status')
+    $TotalTransactions     = TransactionHistory::count();
+    $transactioncompleted = TransactionHistory::where('payment_status', 'paid')->count();
+    $TransactionPending   = TransactionHistory::whereNull('payment_status')->count();
+    $transactioncancelled = TransactionHistory::whereNotNull('payment_status')
                                 ->where('payment_status', '!=', 'paid')
                                 ->count();
     // (Adjust the above status logic if you use explicit "pending / cancelled" values)
@@ -718,7 +720,45 @@ foreach ($services as $s) {
     }
 }
 
+// For Units Sold vs Redeemed (Product-wise)
+$redeemSub = DB::table('service_redeems')
+    ->select(
+        'service_order_id',
+        DB::raw('SUM(IFNULL(number_of_session_use,0)) as used_sessions')
+    )
+    ->groupBy('service_order_id');
 
+$units = DB::table('service_orders as so')
+    ->join('service_units as su', 'su.id', '=', 'so.service_id')
+
+    // ✅ FIX: use subquery instead of direct join
+    ->leftJoinSub($redeemSub, 'sr', function ($join) {
+        $join->on('sr.service_order_id', '=', 'so.id');
+    })
+
+    ->where('su.product_is_deleted', 0)
+
+    ->select(
+        'so.service_id',
+        'su.product_name',
+
+        DB::raw('COUNT(DISTINCT so.id) as total_sales'),
+
+        DB::raw('SUM(IFNULL(so.number_of_session,0)) as total_sessions'),
+
+        DB::raw('SUM(IFNULL(sr.used_sessions,0)) as used_sessions'),
+
+        DB::raw('
+            SUM(IFNULL(so.number_of_session,0)) 
+            - SUM(IFNULL(sr.used_sessions,0)) 
+            as remaining_sessions
+        '),
+
+        DB::raw('SUM(IFNULL(so.qty,0) * IFNULL(so.discounted_amount,0)) as total_revenue')
+    )
+    ->groupBy('so.service_id', 'su.product_name')
+    ->get();
+// dd($units);
     
     // -----------------------------------------------------------------
     // RETURN VIEW
@@ -750,7 +790,7 @@ foreach ($services as $s) {
 
         // Order-tracking metrics (for pie charts)
         'giftcardTotalOrders', 'giftcardCompletedOrders', 'giftcardPendingOrders', 'giftcardCancelledOrders',
-        'serviceTotalOrders', 'serviceCompletedOrders', 'servicePendingOrders', 'serviceCancelledOrders',
+        'TotalTransactions', 'transactioncompleted', 'TransactionPending', 'transactioncancelled',
 
         // Most-sold products + product-wise sales
         'topProducts', 'productSalesReport',
@@ -766,7 +806,76 @@ foreach ($services as $s) {
             'notRedeemedServices',
             'partialRedeemedServices',
             'fullyRedeemedServices',
+            'units'
     ));
+}
+
+
+
+
+
+public function UnitHistoryOfPatient(Request $request, $unitid)
+{
+    // Subquery for total redeemed sessions
+    $redeemSub = DB::table('service_redeems')
+        ->select(
+            'service_order_id',
+            DB::raw('SUM(IFNULL(number_of_session_use,0)) as used_sessions')
+        )
+        ->groupBy('service_order_id');
+
+    $data = DB::table('service_orders as so')
+
+        ->leftJoin('service_units as su', 'su.id', '=', 'so.service_id')
+        ->leftJoin('transaction_histories as th', 'th.order_id', '=', 'so.order_id')
+        ->leftJoin('patients as p', 'p.id', '=', 'th.patient_login_id')
+
+        ->leftJoinSub($redeemSub, 'sr', function ($join) {
+            $join->on('sr.service_order_id', '=', 'so.id');
+        })
+
+        ->where('so.service_id', $unitid)
+
+        ->select(
+            // service_orders
+            'so.id',
+            'so.service_id',
+            'so.qty',
+            'so.number_of_session',
+            'so.order_id',
+
+            // product
+            'su.product_name',
+
+            // patient (fallback logic)
+            DB::raw('COALESCE(p.fname, th.fname) as first_name'),
+            DB::raw('COALESCE(p.lname, th.lname) as last_name'),
+            DB::raw('COALESCE(p.email, th.email) as email'),
+            DB::raw('COALESCE(p.phone, th.phone) as phone'),
+
+            // ✅ FULL transaction data (important fields)
+            'th.transaction_id',
+            'th.transaction_status',
+            'th.payment_status',
+            'th.payment_intent',
+            'th.payment_intent',
+            'th.sub_amount',
+            'th.tax_amount',
+            'th.final_amount',
+            'th.transaction_amount',
+            'th.created_at as transaction_date',
+
+            // remaining sessions
+            DB::raw('
+                IFNULL(so.number_of_session,0) 
+                - IFNULL(sr.used_sessions,0) 
+                as remaining_sessions
+            ')
+        )
+        ->orderBy('th.created_at', 'desc')
+        ->get();
+// dd($data);
+    return view('admin.dashboard.unit_history_of_patient', compact('data'));
 }
 
 }
