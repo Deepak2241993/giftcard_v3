@@ -521,7 +521,7 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header border-0 d-flex justify-content-between">
-                            <h3 class="card-title">Giftcard Order Status</h3>
+                            <h3 class="card-title">Giftcard Transactions Status</h3>
                         </div>
 
                         <div class="card-body">

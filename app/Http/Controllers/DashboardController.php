@@ -812,8 +812,6 @@ $units = DB::table('service_orders as so')
 
 
 
-
-
 public function UnitHistoryOfPatient(Request $request, $unitid)
 {
     $type = $request->type; // 👈 get filter
