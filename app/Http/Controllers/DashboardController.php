@@ -816,7 +816,8 @@ $units = DB::table('service_orders as so')
 
 public function UnitHistoryOfPatient(Request $request, $unitid)
 {
-    // Subquery for total redeemed sessions
+    $type = $request->type; // 👈 get filter
+
     $redeemSub = DB::table('service_redeems')
         ->select(
             'service_order_id',
@@ -824,57 +825,57 @@ public function UnitHistoryOfPatient(Request $request, $unitid)
         )
         ->groupBy('service_order_id');
 
-    $data = DB::table('service_orders as so')
-
+    $query = DB::table('service_orders as so')
         ->leftJoin('service_units as su', 'su.id', '=', 'so.service_id')
         ->leftJoin('transaction_histories as th', 'th.order_id', '=', 'so.order_id')
         ->leftJoin('patients as p', 'p.id', '=', 'th.patient_login_id')
-
         ->leftJoinSub($redeemSub, 'sr', function ($join) {
             $join->on('sr.service_order_id', '=', 'so.id');
         })
-
-        ->where('so.service_id', $unitid)
-
         ->select(
-            // service_orders
             'so.id',
             'so.service_id',
             'so.qty',
             'so.number_of_session',
             'so.order_id',
-
-            // product
             'su.product_name',
 
-            // patient (fallback logic)
             DB::raw('COALESCE(p.fname, th.fname) as first_name'),
             DB::raw('COALESCE(p.lname, th.lname) as last_name'),
             DB::raw('COALESCE(p.email, th.email) as email'),
             DB::raw('COALESCE(p.phone, th.phone) as phone'),
 
-            // ✅ FULL transaction data (important fields)
-            'th.transaction_id',
-            'th.transaction_status',
             'th.payment_status',
             'th.payment_intent',
-            'th.payment_intent',
-            'th.sub_amount',
-            'th.tax_amount',
-            'th.final_amount',
-            'th.transaction_amount',
-            'th.created_at as transaction_date',
 
-            // remaining sessions
             DB::raw('
                 IFNULL(so.number_of_session,0) 
                 - IFNULL(sr.used_sessions,0) 
                 as remaining_sessions
             ')
-        )
-        ->orderBy('th.created_at', 'desc')
-        ->get();
-// dd($data);
+        );
+
+    // ✅ Apply filters
+    if ($type == 'not_redeemed') {
+        $query->whereRaw('IFNULL(sr.used_sessions,0) = 0');
+    }
+
+    if ($type == 'partial') {
+        $query->whereRaw('IFNULL(sr.used_sessions,0) > 0 
+                          AND IFNULL(sr.used_sessions,0) < IFNULL(so.number_of_session,0)');
+    }
+
+    if ($type == 'full') {
+        $query->whereRaw('IFNULL(sr.used_sessions,0) >= IFNULL(so.number_of_session,0)');
+    }
+
+    // optional unit filter (keep your existing logic safe)
+    if ($unitid != 0) {
+        $query->where('so.service_id', $unitid);
+    }
+
+    $data = $query->orderBy('so.id', 'desc')->get();
+
     return view('admin.dashboard.unit_history_of_patient', compact('data'));
 }
 

@@ -224,46 +224,54 @@
 
                                 <!-- Total Purchased Services -->
                                 <div class="col-md-6">
-                                    <div class="info-box bg-info">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Total Purchased Services</span>
-                                            <span class="info-box-number">{{ $totalPurchasedServices }}</span>
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'all']) }}">
+                                        <div class="info-box bg-info">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total Purchased Services</span>
+                                                <span class="info-box-number">{{ $totalPurchasedServices }}</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
                                 <!-- Not Redeemed -->
                                 <div class="col-md-6">
-                                    <div class="info-box bg-warning">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Not Redeemed</span>
-                                            <span class="info-box-number">{{ $notRedeemedServices }}</span>
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'not_redeemed']) }}">
+                                        <div class="info-box bg-warning">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Not Redeemed</span>
+                                                <span class="info-box-number">{{ $notRedeemedServices }}</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
                                 <!-- Partial Redeemed -->
                                 <div class="col-md-6">
-                                    <div class="info-box bg-success">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Partial Redeemed</span>
-                                            <span class="info-box-number">{{ $partialRedeemedServices }}</span>
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'partial']) }}">
+                                        <div class="info-box bg-success">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Partial Redeemed</span>
+                                                <span class="info-box-number">{{ $partialRedeemedServices }}</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
-                                <!-- Last Month -->
+                                <!-- Fully Redeemed -->
                                 <div class="col-md-6">
-                                    <div class="info-box bg-danger">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Fully Redeemed</span>
-                                            <span class="info-box-number">{{ $fullyRedeemedServices }}</span>
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'full']) }}">
+                                        <div class="info-box bg-danger">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Fully Redeemed</span>
+                                                <span class="info-box-number">{{ $fullyRedeemedServices }}</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
 
                             </div>
