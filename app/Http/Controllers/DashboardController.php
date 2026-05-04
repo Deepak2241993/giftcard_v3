@@ -769,22 +769,65 @@ foreach ($services as $s) {
 
 
 // For Units Sold vs Redeemed (Product-wise)
+// $redeemSub = DB::table('service_redeems')
+//     ->select(
+//         'service_order_id',
+//         DB::raw('SUM(IFNULL(number_of_session_use,0)) as used_sessions')
+//     )
+//     ->groupBy('service_order_id');
+
+// $units = DB::table('service_orders as so')
+//     ->join('service_units as su', 'su.id', '=', 'so.service_id')
+
+//     // ✅ FIX: use subquery instead of direct join
+//     ->leftJoinSub($redeemSub, 'sr', function ($join) {
+//         $join->on('sr.service_order_id', '=', 'so.id');
+//     })
+
+//     ->where('su.product_is_deleted', 0)
+
+//     ->select(
+//         'so.service_id',
+//         'su.product_name',
+
+//         DB::raw('COUNT(DISTINCT so.id) as total_sales'),
+
+//         DB::raw('SUM(IFNULL(so.number_of_session,0)) as total_sessions'),
+
+//         DB::raw('SUM(IFNULL(sr.used_sessions,0)) as used_sessions'),
+
+//         DB::raw('
+//             SUM(IFNULL(so.number_of_session,0)) 
+//             - SUM(IFNULL(sr.used_sessions,0)) 
+//             as remaining_sessions
+//         '),
+
+//         DB::raw('SUM(IFNULL(so.qty,0) * IFNULL(so.discounted_amount,0)) as total_revenue')
+//     )
+//     ->groupBy('so.service_id', 'su.product_name')
+//     ->get();
+
 $redeemSub = DB::table('service_redeems')
     ->select(
         'service_order_id',
         DB::raw('SUM(IFNULL(number_of_session_use,0)) as used_sessions')
     )
     ->groupBy('service_order_id');
-
 $units = DB::table('service_orders as so')
     ->join('service_units as su', 'su.id', '=', 'so.service_id')
 
-    // ✅ FIX: use subquery instead of direct join
+    // ✅ Join payment table
+    ->join('transaction_histories as th', 'th.order_id', '=', 'so.order_id')
+
+    // ✅ Redeem subquery
     ->leftJoinSub($redeemSub, 'sr', function ($join) {
         $join->on('sr.service_order_id', '=', 'so.id');
     })
 
     ->where('su.product_is_deleted', 0)
+
+    // ✅ Only paid transactions
+    ->where('th.payment_status', 'paid')
 
     ->select(
         'so.service_id',
@@ -802,11 +845,11 @@ $units = DB::table('service_orders as so')
             as remaining_sessions
         '),
 
+        // ✅ Revenue only for paid
         DB::raw('SUM(IFNULL(so.qty,0) * IFNULL(so.discounted_amount,0)) as total_revenue')
     )
     ->groupBy('so.service_id', 'su.product_name')
     ->get();
-    
     // -----------------------------------------------------------------
     // RETURN VIEW
     // -----------------------------------------------------------------
@@ -884,6 +927,7 @@ public function UnitHistoryOfPatient(Request $request, $unitid)
             'so.number_of_session',
             'so.order_id',
             'su.product_name',
+            'th.id as transaction_id',
 
             DB::raw('COALESCE(p.fname, th.fname) as first_name'),
             DB::raw('COALESCE(p.lname, th.lname) as last_name'),

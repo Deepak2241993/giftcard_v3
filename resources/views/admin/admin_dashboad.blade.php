@@ -4,82 +4,10 @@
         <div class="container-fluid">
 
             <!-- ================================
-                    GIFT CARD TRANSACTION OVERVIEW
-                ================================= -->
+                        GIFT CARD TRANSACTION OVERVIEW
+                    ================================= -->
             <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card mt-4">
-                        <div class="card-header border-0 d-flex justify-content-between">
-                            <h3 class="card-title">Gift Cards Transaction Overview</h3>
-                            <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a>
-                        </div>
 
-                        <div class="card-body">
-                            <div class="row">
-
-                                <!-- Today -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-info">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Today's Transactions</span>
-                                            <span class="info-box-number">{{ $todayGiftcards }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Yesterday -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-warning">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Yesterday</span>
-                                            <span class="info-box-number">{{ $yesterdayGiftcards }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last 7 Days -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-success">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Last 7 Days</span>
-                                            <span class="info-box-number">{{ $last7DaysGiftcards }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Month -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-danger">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Last Month</span>
-                                            <span class="info-box-number">{{ $lastMonthGiftcards }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row mt-3">
-                                <!-- This Month -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-primary">
-                                        <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">This Month</span>
-                                            <span class="info-box-number">{{ $thisMonthGiftcards }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
 
                 {{-- Redeem Section --}}
                 <div class="col-lg-6 mb-4">
@@ -92,145 +20,69 @@
                         <div class="card-body">
                             <div class="row">
 
-    <!-- Total Giftcards -->
-    <div class="col-md-6">
-        <a href="{{ route('giftcards-history-of-patient', ['status' => 'all']) }}">
-            <div class="info-box bg-primary">
-                <span class="info-box-icon"><i class="fas fa-gift"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Total Giftcards</span>
-                    <span class="info-box-number">{{ $totalGiftcards }}</span>
-                </div>
-            </div>
-        </a>
-    </div>
+                                <!-- Total Giftcards -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'all']) }}">
+                                        <div class="info-box bg-primary">
+                                            <span class="info-box-icon"><i class="fas fa-gift"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total Giftcards</span>
+                                                <span class="info-box-number">{{ $totalGiftcards }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
 
-    <!-- Not Redeemed -->
-    <div class="col-md-6">
-        <a href="{{ route('giftcards-history-of-patient', ['status' => 'not_used']) }}">
-            <div class="info-box bg-info">
-                <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Not Redeemed</span>
-                    <span class="info-box-number">{{ $notRedeemed }}</span>
-                </div>
-            </div>
-        </a>
-    </div>
+                                <!-- Not Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'not_used']) }}">
+                                        <div class="info-box bg-info">
+                                            <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Not Redeemed</span>
+                                                <span class="info-box-number">{{ $notRedeemed }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
 
-    <!-- Partial Redeemed -->
-    <div class="col-md-6">
-        <a href="{{ route('giftcards-history-of-patient', ['status' => 'partial']) }}">
-            <div class="info-box bg-warning">
-                <span class="info-box-icon"><i class="fas fa-adjust"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Partially Redeemed</span>
-                    <span class="info-box-number">{{ $partialRedeemed }}</span>
-                </div>
-            </div>
-        </a>
-    </div>
+                                <!-- Partial Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'partial']) }}">
+                                        <div class="info-box bg-warning">
+                                            <span class="info-box-icon"><i class="fas fa-adjust"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Partially Redeemed</span>
+                                                <span class="info-box-number">{{ $partialRedeemed }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
 
-    <!-- Fully Redeemed -->
-    <div class="col-md-6">
-        <a href="{{ route('giftcards-history-of-patient', ['status' => 'full']) }}">
-            <div class="info-box bg-success">
-                <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Fully Redeemed</span>
-                    <span class="info-box-number">{{ $fullyRedeemed }}</span>
-                </div>
-            </div>
-        </a>
-    </div>
+                                <!-- Fully Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'full']) }}">
+                                        <div class="info-box bg-success">
+                                            <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Fully Redeemed</span>
+                                                <span class="info-box-number">{{ $fullyRedeemed }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
 
-</div>
+                            </div>
 
                         </div>
 
                     </div>
                 </div>
                 {{-- Redeem Section End  --}}
-                <!-- ================================
-                    SERVICE SALES OVERVIEW
-                    ================================= -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <div class="card-header border-0 d-flex justify-content-between">
-                            <h3 class="card-title">Service Sales Overview</h3>
-                            <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="row">
-
-                                <!-- Today -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-info">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Today's Sales</span>
-                                            <span class="info-box-number">{{ $todayServiceSales }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Yesterday -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-warning">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Yesterday</span>
-                                            <span class="info-box-number">{{ $yesterdayServiceSales }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last 7 Days -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-success">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Last 7 Days</span>
-                                            <span class="info-box-number">{{ $last7DaysServiceSales }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Month -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-danger">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Last Month</span>
-                                            <span class="info-box-number">{{ $lastMonthServiceSales }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row mt-3">
-                                <!-- This Month -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-primary">
-                                        <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">This Month</span>
-                                            <span class="info-box-number">{{ $thisMonthServiceSales }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
 
                 {{-- For Service Redeem Status --}}
                 <div class="col-lg-6 mb-4">
-                    <div class="card">
+                    <div class="card mt-4">
                         <div class="card-header border-0 d-flex justify-content-between">
                             <h3 class="card-title">Service Redeem Status</h3>
                             {{-- <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a> --}}
@@ -268,8 +120,7 @@
 
                                 <!-- Partial Redeemed -->
                                 <div class="col-md-6">
-                                    <a
-                                        href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'partial']) }}">
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'partial']) }}">
                                         <div class="info-box bg-success">
                                             <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
                                             <div class="info-box-content">
@@ -302,8 +153,7 @@
                     </div>
                 </div>
             </div>
-
-            {{-- For Unit View  --}}
+{{-- For Unit View  --}}
             <section class="content-header">
                 <h1>Unit Dashboard</h1>
                 <!--begin::App Content-->
@@ -379,14 +229,169 @@
             </section>
 
             {{-- Unit view End --}}
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card mt-4">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Gift Cards Transaction Overview</h3>
+                            <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Today -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-info">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Today's Transactions</span>
+                                            <span class="info-box-number">{{ $todayGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yesterday -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-warning">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Yesterday</span>
+                                            <span class="info-box-number">{{ $yesterdayGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last 7 Days -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-success">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last 7 Days</span>
+                                            <span class="info-box-number">{{ $last7DaysGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-danger">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last Month</span>
+                                            <span class="info-box-number">{{ $lastMonthGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-3">
+                                <!-- This Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-primary">
+                                        <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">This Month</span>
+                                            <span class="info-box-number">{{ $thisMonthGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ================================
+                        SERVICE SALES OVERVIEW
+                        ================================= -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card mt-4">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Service Sales Overview</h3>
+                            <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Today -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-info">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Today's Sales</span>
+                                            <span class="info-box-number">{{ $todayServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yesterday -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-warning">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Yesterday</span>
+                                            <span class="info-box-number">{{ $yesterdayServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last 7 Days -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-success">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last 7 Days</span>
+                                            <span class="info-box-number">{{ $last7DaysServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-danger">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last Month</span>
+                                            <span class="info-box-number">{{ $lastMonthServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-3">
+                                <!-- This Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-primary">
+                                        <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">This Month</span>
+                                            <span class="info-box-number">{{ $thisMonthServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            
 
 
 
 
 
             <!-- ================================
-                    COMPARISON CHARTS ROW
-                ================================= -->
+                        COMPARISON CHARTS ROW
+                    ================================= -->
             <div class="row">
 
                 <!-- Giftcard Chart -->

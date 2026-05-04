@@ -70,64 +70,58 @@
                                 </tr>
                             </thead>
                             <tbody id="data-table-body">
-                                @foreach ($data as $key=>$value)
+                                @foreach ($data as $key => $value)
                                     <tr>
 
                                         <td>{{ $loop->iteration }}</td>
 
                                         <td><a class="btn btn-block btn-outline-success"
-                                                href="http://localhost/giftcard_v3/public/admin/invoice/9">{{ $value->order_id }}</a>
+                                                href="http://localhost/giftcard_v3/public/admin/invoice/{{ $value->transaction_id }}">{{ $value->order_id }}</a>
                                         </td>
                                         <td>{{ $value->product_name }}</td>
                                         <td>
-    <a href="{{ route('unit-history-of-patient', $value->service_id) }}">
-        {{ !empty($value->first_name) 
-            ? $value->first_name . ' ' . $value->last_name 
-            : 'N/A' }}
-    </a>
-    <br>
+                                            <a href="{{ route('unit-history-of-patient', $value->service_id) }}">
+                                                {{ !empty($value->first_name) ? $value->first_name . ' ' . $value->last_name : 'N/A' }}
+                                            </a>
+                                            <br>
 
-    @if (!empty($value->payment_intent) && ($value->payment_status == 'paid' || $value->payment_status == 'success'))
+                                            @if (!empty($value->payment_intent) && ($value->payment_status == 'paid' || $value->payment_status == 'success'))
+                                                <a type="button" class="btn btn-sm btn-outline-success me-1"
+                                                    data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
+                                                    onclick="OrderView({{ $key }}, '{{ $value->order_id }}')"
+                                                    title="Redeem Service">
+                                                    <i class="fa fa-check-circle"></i>
+                                                </a>
 
-        <a type="button" class="btn btn-sm btn-outline-success me-1"
-            data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
-            onclick="OrderView({{ $key }}, '{{ $value->order_id }}')"
-            title="Redeem Service">
-            <i class="fa fa-check-circle"></i>
-        </a>
+                                                <a type="button" class="btn btn-sm btn-outline-danger me-1"
+                                                    data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
+                                                    onclick="CancelView({{ $key }}, '{{ $value->order_id }}')"
+                                                    title="Cancel Order">
+                                                    <i class="fa fa-times-circle"></i>
+                                                </a>
 
-        <a type="button" class="btn btn-sm btn-outline-danger me-1"
-            data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
-            onclick="CancelView({{ $key }}, '{{ $value->order_id }}')"
-            title="Cancel Order">
-            <i class="fa fa-times-circle"></i>
-        </a>
+                                                <a type="button" class="btn btn-sm btn-outline-warning"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#statement_view_{{ $value->id }}"
+                                                    onclick="StatementView({{ $key }}, '{{ $value->order_id }}')"
+                                                    title="View Statement">
+                                                    <i class="fa fa-file-text"></i>
+                                                </a>
+                                            @elseif(!empty($value->payment_intent) && $value->payment_status == 'under_process')
+                                                <span class="badge bg-primary">
+                                                    {{ 'Payment ' . str_replace('_', ' ', ucfirst($value->payment_status)) }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger">No Payment</span>
+                                            @endif
+                                        </td>
 
-        <a type="button" class="btn btn-sm btn-outline-warning"
-            data-bs-toggle="modal"
-            data-bs-target="#statement_view_{{ $value->id }}"
-            onclick="StatementView({{ $key }}, '{{ $value->order_id }}')"
-            title="View Statement">
-            <i class="fa fa-file-text"></i>
-        </a>
-
-    @elseif(!empty($value->payment_intent) && $value->payment_status == 'under_process')
-
-        <span class="badge bg-primary">
-            {{ 'Payment ' . str_replace('_', ' ', ucfirst($value->payment_status)) }}
-        </span>
-
-    @else
-        <span class="badge bg-danger">No Payment</span>
-    @endif
-</td>
-
-                                <td>{{ $value->email }}</td>
-                                <td>{{ $value->phone }}</td>
-                                {{-- <td><span class="badge bg-warning">{{ $value->order_id }}</span></td> --}}
-                                <td>{{ $value->qty }}</td>
-                                <td><span class="badge bg-success">{{ $value->remaining_sessions }}</span></td>
-                                </tr>
+                                        <td>{{ $value->email }}</td>
+                                        <td>{{ $value->phone }}</td>
+                                        {{-- <td><span class="badge bg-warning">{{ $value->order_id }}</span></td> --}}
+                                        <td>{{ $value->qty }}</td>
+                                        <td><span class="badge bg-success">{{ $value->remaining_sessions }}</span></td>
+                                    </tr>
                                 @endforeach
                             </tbody>
 
