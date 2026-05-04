@@ -640,39 +640,82 @@ class DashboardController extends Controller
     $trendMonths = collect(range(1,12))->map(fn($m) => date("M", mktime(0,0,0,$m,1)));
     $trendCount  = collect(range(1,12))->map(fn($m) => $redemptionTrend[$m] ?? 0);
 
- // Giftcard status summary
-        $giftcardStatus = DB::table('giftcards_numbers')
-            ->select(
-                'giftnumber',
-                DB::raw("SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) as total_purchase"),
-                DB::raw("SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END) as total_redeem")
-            )
-            ->groupBy('giftnumber')
-            ->get();
-
-        $notRedeemed = 0;
-        $partialRedeemed = 0;
-        $fullyRedeemed = 0;
-
-        foreach ($giftcardStatus as $card) {
-
-            $purchase = $card->total_purchase;
-            $redeem   = $card->total_redeem;
-            $remaining = $purchase - $redeem;
-
-            if ($redeem == 0) {
-                $notRedeemed++;
-            } elseif ($remaining == 0) {
-                $fullyRedeemed++;
-            } else {
-                $partialRedeemed++;
-            }
-        }
 
 
-        // For Service Redeem Status
 
-// STEP 1: Summary Query (Correct)
+ // Giftcard status For Dashboard
+ 
+// 🔹 Total Purchases (from giftsends - correct source)
+// ✅ Total successful orders count (optional)
+$totalPurchases = Giftsend::where('payment_status', 'succeeded')->count();
+
+
+// ✅ Total amount summary
+$summary = DB::table('giftcards_numbers as gn')
+    ->join('giftsends as gs', 'gs.id', '=', 'gn.user_id')
+    ->where('gs.payment_status', 'succeeded')
+    ->select(
+        DB::raw('SUM(CASE WHEN gn.amount > 0 THEN gn.amount ELSE 0 END) as total_purchase'),
+        DB::raw('SUM(CASE WHEN gn.amount < 0 THEN ABS(gn.amount) ELSE 0 END) as total_redeem')
+    )
+    ->first();
+
+
+// ✅ Giftcard wise aggregation (FIXED with join)
+$giftcardStatus = DB::table('giftcards_numbers as gn')
+    ->join('giftsends as gs', 'gs.id', '=', 'gn.user_id')
+    ->where('gs.payment_status', 'succeeded')
+    ->select(
+        'gn.giftnumber',
+        DB::raw('SUM(CASE WHEN gn.amount > 0 THEN gn.amount ELSE 0 END) as total_purchase'),
+        DB::raw('SUM(CASE WHEN gn.amount < 0 THEN ABS(gn.amount) ELSE 0 END) as total_redeem')
+    )
+    ->groupBy('gn.giftnumber')
+    ->get();
+
+
+// ✅ Counters
+$fullRedeemed = 0;
+$partialRedeemed = 0;
+$notUsed = 0;
+
+foreach ($giftcardStatus as $card) {
+
+    if ($card->total_redeem == 0) {
+        $notUsed++; // NEW
+        continue;
+    }
+
+    if ($card->total_purchase == $card->total_redeem) {
+        $fullRedeemed++;
+    } elseif ($card->total_redeem < $card->total_purchase) {
+        $partialRedeemed++;
+    }
+}
+
+
+// ✅ Final result
+$result = [
+    'total_orders' => $totalPurchases, // NEW
+    'total_giftcards' => count($giftcardStatus), // NEW
+
+    'total_purchase_amount' => $summary->total_purchase ?? 0,
+    'total_redeemed_amount' => $summary->total_redeem ?? 0,
+
+    'fully_redeemed_cards' => $fullRedeemed,
+    'partially_redeemed_cards' => $partialRedeemed,
+    'not_used_cards' => $notUsed, // NEW
+];
+
+$notRedeemed     = $result['not_used_cards'];
+$partialRedeemed = $result['partially_redeemed_cards'];
+$fullyRedeemed   = $result['fully_redeemed_cards'];
+$totalGiftcards  = $result['total_giftcards']; // (optional but recommended)
+
+// dd($result);
+
+
+// For Service Redeem Status for Dashboard
 $redeems = DB::table('service_redeems')
     ->select(
         'order_id',
@@ -720,6 +763,11 @@ foreach ($services as $s) {
     }
 }
 
+
+
+
+
+
 // For Units Sold vs Redeemed (Product-wise)
 $redeemSub = DB::table('service_redeems')
     ->select(
@@ -758,7 +806,6 @@ $units = DB::table('service_orders as so')
     )
     ->groupBy('so.service_id', 'su.product_name')
     ->get();
-// dd($units);
     
     // -----------------------------------------------------------------
     // RETURN VIEW
@@ -797,10 +844,10 @@ $units = DB::table('service_orders as so')
 
         // Campaign / deals revenue
         'campaignRevenue', 'totalDealsRevenue',
-        // Giftcard metrics
-            'totalGiftcardsSold','totalGiftcardsRedeemed','totalGiftcardsCancelled','redemptionRatio','soldValue','redeemedValue','trendMonths','trendCount'
-            ,// For Giftcard Redeem Status
-            'notRedeemed','partialRedeemed','fullyRedeemed',
+         'totalGiftcards',
+            'notRedeemed',
+            'partialRedeemed',
+            'fullyRedeemed',
             // For Service Redeem Status
             'totalPurchasedServices',
             'notRedeemedServices',
@@ -811,7 +858,7 @@ $units = DB::table('service_orders as so')
 }
 
 
-
+// For Unit History of Patient Seprate Page
 public function UnitHistoryOfPatient(Request $request, $unitid)
 {
     $type = $request->type; // 👈 get filter
@@ -875,6 +922,37 @@ public function UnitHistoryOfPatient(Request $request, $unitid)
     $data = $query->orderBy('so.id', 'desc')->get();
 
     return view('admin.dashboard.unit_history_of_patient', compact('data'));
+}
+
+
+
+// For Giftcard Redeem History Seprate Page
+public function GiftCardsHistoryOfPatient(Request $request)
+{
+    $status = $request->status;
+
+    $query = DB::table('giftcards_numbers as gn')
+        ->join('giftsends as gs', 'gs.id', '=', 'gn.user_id')
+        ->select(
+            'gn.giftnumber',
+            'gs.recipient_name',
+            'gs.gift_send_to as email',
+            DB::raw("SUM(CASE WHEN gn.amount > 0 THEN gn.amount ELSE 0 END) as total_purchase"),
+            DB::raw("SUM(CASE WHEN gn.amount < 0 THEN ABS(gn.amount) ELSE 0 END) as total_redeem")
+        )
+        ->groupBy('gn.giftnumber', 'gs.recipient_name', 'gs.gift_send_to');
+
+    if ($status == 'not_used') {
+        $query->havingRaw('total_redeem = 0');
+    } elseif ($status == 'full') {
+        $query->havingRaw('total_purchase = total_redeem');
+    } elseif ($status == 'partial') {
+        $query->havingRaw('total_redeem > 0 AND total_purchase > total_redeem');
+    }
+
+    $data = $query->get();
+
+    return view('admin.dashboard.giftcards_summary_of_patient', compact('data'));
 }
 
 }

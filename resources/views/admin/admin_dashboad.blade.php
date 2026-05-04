@@ -4,8 +4,8 @@
         <div class="container-fluid">
 
             <!-- ================================
-                GIFT CARD TRANSACTION OVERVIEW
-            ================================= -->
+                    GIFT CARD TRANSACTION OVERVIEW
+                ================================= -->
             <div class="row">
                 <div class="col-lg-6 mb-4">
                     <div class="card mt-4">
@@ -92,42 +92,59 @@
                         <div class="card-body">
                             <div class="row">
 
-                                <!-- Today -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-info">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Not Redeemed</span>
-                                            <span class="info-box-number">{{ $notRedeemed }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+    <!-- Total Giftcards -->
+    <div class="col-md-6">
+        <a href="{{ route('giftcards-history-of-patient', ['status' => 'all']) }}">
+            <div class="info-box bg-primary">
+                <span class="info-box-icon"><i class="fas fa-gift"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Giftcards</span>
+                    <span class="info-box-number">{{ $totalGiftcards }}</span>
+                </div>
+            </div>
+        </a>
+    </div>
 
-                                <!-- Yesterday -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-warning">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Partial Redeemed</span>
-                                            <span class="info-box-number">{{ $partialRedeemed }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+    <!-- Not Redeemed -->
+    <div class="col-md-6">
+        <a href="{{ route('giftcards-history-of-patient', ['status' => 'not_used']) }}">
+            <div class="info-box bg-info">
+                <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Not Redeemed</span>
+                    <span class="info-box-number">{{ $notRedeemed }}</span>
+                </div>
+            </div>
+        </a>
+    </div>
 
-                                <!-- Last 7 Days -->
-                                <div class="col-md-4">
-                                    <div class="info-box bg-success">
-                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Fully Redeemed</span>
-                                            <span class="info-box-number">{{ $fullyRedeemed }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+    <!-- Partial Redeemed -->
+    <div class="col-md-6">
+        <a href="{{ route('giftcards-history-of-patient', ['status' => 'partial']) }}">
+            <div class="info-box bg-warning">
+                <span class="info-box-icon"><i class="fas fa-adjust"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Partially Redeemed</span>
+                    <span class="info-box-number">{{ $partialRedeemed }}</span>
+                </div>
+            </div>
+        </a>
+    </div>
 
+    <!-- Fully Redeemed -->
+    <div class="col-md-6">
+        <a href="{{ route('giftcards-history-of-patient', ['status' => 'full']) }}">
+            <div class="info-box bg-success">
+                <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Fully Redeemed</span>
+                    <span class="info-box-number">{{ $fullyRedeemed }}</span>
+                </div>
+            </div>
+        </a>
+    </div>
 
-
-                            </div>
+</div>
 
                         </div>
 
@@ -135,8 +152,8 @@
                 </div>
                 {{-- Redeem Section End  --}}
                 <!-- ================================
-                SERVICE SALES OVERVIEW
-                ================================= -->
+                    SERVICE SALES OVERVIEW
+                    ================================= -->
                 <div class="col-lg-6 mb-4">
                     <div class="card">
                         <div class="card-header border-0 d-flex justify-content-between">
@@ -237,7 +254,8 @@
 
                                 <!-- Not Redeemed -->
                                 <div class="col-md-6">
-                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'not_redeemed']) }}">
+                                    <a
+                                        href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'not_redeemed']) }}">
                                         <div class="info-box bg-warning">
                                             <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
                                             <div class="info-box-content">
@@ -250,7 +268,8 @@
 
                                 <!-- Partial Redeemed -->
                                 <div class="col-md-6">
-                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'partial']) }}">
+                                    <a
+                                        href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'partial']) }}">
                                         <div class="info-box bg-success">
                                             <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
                                             <div class="info-box-content">
@@ -332,12 +351,16 @@
 
                                                 <td>{{ $loop->iteration }}</td>
 
-                                                <td><a href="{{ route('unit-history-of-patient',$value->service_id) }}">{{ $value->product_name ? $value->product_name : 'N/A' }}</a></td>
+                                                <td><a
+                                                        href="{{ route('unit-history-of-patient', $value->service_id) }}">{{ $value->product_name ? $value->product_name : 'N/A' }}</a>
+                                                </td>
 
                                                 <td>{{ $value->total_sales }}</td>
-                                                <td><span class="badge bg-primary">{{ $value->total_sessions }}</span></td>
+                                                <td><span class="badge bg-primary">{{ $value->total_sessions }}</span>
+                                                </td>
                                                 <td><span class="badge bg-warning">{{ $value->used_sessions }}</span></td>
-                                                <td><span class="badge bg-success">{{ $value->remaining_sessions }}</span></td>
+                                                <td><span class="badge bg-success">{{ $value->remaining_sessions }}</span>
+                                                </td>
                                                 <td>${{ number_format($value->total_revenue, 2) }}</td>
                                             </tr>
                                         @endforeach
@@ -362,8 +385,8 @@
 
 
             <!-- ================================
-                COMPARISON CHARTS ROW
-            ================================= -->
+                    COMPARISON CHARTS ROW
+                ================================= -->
             <div class="row">
 
                 <!-- Giftcard Chart -->
@@ -377,7 +400,8 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <p class="d-flex flex-column">
-                                    <span class="text-bold text-lg">${{ number_format($thisMonthGiftcardSales, 2) }}</span>
+                                    <span
+                                        class="text-bold text-lg">${{ number_format($thisMonthGiftcardSales, 2) }}</span>
                                     <span>Sales This Month</span>
                                 </p>
 

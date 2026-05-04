@@ -49,7 +49,8 @@ Route::prefix('admin')->middleware(['auth:web','role:admin'])->group(function ()
     Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
     Route::get('/unit-history-of-patient/{unitid}', [DashboardController::class, 'UnitHistoryOfPatient'])->name('unit-history-of-patient');
-    
+    Route::get('/giftcards-history-of-patient', [DashboardController::class, 'GiftCardsHistoryOfPatient'])->name('giftcards-history-of-patient');
+
     // ================= SERVICE ORDER HISTORY =================
 // Handles service order listing, details, create, update, delete
 Route::resource('/service-orders', TransactionHistoryController::class);
