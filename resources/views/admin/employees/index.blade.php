@@ -40,11 +40,11 @@
                         <div class="row">
 
                             {{-- Employee ID --}}
-                            <div class="col-md-6 mb-2">
+                            {{-- <div class="col-md-6 mb-2">
                                 <label>Employee ID</label>
                                 <input class="form-control" type="text" name="emp_id" maxlength="6" pattern="[0-9]*"
                                     inputmode="numeric">
-                            </div>
+                            </div> --}}
 
 
                             {{-- First Name --}}
@@ -63,7 +63,7 @@
 
                             {{-- Email --}}
                             <div class="col-md-6 mb-2">
-                                <label>Email</label>
+                                <label>Email<span class="text-danger">*</span></label>
                                 <input class="form-control" type="email" name="email">
                                 <small class="text-danger" id="error-email"></small>
                             </div>

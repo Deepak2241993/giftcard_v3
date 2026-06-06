@@ -76,7 +76,7 @@
                                         <td>{{ $loop->iteration }}</td>
 
                                         <td><a class="btn btn-block btn-outline-success"
-                                                href="http://localhost/giftcard_v3/public/admin/invoice/{{ $value->transaction_id }}">{{ $value->order_id }}</a>
+                                                href="{{ route('service-invoice', $value->transaction_id) }}">{{ $value->order_id }}</a>
                                         </td>
                                         <td>{{ $value->product_name }}</td>
                                         <td>
