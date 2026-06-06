@@ -926,9 +926,9 @@ public function UnitHistoryOfPatient(Request $request, $unitid)
             'so.qty',
             'so.number_of_session',
             'so.order_id',
-            'so.created_at',
             'su.product_name',
             'th.id as transaction_id',
+            'so.created_at as transaction_date',
 
             DB::raw('COALESCE(p.fname, th.fname) as first_name'),
             DB::raw('COALESCE(p.lname, th.lname) as last_name'),

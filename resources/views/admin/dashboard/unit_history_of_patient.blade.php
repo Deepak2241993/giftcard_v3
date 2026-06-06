@@ -22,7 +22,9 @@
     @endpush()
     <section class="content-header">
         <!-- /.container-fluid -->
-        <h4><u>Purchases Information</u></h4>
+        <h4>
+            <u>Purchases Information</u>
+        </h4>
         {{-- <a href="{{ route(RoutePrefix() . 'patient.index') }}"class="btn btn-primary">Go to Patient List</a>
         <a href="{{ route(RoutePrefix() . 'patient.edit', $patient->id) }}"class="btn btn-dark">Go to Profile</a> --}}
     </section>
@@ -73,13 +75,14 @@
                                 </tr>
                             </thead>
                             <tbody id="data-table-body">
+                                {{-- {{ dd($data) }} --}}
                                 @foreach ($data as $key => $value)
                                     <tr>
 
                                         <td>{{ $loop->iteration }}</td>
 
                                         <td><a class="btn btn-block btn-outline-success"
-                                                href="{{ route('service-invoice', $value->transaction_id) }}">{{ $value->order_id }}</a>
+                                                href="{{ route('service-invoice', $value->transaction_id??$value->order_id) }}">{{ $value->order_id }}</a>
                                         </td>
                                         <td>{{ $value->product_name }}</td>
                                         <td>
@@ -121,7 +124,7 @@
 
                                         <td>{{ $value->email }}</td>
                                         <td>{{ $value->phone }}</td>
-                                        <td>{{ date('m-d-Y', strtotime($value->created_at)) }}</td>
+                                        <td>{{ date('m-d-Y', strtotime($value->transaction_date)) ?? $value->transaction_date }}</td>
                                         {{-- <td><span class="badge bg-warning">{{ $value->order_id }}</span></td> --}}
                                         <td>{{ $value->qty }}</td>
                                         <td><span class="badge bg-success">{{ $value->remaining_sessions }}</span></td>
