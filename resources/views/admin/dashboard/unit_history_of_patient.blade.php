@@ -61,6 +61,9 @@
                                         rowspan="1" colspan="1" aria-sort="ascending" aria-label="Patient Phone">
                                         Patient Phone</th>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date">
+                                        Date(MM-DD-YYYY)</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
                                         rowspan="1" colspan="1" aria-sort="ascending" aria-label="Qty">Qty</th>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
                                         rowspan="1" colspan="1" aria-sort="ascending" aria-label="Remaining Sessions">
@@ -118,6 +121,7 @@
 
                                         <td>{{ $value->email }}</td>
                                         <td>{{ $value->phone }}</td>
+                                        <td>{{ date('m-d-Y', strtotime($value->created_at)) }}</td>
                                         {{-- <td><span class="badge bg-warning">{{ $value->order_id }}</span></td> --}}
                                         <td>{{ $value->qty }}</td>
                                         <td><span class="badge bg-success">{{ $value->remaining_sessions }}</span></td>

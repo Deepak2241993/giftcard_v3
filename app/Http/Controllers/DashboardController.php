@@ -926,6 +926,7 @@ public function UnitHistoryOfPatient(Request $request, $unitid)
             'so.qty',
             'so.number_of_session',
             'so.order_id',
+            'so.created_at',
             'su.product_name',
             'th.id as transaction_id',
 
