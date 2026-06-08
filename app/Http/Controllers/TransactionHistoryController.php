@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TransactionHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Auth;
 class TransactionHistoryController extends Controller
 {
@@ -12,21 +13,65 @@ class TransactionHistoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(TransactionHistory $transaction)
-    {
-        if (Auth::user()->role_id == 1) {
-            $data = $transaction->orderBy('id', 'DESC')->get();
-        } 
-        else if (Auth::user()->role_id == 2) {
-            $data = $transaction->orderBy('id', 'DESC')->get();
-        } 
+    // public function index(TransactionHistory $transaction)
+    // {
+    //     if (Auth::user()->role_id == 1) {
+    //         $data = $transaction->orderBy('id', 'DESC')->get();
+    //     } 
+    //     else if (Auth::user()->role_id == 2) {
+    //         $data = $transaction->orderBy('id', 'DESC')->get();
+    //     } 
         
-        else {
-            $id = Auth::user()->id;
-            $data = $transaction->where('user_id', $id)->orderBy('id', 'DESC')->get();
-        }
-        return view('gift.order_history', compact('data'));
-    }
+    //     else {
+    //         $id = Auth::user()->id;
+    //         $data = $transaction->where('user_id', $id)->orderBy('id', 'DESC')->get();
+    //     }
+    //     return view('gift.order_history', compact('data'));
+    // }
+
+public function index()
+{
+    $serviceOrders = DB::table('service_orders')
+        ->select(
+            'order_id',
+            DB::raw('SUM(number_of_session) as total_sessions')
+        )
+        ->groupBy('order_id');
+
+    $serviceRedeems = DB::table('service_orders as so')
+        ->leftJoin('service_redeems as sr', 'so.id', '=', 'sr.service_order_id')
+        ->select(
+            'so.order_id',
+            DB::raw('COALESCE(SUM(sr.number_of_session_use),0) as redeemed_sessions')
+        )
+        ->groupBy('so.order_id');
+
+    $data = DB::table('transaction_histories as th')
+        ->leftJoinSub($serviceOrders, 'so', function ($join) {
+            $join->on('th.order_id', '=', 'so.order_id');
+        })
+        ->leftJoinSub($serviceRedeems, 'sr', function ($join) {
+            $join->on('th.order_id', '=', 'sr.order_id');
+        })
+        ->select(
+            'th.*',
+            DB::raw('COALESCE(so.total_sessions,0) as total_sessions'),
+            DB::raw('COALESCE(sr.redeemed_sessions,0) as redeemed_sessions'),
+            DB::raw("
+                CASE
+                    WHEN COALESCE(sr.redeemed_sessions,0) = 0
+                        THEN 'Not Redeemed'
+                    WHEN COALESCE(sr.redeemed_sessions,0) < COALESCE(so.total_sessions,0)
+                        THEN 'Partial Redeemed'
+                    ELSE 'Full Redeemed'
+                END as redeem_status
+            ")
+        )
+        ->orderBy('th.id', 'DESC')
+        ->get();
+
+    return view('gift.order_history', compact('data'));
+}
     
 
     /**

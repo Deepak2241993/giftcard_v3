@@ -54,6 +54,7 @@
 
                 <tbody id="data-table-body">
                     @foreach($data as $key => $value)
+                   
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             {{-- <td>
@@ -82,8 +83,8 @@
     <a type="button" 
        class="btn btn-sm btn-outline-success me-1" 
        data-bs-toggle="modal"
-       data-bs-target="#redeemAction{{ $value['id'] }}"
-       onclick="OrderView({{ $key }}, '{{ $value['order_id'] }}')"
+       data-bs-target="#redeemAction{{ $value->id }}"
+       onclick="OrderView({{ $key }}, '{{ $value->order_id }}')"
        title="Redeem Service">
         <i class="fa fa-check-circle"></i>
     </a>
@@ -91,8 +92,8 @@
     <a type="button" 
        class="btn btn-sm btn-outline-danger me-1" 
        data-bs-toggle="modal"
-       data-bs-target="#redeemAction{{ $value['id'] }}"
-       onclick="CancelView({{ $key }}, '{{ $value['order_id'] }}')"
+       data-bs-target="#redeemAction{{ $value->id }}"
+       onclick="CancelView({{ $key }}, '{{ $value->order_id }}')"
        title="Cancel Order">
         <i class="fa fa-times-circle"></i>
     </a>
@@ -100,11 +101,19 @@
     <a type="button" 
        class="btn btn-sm btn-outline-warning" 
        data-bs-toggle="modal" 
-       data-bs-target="#statement_view_{{ $value['id'] }}"
-       onclick="StatementView({{ $key }}, '{{ $value['order_id'] }}')"
+       data-bs-target="#statement_view_{{ $value->id }}"
+       onclick="StatementView({{ $key }}, '{{ $value->order_id }}')"
        title="View Statement">
         <i class="fa fa-file-text"></i>
     </a>
+    
+     @if($value->redeem_status == 'Full Redeemed')
+        <span class="badge bg-success">Full Redeemed</span>
+    @elseif($value->redeem_status == 'Partial Redeemed')
+        <span class="badge bg-warning">Partial Redeemed</span>
+    @else
+        <span class="badge bg-danger">Not Redeemed</span>
+    @endif
 </td>
 
                                @elseif(!empty($value->payment_intent) && ($value->payment_status == 'under_process'))
