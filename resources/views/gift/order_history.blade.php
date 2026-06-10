@@ -1,142 +1,164 @@
 @extends('layouts.admin_layout')
 @section('body')
-
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h3 class="mb-0">Service Order History</h3>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Orders</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        Service Order History
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div><!-- /.container-fluid -->
-</section>
-
-<section class="app-main">
-
-    <!--begin::App Content-->
-    <div class="app-content">
-        <!--begin::Container-->
+    <section class="content-header">
         <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="mb-0">Service Order History</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Orders</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Service Order History
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
 
-            
-            
-            <!--begin::Row-->
-            {{-- {{ $data->onEachSide(50)->links() }} --}}
-            <table id="datatable-buttons" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
-                        {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Order Number">Order Number</th> --}}
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Invoice">Invoice</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Redeem Action">Redeem Action</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Full Name">Full Name</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Email">Email</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Phone">Phone</th>
-                        {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="City">City</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Country">Country</th> --}}
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Transaction Id">Transaction Id</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Total Amount">Total Amount</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Transaction Amount">Transaction Amount</th>
-                        {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Payment Status">Payment Status</th> --}}
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Transaction Status">Transaction Status</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Created Date & Time">Date & Time</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Gift Card Use">Gift Card Use</th>
-                    </tr>
-                </thead>
+    <section class="app-main">
 
-                <tbody id="data-table-body">
-                    @foreach($data as $key => $value)
-                   
+        <!--begin::App Content-->
+        <div class="app-content">
+            <!--begin::Container-->
+            <div class="container-fluid">
+
+
+
+                <!--begin::Row-->
+                {{-- {{ $data->onEachSide(50)->links() }} --}}
+                <table id="datatable-buttons" class="table table-bordered table-striped">
+                    <thead>
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            {{-- <td>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="#">#</th>
+                            {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Order Number">Order Number</th> --}}
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Invoice">Invoice</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Redeem Action">Redeem Action</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Full Name">Full Name</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Email">Email</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Phone">Phone</th>
+                            {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="City">City</th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Country">Country</th> --}}
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Transaction Id">Transaction Id</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Total Amount">Total Amount</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Transaction Amount">Transaction Amount</th>
+                            {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Payment Status">Payment Status</th> --}}
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Transaction Status">Transaction Status</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Created Date & Time">Date & Time</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="Gift Card Use">Gift Card Use</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="data-table-body">
+                        @foreach ($data as $key => $value)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                {{-- <td>
                                
                                 {{ $value->order_id }}
                                
                             </td> --}}
-                            <td>
-                             
-                                @if(!empty($value->payment_intent && $value->payment_status == 'paid' || $value->payment_intent && $value->payment_status == 'success'))
-                                <a  class="btn btn-block btn-outline-success"
-                                    href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
-                                    {{ $value->order_id }}
-                                </a>
-                                @elseif($value->payment_status == 'under_process')
-                                <a  class="btn btn-block btn-outline-primary"
-                                    href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
-                                    {{ $value->order_id }}
-                                </a>
-                                @else
-                                <span class="text-danger">No Payment</span>
-                                @endif
-                            </td>
-                             @if(!empty($value->payment_intent) && ($value->payment_status == 'paid' || $value->payment_status == 'success'))
                                 <td>
-    <a type="button" 
-       class="btn btn-sm btn-outline-success me-1" 
-       data-bs-toggle="modal"
-       data-bs-target="#redeemAction{{ $value->id }}"
-       onclick="OrderView({{ $key }}, '{{ $value->order_id }}')"
-       title="Redeem Service">
-        <i class="fa fa-check-circle"></i>
-    </a>
 
-    <a type="button" 
-       class="btn btn-sm btn-outline-danger me-1" 
-       data-bs-toggle="modal"
-       data-bs-target="#redeemAction{{ $value->id }}"
-       onclick="CancelView({{ $key }}, '{{ $value->order_id }}')"
-       title="Cancel Order">
-        <i class="fa fa-times-circle"></i>
-    </a>
+                                    @if (
+                                        !empty(
+                                            ($value->payment_intent && $value->payment_status == 'paid') ||
+                                                ($value->payment_intent && $value->payment_status == 'success')
+                                        ))
+                                        <a class="btn btn-block btn-outline-success"
+                                            href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
+                                            {{ $value->order_id }}
+                                        </a>
+                                    @elseif($value->payment_status == 'under_process')
+                                        <a class="btn btn-block btn-outline-primary"
+                                            href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
+                                            {{ $value->order_id }}
+                                        </a>
+                                    @else
+                                        <span class="text-danger">No Payment</span>
+                                    @endif
+                                </td>
+                                @if (!empty($value->payment_intent) && ($value->payment_status == 'paid' || $value->payment_status == 'success'))
+                                    <td>
+                                        <a type="button" class="btn btn-sm btn-outline-success me-1"
+                                            data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
+                                            onclick="OrderView({{ $key }}, '{{ $value->order_id }}')"
+                                            title="Redeem Service">
+                                            <i class="fa fa-check-circle"></i>
+                                        </a>
 
-    <a type="button" 
-       class="btn btn-sm btn-outline-warning" 
-       data-bs-toggle="modal" 
-       data-bs-target="#statement_view_{{ $value->id }}"
-       onclick="StatementView({{ $key }}, '{{ $value->order_id }}')"
-       title="View Statement">
-        <i class="fa fa-file-text"></i>
-    </a>
-    
-     @if($value->redeem_status == 'Full Redeemed')
-        <span class="badge bg-success">Full Redeemed</span>
-    @elseif($value->redeem_status == 'Partial Redeemed')
-        <span class="badge bg-warning">Partial Redeemed</span>
-    @else
-        <span class="badge bg-danger">Not Redeemed</span>
-    @endif
-</td>
+                                        <a type="button" class="btn btn-sm btn-outline-danger me-1"
+                                            data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
+                                            onclick="CancelView({{ $key }}, '{{ $value->order_id }}')"
+                                            title="Cancel Order">
+                                            <i class="fa fa-times-circle"></i>
+                                        </a>
 
-                               @elseif(!empty($value->payment_intent) && ($value->payment_status == 'under_process'))
-                                <td> <span class="badge bg-primary">{{"Payment ".str_replace('_',' ',UcFirst($value->payment_status))}}</span></td>
+                                        <a type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
+                                            data-bs-target="#statement_view_{{ $value->id }}"
+                                            onclick="StatementView({{ $key }}, '{{ $value->order_id }}')"
+                                            title="View Statement">
+                                            <i class="fa fa-file-text"></i>
+                                        </a>
+                                        @if (Auth::user()->user_type == 1)
+                                            <a type="button" class="btn btn-sm btn-outline-primary me-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#RedeemServiceRolBack{{ $value->id }}"
+                                                onclick="ServiceRollback({{ $key }}, '{{ $value->order_id }}')"
+                                                title="Redeem Service Roll Back">
+                                                <i class="fa fa-undo"></i>
+                                            </a>
+                                        @endif
+
+
+
+                                        @if ($value->redeem_status == 'Full Redeemed')
+                                            <span class="badge bg-success">Full Redeemed</span>
+                                        @elseif($value->redeem_status == 'Partial Redeemed')
+                                            <span class="badge bg-warning">Partial Redeemed</span>
+                                        @else
+                                            <span class="badge bg-danger">Not Redeemed</span>
+                                        @endif
+
+
+                                    </td>
+                                @elseif(!empty($value->payment_intent) && $value->payment_status == 'under_process')
+                                    <td> <span
+                                            class="badge bg-primary">{{ 'Payment ' . str_replace('_', ' ', UcFirst($value->payment_status)) }}</span>
+                                    </td>
                                 @else
-                                <td> <span class="badge bg-danger">No Payment</span></td>
+                                    <td> <span class="badge bg-danger">No Payment</span></td>
                                 @endif
-                            <td>{{ $value->fname . " " . $value->lname }}</td>
-                            <td>{{ $value->email }}</td>
-                            <td>{{ $value->phone }}</td>
-                            {{-- <td>{{ $value->city }}</td>
+                                <td>{{ $value->fname . ' ' . $value->lname }}</td>
+                                <td>{{ $value->email }}</td>
+                                <td>{{ $value->phone }}</td>
+                                {{-- <td>{{ $value->city }}</td>
                             <td>{{ $value->country }}</td> --}}
-                            <td>{{ $value->payment_intent }}</td>
-                            <td>${{ number_format((float) $value->final_amount, 2) }}</td>
-                            <td>${{ number_format((float) $value->transaction_amount, 2) }}</td>
+                                <td>{{ $value->payment_intent }}</td>
+                                <td>${{ number_format((float) $value->final_amount, 2) }}</td>
+                                <td>${{ number_format((float) $value->transaction_amount, 2) }}</td>
 
-                            
-                            {{-- <td>
+
+                                {{-- <td>
                                 <span
                                     class="badge bg-{{ $value->payment_status == 'paid' || $value->payment_status == 'success' ? 'success' : 'danger' }}">
                                     {{ucfirst($value->payment_status) }}
                                 </span>
-                                @if($value->payment_status == 'under_process')
+                                @if ($value->payment_status == 'under_process')
                                 <a href="#">
                                     <span class="badge bg-warning" data-bs-toggle="modal"
                                         data-bs-target="#paymentUpdate_{{ $value['id'] }}"
@@ -145,32 +167,31 @@
                                 </a>
                                 @endif
                             </td> --}}
-                            <td>
-                                <span
-                                    class="badge bg-{{ $value->transaction_status == 'complete' ? 'success' : 'danger' }}">
-                                    {{ucfirst($value->transaction_status) }}
-                                </span>
-                            </td>
-                            <td>{{ date('m-d-Y h:i:s', strtotime($value->updated_at)) }}
-                            </td>
-                            <td>{{ $value->gift_card_applyed ? 'Yes' : 'No' }}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                <td>
+                                    <span
+                                        class="badge bg-{{ $value->transaction_status == 'complete' ? 'success' : 'danger' }}">
+                                        {{ ucfirst($value->transaction_status) }}
+                                    </span>
+                                </td>
+                                <td>{{ date('m-d-Y h:i:s', strtotime($value->updated_at)) }}
+                                </td>
+                                <td>{{ $value->gift_card_applyed ? 'Yes' : 'No' }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-           
-            <!--end::Row-->
-            <!-- /.Start col -->
+
+                <!--end::Row-->
+                <!-- /.Start col -->
+            </div>
+            <!-- /.row (main row) -->
         </div>
-        <!-- /.row (main row) -->
-    </div>
-    <!--end::Container-->
-</section>
+        <!--end::Container-->
+    </section>
 
-<!-- for Show Service Order Modal -->
- <!-- for Show Service Order Modal -->
+    <!-- for Show Service Order Modal -->
     <div class="modal fade deepak" id="redeemAction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -253,60 +274,265 @@
     </div>
     {{-- Service Order Cancel Modal End --}}
 
-{{-- for payment status update modal --}}
-<div class="modal fade paymentUpdate" id="paymentUpdate_" data-bs-backdrop="static" data-bs-keyboard="false"
-tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="paymentstatus">Payment Status Update</h5>
-             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-        </div>
-        <div class="modal-body">
-            <form method="post" action="{{route('service-orders-update')}}">
-                @csrf
-                <div style="display: flex; flex-direction: column;">
-                    <label for="transaction_id_" style="margin-right: 10px;">Transaction id:</label>
-                    <input class="transaction_id form-control" type="text" id="transaction_id_" name="order_id"
-                        value="" style="margin-right: 20px;" readonly>
-
-                    <label for="payment_status_" style="margin-right: 10px;">Update Status</label>
-                    <select name="payment_status" class="form-control status_id" id="payment_status_">
-                        <option value="">Select Status</option>
-                        <option value="paid" selected>Success</option>
-                        <option value="fail">Fail</option>
-                    </select>
-
-                    <label for="comments_" style="margin-right: 10px;">Comments</label>
-                    <textarea class="form-control comments_" name="comments" id="comments_" style="margin-right: 20px;"></textarea>
-
-                    <input type="hidden" class="user_token" name="user_token"
-                        value="{{ Auth::user()->user_token }}">
-                    <input type="hidden" class="gift_id" id="gift_id_" name="id" value="">
-
-                    <button type="submit"  class="btn btn-block btn-outline-primary mt-3 paymentstatusbutton" id="paymentstatusbutton"
-                        gift_id="gift_id_" onclick="updatestatus(event)"><span
-                            class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
-                            style="display: none;"></span>Update</button>
+    {{-- for payment status update modal --}}
+    <div class="modal fade paymentUpdate" id="paymentUpdate_" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentstatus">Payment Status Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-           <button type="button"  class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+                <div class="modal-body">
+                    <form method="post" action="{{ route('service-orders-update') }}">
+                        @csrf
+                        <div style="display: flex; flex-direction: column;">
+                            <label for="transaction_id_" style="margin-right: 10px;">Transaction id:</label>
+                            <input class="transaction_id form-control" type="text" id="transaction_id_"
+                                name="order_id" value="" style="margin-right: 20px;" readonly>
+
+                            <label for="payment_status_" style="margin-right: 10px;">Update Status</label>
+                            <select name="payment_status" class="form-control status_id" id="payment_status_">
+                                <option value="">Select Status</option>
+                                <option value="paid" selected>Success</option>
+                                <option value="fail">Fail</option>
+                            </select>
+
+                            <label for="comments_" style="margin-right: 10px;">Comments</label>
+                            <textarea class="form-control comments_" name="comments" id="comments_" style="margin-right: 20px;"></textarea>
+
+                            <input type="hidden" class="user_token" name="user_token"
+                                value="{{ Auth::user()->user_token }}">
+                            <input type="hidden" class="gift_id" id="gift_id_" name="id" value="">
+
+                            <button type="submit" class="btn btn-block btn-outline-primary mt-3 paymentstatusbutton"
+                                id="paymentstatusbutton" gift_id="gift_id_" onclick="updatestatus(event)"><span
+                                    class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                                    style="display: none;"></span>Update</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
-{{-- Paymnet status update modal End --}}
+    {{-- Paymnet status update modal End --}}
+
+    {{-- RollBack Modal Open --}}
+    <div class="modal fade deepak" id="RollBackAction" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">RollBack Service</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body">
+                    <div class="d-flex flex-column">
+
+                        <h3>Redeemed Services Roll Back</h3>
+
+                        <!-- Messages -->
+                        <h4 class="text-success" id="redeemed_success"></h4>
+                        <h4 class="text-danger" id="redeemed_error"></h4>
+                        <!-- Dynamic table -->
+                        <div id="rollbackservicebody" class="mt-4"></div>
+
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {{-- RollBack Modal End --}}
 @endsection
 @push('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
         integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-//Redeem Service Action Modal 
+
+    function formatDateMDYHMI(dateString) {
+    var d = new Date(dateString);
+
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var day   = String(d.getDate()).padStart(2, '0');
+    var year  = String(d.getFullYear()).slice(-2);
+    var hour  = String(d.getHours()).padStart(2, '0');
+    var min   = String(d.getMinutes()).padStart(2, '0');
+
+    return month + '-' + day + '-' + year + ' ' + hour + ':' + min;
+}
+        // Rollback Service Modal Open
+        function ServiceRollback(id, order_id) {
+
+            var $modal = $('#RollBackAction');
+            $modal.find('#redeemed_error').hide().html('');
+            $modal.find('#redeemed_success').hide().html('');
+            $modal.find('#rollbackservicebody').html('');
+
+            $modal.modal({
+                backdrop: 'static',
+                keyboard: false
+            }).modal('show');
+
+            $.ajax({
+                url: '{{ route('redeemedservice') }}',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    order_id: order_id
+                },
+
+                success: function(response) {
+                console.log(response);
+                console.log(response.redeemedServices);
+                    if (!response.success || response.redeemedServices.length === 0) {
+                        $modal.find('#rollbackservicebody').html(
+                            '<p class="text-center">No redeemed services found.</p>'
+                        );
+                        return;
+                    }
+
+                    var table = $('<table class="table table-bordered table-striped">');
+
+                    table.append(
+                        '<thead>' +
+                        '<tr>' +
+                        '<th>#</th>' +
+                        '<th>Redeemed Date</th>' +
+                        '<th>Service Name</th>' +
+                        '<th>Redeemed Sessions</th>' +
+                        '<th>Rollback Reason<span class="text-danger">*</span></th>' +
+                        '<th>Action</th>' +
+                        '</tr>' +
+                        '</thead>'
+                    );
+
+                    var tbody = $('<tbody>');
+
+                    $.each(response.redeemedServices, function(index, element) {
+
+                        var serviceName = (element.service_type === 'product') ?
+                            element.product_name :
+                            element.unit_name;
+
+                        tbody.append(
+                            '<tr id="redeem_row_' + element.id + '">' +
+                            '<td>' + (index + 1) + '</td>' +
+                            '<td>' + formatDateMDYHMI(element.redeemed_date) + '</td>' +
+                            '<td>' + (serviceName || '-') + '</td>' +
+                            '<td>' + element.redeemed_sessions + '</td>' +
+                            '<td>' +
+                            '<textarea required class="form-control" rows="2" ' +
+                            'id="rollback_comment_' + element.id + '" ' +
+                            'placeholder="Enter rollback reason"></textarea>' +
+                            '</td>' +
+                            '<td>' +
+                            '<button type="button" ' +
+                            'class="btn btn-sm btn-outline-danger" ' +
+                            'onclick="rollbackRedeemed(' + element.id + ', this)">' +
+                            'Rollback' +
+                            '</button>' +
+                            '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    table.append(tbody);
+                    $modal.find('#rollbackservicebody').html(table);
+                }
+            });
+        }
+        // For Rolback Service
+        function rollbackRedeemed(redeemId, btn) {
+
+            var $modal = $(btn).closest('.modal');
+            var comment = $modal.find('#rollback_comment_' + redeemId).val().trim();
+
+            if (comment === '') {
+                alert('Please enter a rollback reason.');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to rollback this redeemed session?')) {
+                return;
+            }
+
+            $(btn).prop('disabled', true).text('Rolling...');
+
+            $.ajax({
+                url: '{{ route('rollback-redeemed-service') }}',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    redeem_id: redeemId,
+                    comment: comment
+                },
+                success: function(response) {
+
+                    if (response.success) {
+
+                        $modal.find('#redeemed_error').hide();
+
+                        $modal.find('#redeemed_success')
+                            .html(response.message || 'Redeemed session rolled back successfully.')
+                            .fadeIn();
+
+                        $('#redeem_row_' + redeemId).fadeOut(300, function() {
+                            $(this).remove();
+                        });
+
+                        setTimeout(function() {
+                            $modal.find('#redeemed_success').fadeOut();
+                        }, 3000);
+
+                    } else {
+
+                        $modal.find('#redeemed_success').hide();
+
+                        $modal.find('#redeemed_error')
+                            .html(response.message || 'Rollback failed.')
+                            .fadeIn();
+
+                        $(btn).prop('disabled', false).text('Rollback');
+                    }
+                },
+                error: function() {
+
+                    $modal.find('#redeemed_success').hide();
+
+                    $modal.find('#redeemed_error')
+                        .html('Something went wrong. Please try again.')
+                        .fadeIn();
+
+                    $(btn).prop('disabled', false).text('Rollback');
+                }
+            });
+        }
+        //  Service Roll back end 
+
+
+        //Redeem Service Action Modal 
         function modalopen(id, transaction_id) {
             $('#paymentUpdate_').attr('id', 'paymentUpdate_' + id);
             $('#transaction_id_').attr('id', 'transaction_id_' + id).val();
@@ -317,6 +543,7 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
             $('#comments_').attr('id', 'comments_' + id).val();
             $('#paymentUpdate_' + id).modal('show');
         }
+
         function StatementView(id, order_id) {
             $('.statement').attr('id', 'statement_view_' + id);
             $('#statement_view_' + id).modal('show');
@@ -353,9 +580,9 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
                                         <th style="padding: 10px; text-align: left;">Service Name</th>
                                         <th style="padding: 10px; text-align: left;">Message</th>
                                         <th style="padding: 10px; text-align: left;">Service Session</th>
-
+                                        
                                         <th style="padding: 10px; text-align: left;">Service Session Redeem</th>
-                                    </tr>`;
+                                        </tr>`;
 
                         // Loop through each purchase to show credits
                         $.each(servicePurchases, function(index, item) {
@@ -387,6 +614,8 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
                         <td style="padding: 10px;">${value.comments ? value.comments : ''}</td>
                         <td style="padding: 10px;">--</td>
                         <td style="padding: 10px;">${value.number_of_session_use}</td>
+                        
+                   
                     </tr>`;
                         });
 
@@ -717,7 +946,7 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
                 var currentRow = $(button).closest('tr');
                 var number_of_session_use = currentRow.find('input[name="number_of_session_use[]"]').val();
                 var remaining_sessions = currentRow.find('td:nth-child(4)')
-            .text(); // Get remaining sessions value from table cell
+                    .text(); // Get remaining sessions value from table cell
                 // Validate session usage
                 if (parseInt(number_of_session_use) > parseInt(remaining_sessions)) {
                     alert('You cannot redeem more sessions than the remaining sessions.');
@@ -776,26 +1005,27 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
                 inputElement.value = 0; // Set the value to the minimum value
             }
         }
-//  For Seacrh Function 
-
+        //  For Seacrh Function 
     </script>
 
     {{--  Table --}}
     <script>
-        $(function () {
-          $("#datatable-buttons").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-          }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
-          $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-          });
+        $(function() {
+            $("#datatable-buttons").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
         });
-      </script>
+    </script>
 @endpush

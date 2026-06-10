@@ -251,7 +251,7 @@
             <div class="modal-body">
                 <div class="d-flex flex-column">
 
-                    <h3>Redeemed Service</h3>
+                     <h3>Redeemed Services Roll Back</h3>
 
                     <!-- Messages -->
                         <h4 class="text-success" id="redeemed_success"></h4>
@@ -768,11 +768,6 @@ function formatDateMDYHMI(dateString) {
     });
 }
 
-
-
-
-
-
 // For Rolback Service
 function rollbackRedeemed(redeemId, btn) {
 
@@ -841,13 +836,7 @@ function rollbackRedeemed(redeemId, btn) {
     });
 }
 
-
-
-
-
-
-
-        //  Service Roll back end 
+//  Service Roll back end 
 
         function handleRedeemClick(button) {
             if (confirm('Are you sure you want to redeem this?')) {

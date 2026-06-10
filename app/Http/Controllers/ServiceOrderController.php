@@ -270,6 +270,7 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
             ->leftJoin('products', 'service_redeems.product_id', '=', 'products.id')
             ->leftJoin('service_units', 'service_redeems.product_id', '=', 'service_units.id')
             ->where('service_redeems.order_id', $orderId)
+            ->where('service_redeems.is_deleted', 0) // ✅ only non-deleted redeems
             ->get();
 
             // Calculate total remaining sessions
