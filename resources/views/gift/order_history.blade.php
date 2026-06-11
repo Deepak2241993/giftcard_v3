@@ -114,14 +114,16 @@
                                             title="View Statement">
                                             <i class="fa fa-file-text"></i>
                                         </a>
-                                        @if (Auth::user()->user_type == 1)
-                                            <a type="button" class="btn btn-sm btn-outline-primary me-1"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#RedeemServiceRolBack{{ $value->id }}"
-                                                onclick="ServiceRollback({{ $key }}, '{{ $value->order_id }}')"
-                                                title="Redeem Service Roll Back">
-                                                <i class="fa fa-undo"></i>
-                                            </a>
+                                        @if($value->redeem_status == 'Partial Redeemed')
+                                            @if (Auth::user()->user_type == 1)
+                                                <a type="button" class="btn btn-sm btn-outline-primary me-1"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#RedeemServiceRolBack{{ $value->id }}"
+                                                    onclick="ServiceRollback({{ $key }}, '{{ $value->order_id }}')"
+                                                    title="Redeem Service Roll Back">
+                                                    <i class="fa fa-undo"></i>
+                                                </a>
+                                            @endif
                                         @endif
 
 

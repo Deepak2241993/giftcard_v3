@@ -38,13 +38,16 @@ public function index()
         )
         ->groupBy('order_id');
 
-    $serviceRedeems = DB::table('service_orders as so')
-        ->leftJoin('service_redeems as sr', 'so.id', '=', 'sr.service_order_id')
-        ->select(
-            'so.order_id',
-            DB::raw('COALESCE(SUM(sr.number_of_session_use),0) as redeemed_sessions')
-        )
-        ->groupBy('so.order_id');
+  $serviceRedeems = DB::table('service_orders as so')
+    ->leftJoin('service_redeems as sr', function ($join) {
+        $join->on('so.id', '=', 'sr.service_order_id')
+             ->where('sr.is_deleted', '=', 0);
+    })
+    ->select(
+        'so.order_id',
+        DB::raw('COALESCE(SUM(sr.number_of_session_use),0) as redeemed_sessions')
+    )
+    ->groupBy('so.order_id');
 
     $data = DB::table('transaction_histories as th')
         ->leftJoinSub($serviceOrders, 'so', function ($join) {
