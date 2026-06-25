@@ -12,7 +12,9 @@
             <select id="role_id" class="form-control">
                 <option value="">Select Role</option>
                 @foreach($roles as $role)
+                @if($role->id !=1)
                     <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endif
                 @endforeach
             </select>
         </div>
@@ -61,6 +63,8 @@
                             'departments' => 'Departments',
                             'clinics' => 'Clinics',
                             'access_controls' => 'Access Control',
+                            'service_redeem_rollback' => 'Service Redeem Rollback',
+                            'invoices' => 'Invoices',
                         ];
                             
                         @endphp
@@ -85,11 +89,10 @@
 
                     </tbody>
                 </table>
-                    @if(hasPermission('edit_access_controls'))
                 <button type="button" class="btn btn-primary mt-3" onclick="savePermissions()">
                     Save Permissions
                 </button>
-                @endif
+                
 
             </form>
 

@@ -152,6 +152,7 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
 
       public function ServiceRedeem(Request $request, ServiceRedeem $service_redeem)
         {
+           
             // Validate the request data
             $validatedData = $request->validate([
                 'order_id' => 'required|string|max:255',
@@ -249,7 +250,6 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
         public function getServiceStatement(Request $request)
         {
             $orderId = $request->order_id;
-
             // Fetch service purchases with product and unit details
             $servicePurchases = ServiceOrder::select(
                 'service_orders.*', 
@@ -288,6 +288,7 @@ public function ServiceRedeemPatientList(Request $request, TransactionHistory $t
         //  For Redeem Calculation 
         public function redeemcalculation(Request $request)
         {
+     
             $orderId = $request->order_id;
 
             // Fetch service purchases with remaining sessions

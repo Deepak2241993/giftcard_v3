@@ -32,15 +32,19 @@ if (!function_exists('getStaticContent')) {
 
 
 if (!function_exists('roleRoute')) {
-    function roleRoute($adminRoute, $employeeRoute = null)
+    function roleRoute($adminRoute, $employeeRoute = null, $params = [])
     {
         $user = Auth::user();
 
-        if (!$user) return '#';
+        if (!$user) {
+            return '#';
+        }
 
         return $user->role_id == 1
-            ? route($adminRoute)
-            : ($employeeRoute ? route($employeeRoute) : route($adminRoute));
+            ? route($adminRoute, $params)
+            : ($employeeRoute
+                ? route($employeeRoute, $params)
+                : route($adminRoute, $params));
     }
 }
 

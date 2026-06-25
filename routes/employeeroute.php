@@ -425,42 +425,45 @@ Route::post('/program/bulk-action', 'ProgramController@bulkAction')->name('emplo
 Route::Get('/program-sale/{id}', 'ProgramController@PatientProgramBuy')->name('employee.program-sale');
     
 // ================= PATIENT =================
+
+
+
+// Patient Routes
 Route::get('/patient', [PatientController::class, 'index'])
-->middleware('permission:view_patients')
-->name('employee.patient.index');
+    ->middleware('permission:view_patients')
+    ->name('employee.patient.index');
 
 Route::get('/patient/table-data', [PatientController::class, 'patientTableData'])
-->middleware('permission:view_patients')
-->name('employee.patient.table.data');
+    ->middleware('permission:view_patients')
+    ->name('employee.patient.table.data');
 
 Route::post('/patient-quick-create', [PatientController::class, 'PatientQuickCreate'])
-->middleware('permission:create_patients')
-->name('employee.patient-quick-create');
-
+    ->middleware('permission:create_patients')
+    ->name('employee.patient-quick-create');
 
 Route::get('/patient/create', [PatientController::class, 'create'])
-->middleware('permission:create_patients')
-->name('employee.patient.create');
+    ->middleware('permission:create_patients')
+    ->name('employee.patient.create');
 
 Route::post('/patient', [PatientController::class, 'store'])
-->middleware('permission:create_patients')
-->name('employee.patient.store');
+    ->middleware('permission:create_patients')
+    ->name('employee.patient.store');
 
 Route::get('/patient/{id}', [PatientController::class, 'show'])
-->middleware('permission:view_patients')
-->name('employee.patient.show');
+    ->middleware('permission:view_patients')
+    ->name('employee.patient.show');
 
-Route::get('/patient/{id}/edit', [PatientController::class, 'edit'])
-->middleware('permission:edit_patients')
-->name('employee.patient.edit');
+Route::get('/patient/{patient}/edit', [PatientController::class, 'edit'])
+    ->middleware('permission:edit_patients')
+    ->name('employee.patient.edit');
 
 Route::put('/patient/{id}', [PatientController::class, 'update'])
-->middleware('permission:edit_patients')
-->name('employee.patient.update');
+    ->middleware('permission:edit_patients')
+    ->name('employee.patient.update');
 
 Route::delete('/patient/{id}', [PatientController::class, 'destroy'])
-->middleware('permission:delete_patients')
-->name('employee.patient.destroy');
+    ->middleware('permission:delete_patients')
+    ->name('employee.patient.destroy');
 
 Route::get('/giftcards-statement-admin-view/{id}', 'PatientController@GiftcardsStatementAdminView')->name('employee.giftcards-statement-admin-view');
 Route::post('/patient-import','PatientController@importPatients')->name('employee.patients.import')->middleware('permission:create_patients');

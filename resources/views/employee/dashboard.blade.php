@@ -1,419 +1,635 @@
 @extends('layouts.admin_layout')
 @section('body')
     <div class="content">
-    <div class="container-fluid">
+        <div class="container-fluid">
 
-        <!-- ================================
-            GIFT CARD TRANSACTION OVERVIEW
-        ================================= -->
-        <div class="row">
-            <div class="col-lg-12 mb-4">
-                <div class="card">
-                    <div class="card-header border-0 d-flex justify-content-between">
-                        <h3 class="card-title">Gift Cards Transaction Overview</h3>
-                        <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a>
-                    </div>
+            <!-- ================================
+                            GIFT CARD TRANSACTION OVERVIEW
+                        ================================= -->
+            <div class="row">
 
-                    <div class="card-body">
-                        <div class="row">
 
-                            <!-- Today -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-info">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Today's Transactions</span>
-                                        <span class="info-box-number">{{ $todayGiftcards }}</span>
-                                    </div>
+                {{-- Redeem Section --}}
+                <div class="col-lg-6 mb-4">
+                    <div class="card mt-4">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Gift Redeem Status</h3>
+                            {{-- <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a> --}}
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Total Giftcards -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'all']) }}">
+                                        <div class="info-box bg-primary">
+                                            <span class="info-box-icon"><i class="fas fa-gift"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total Giftcards</span>
+                                                <span class="info-box-number">{{ $totalGiftcards }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
 
-                            <!-- Yesterday -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-warning">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Yesterday</span>
-                                        <span class="info-box-number">{{ $yesterdayGiftcards }}</span>
-                                    </div>
+                                <!-- Not Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'not_used']) }}">
+                                        <div class="info-box bg-info">
+                                            <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Not Redeemed</span>
+                                                <span class="info-box-number">{{ $notRedeemed }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
 
-                            <!-- Last 7 Days -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-success">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Last 7 Days</span>
-                                        <span class="info-box-number">{{ $last7DaysGiftcards }}</span>
-                                    </div>
+                                <!-- Partial Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'partial']) }}">
+                                        <div class="info-box bg-warning">
+                                            <span class="info-box-icon"><i class="fas fa-adjust"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Partially Redeemed</span>
+                                                <span class="info-box-number">{{ $partialRedeemed }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
 
-                            <!-- Last Month -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-danger">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Last Month</span>
-                                        <span class="info-box-number">{{ $lastMonthGiftcards }}</span>
-                                    </div>
+                                <!-- Fully Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('giftcards-history-of-patient', ['status' => 'full']) }}">
+                                        <div class="info-box bg-success">
+                                            <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Fully Redeemed</span>
+                                                <span class="info-box-number">{{ $fullyRedeemed }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
+
                             </div>
 
                         </div>
 
-                        <div class="row mt-3">
-                            <!-- This Month -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-primary">
-                                    <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">This Month</span>
-                                        <span class="info-box-number">{{ $thisMonthGiftcards }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <!-- ================================
-            SERVICE SALES OVERVIEW
-        ================================= -->
-        <div class="row">
-            <div class="col-lg-12 mb-4">
-                <div class="card">
-                    <div class="card-header border-0 d-flex justify-content-between">
-                        <h3 class="card-title">Service Sales Overview</h3>
-                        <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="row">
-
-                            <!-- Today -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-info">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Today's Sales</span>
-                                        <span class="info-box-number">{{ $todayServiceSales }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Yesterday -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-warning">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Yesterday</span>
-                                        <span class="info-box-number">{{ $yesterdayServiceSales }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Last 7 Days -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-success">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Last 7 Days</span>
-                                        <span class="info-box-number">{{ $last7DaysServiceSales }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Last Month -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-danger">
-                                    <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Last Month</span>
-                                        <span class="info-box-number">{{ $lastMonthServiceSales }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="row mt-3">
-                            <!-- This Month -->
-                            <div class="col-md-3">
-                                <div class="info-box bg-primary">
-                                    <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">This Month</span>
-                                        <span class="info-box-number">{{ $thisMonthServiceSales }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <!-- ================================
-            COMPARISON CHARTS ROW
-        ================================= -->
-        <div class="row">
-
-            <!-- Giftcard Chart -->
-            <div class="col-lg-6 mb-4">
-                <div class="card chart-card">
-                    <div class="card-header border-0 d-flex justify-content-between">
-                        <h3 class="card-title">Gift Card Sales Comparison</h3>
-                        <a href="#" class="btn btn-primary btn-sm">View Report</a>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <p class="d-flex flex-column">
-                                <span class="text-bold text-lg">${{ number_format($thisMonthGiftcardSales,2) }}</span>
-                                <span>Sales This Month</span>
-                            </p>
-
-                            <p class="ml-auto d-flex flex-column text-right">
-                                <span class="{{ $giftcardSalesGrowth >= 0 ? 'text-success' : 'text-danger' }}">
-                                    <i class="fas fa-arrow-{{ $giftcardSalesGrowth >=0 ? 'up':'down' }}"></i>
-                                    {{ number_format($giftcardSalesGrowth,1) }}%
-                                </span>
-                                <span class="text-muted">vs Last Month</span>
-                            </p>
-                        </div>
-
-                        <div class="position-relative mb-4" style="height:280px;">
-                            <canvas id="giftcard-sales-comparison-chart"></canvas>
-                        </div>
-
-                        <div class="d-flex flex-row justify-content-end">
-                            <span class="mr-3"><i class="fas fa-square text-primary"></i> {{ now()->year }}</span>
-                            <span><i class="fas fa-square text-secondary"></i> {{ now()->subYear()->year }}</span>
-                        </div>
                     </div>
                 </div>
-            </div>
+                {{-- Redeem Section End  --}}
 
-            <!-- Service Chart -->
-            <div class="col-lg-6 mb-4">
-                <div class="card chart-card">
-                    <div class="card-header border-0 d-flex justify-content-between">
-                        <h3 class="card-title">Service Sales Comparison</h3>
-                        <a href="#" class="btn btn-primary btn-sm">View Report</a>
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="d-flex">
-                            <p class="d-flex flex-column">
-                                <span class="text-bold text-lg">${{ number_format($thisMonthServiceSales,2) }}</span>
-                                <span>Sales This Month</span>
-                            </p>
-
-                            <p class="ml-auto d-flex flex-column text-right">
-                                <span class="{{ $thisMonthServiceSales >= $lastMonthServiceSales ? 'text-success':'text-danger' }}">
-                                    <i class="fas fa-arrow-{{ $thisMonthServiceSales >= $lastMonthServiceSales ? 'up':'down' }}"></i>
-                                    {{ $lastMonthServiceSales > 0 ? number_format((($thisMonthServiceSales-$lastMonthServiceSales)/$lastMonthServiceSales)*100,1) : 100 }}%
-                                </span>
-                                <span class="text-muted">vs Last Month</span>
-                            </p>
+                {{-- For Service Redeem Status --}}
+                <div class="col-lg-6 mb-4">
+                    <div class="card mt-4">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Service Redeem Status</h3>
+                            {{-- <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a> --}}
                         </div>
 
-                        <div class="position-relative mb-4" style="height:280px;">
-                            <canvas id="service-sales-comparison-chart"></canvas>
-                        </div>
+                        <div class="card-body">
+                            <div class="row">
 
-                        <div class="d-flex flex-row justify-content-end">
-                            <span class="mr-3"><i class="fas fa-square text-primary"></i> {{ now()->year }}</span>
-                            <span><i class="fas fa-square text-secondary"></i> {{ now()->subYear()->year }}</span>
+                                <!-- Total Purchased Services -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'all']) }}">
+                                        <div class="info-box bg-info">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total Purchased Services</span>
+                                                <span class="info-box-number">{{ $totalPurchasedServices }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- Not Redeemed -->
+                                <div class="col-md-6">
+                                    <a
+                                        href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'not_redeemed']) }}">
+                                        <div class="info-box bg-warning">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Not Redeemed</span>
+                                                <span class="info-box-number">{{ $notRedeemedServices }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- Partial Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'partial']) }}">
+                                        <div class="info-box bg-success">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Partial Redeemed</span>
+                                                <span class="info-box-number">{{ $partialRedeemedServices }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- Fully Redeemed -->
+                                <div class="col-md-6">
+                                    <a href="{{ route('unit-history-of-patient', ['unitid' => 0, 'type' => 'full']) }}">
+                                        <div class="info-box bg-danger">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Fully Redeemed</span>
+                                                <span class="info-box-number">{{ $fullyRedeemedServices }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+
+
+
                         </div>
 
                     </div>
                 </div>
             </div>
+            {{-- For Unit View  --}}
+            <section class="content-header">
+                <h1>Unit Dashboard</h1>
+                <!--begin::App Content-->
+                <div class="app-content">
+                    <!--begin::Container-->
+                    <div class="container-fluid">
 
-        </div>
+                        <div class="card">
+                            <div class="card-body">
 
-        <div class="row">
-            {{-- For Most Sold Products --}}
-            <div class="col-lg-6 mt-4">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">Most Sold Products</h3>
+                                <table id="datatable-buttons" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="select_all"></th>
+                                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1" aria-sort="ascending" aria-label="Unit Name">
+                                                Unit Name
+                                            </th>
+                                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1" aria-sort="ascending"
+                                                aria-label="Total Sales">
+                                                Total Orders</th>
+                                            <th class="sorting sorting_asc" tabindex="0"
+                                                aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                                aria-sort="ascending" aria-label="Total Sessions Sale">
+                                                Total Sessions Sale</th>
+                                            <th class="sorting sorting_asc" tabindex="0"
+                                                aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                                aria-sort="ascending" aria-label="Used Sessions">
+                                                Used Sessions</th>
+                                            <th class="sorting sorting_asc" tabindex="0"
+                                                aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                                aria-sort="ascending" aria-label="Remaining Sessions">
+                                                Remaining Sessions</th>
+                                            {{-- <th class="sorting sorting_asc" tabindex="0"
+                                                aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                                aria-sort="ascending" aria-label="Total Revenue">
+                                                Total Revenue</th> --}}
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="data-table-body">
+                                        @foreach ($units as $value)
+                                            <tr>
+
+                                                <td>{{ $loop->iteration }}</td>
+
+                                                <td><a
+                                                        href="{{ route('unit-history-of-patient', $value->service_id) }}">{{ $value->product_name ? $value->product_name : 'N/A' }}</a>
+                                                </td>
+
+                                                <td>{{ $value->total_sales }}</td>
+                                                <td><span class="badge bg-primary">{{ $value->total_sessions }}</span>
+                                                </td>
+                                                <td><span class="badge bg-warning">{{ $value->used_sessions }}</span></td>
+                                                <td><span class="badge bg-success">{{ $value->remaining_sessions }}</span>
+                                                </td>
+                                                {{-- <td>${{ number_format($value->total_revenue, 2) }}</td> --}}
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                        {{-- {{ $result->links() }} --}}
+                        <!--end::Row-->
+                        <!-- /.Start col -->
                     </div>
+                    <!-- /.row (main row) -->
+                </div>
+                <!--end::Container-->
+            </section>
 
-                    <div class="card-body p-0">
-                        <table class="table table-striped m-0">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Category</th>
-                                    <th>Qty Sold</th>
-                                    <th>Revenue</th>
-                                </tr>
-                            </thead>
+            {{-- Unit view End --}}
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card mt-4">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Gift Cards Transaction Overview</h3>
+                            <a href="{{ url('admin/giftcards-orders') }}" class="btn btn-primary btn-sm">See All</a>
+                        </div>
 
-                            <tbody>
-                                @foreach($topProducts as $item)
-                                <tr>
-                                    <td>{{ $item->product_name }}</td>
-                                    <td>{{ $item->cat_name ?? 'N/A' }}</td>
-                                    <td><strong>{{ $item->total_qty }}</strong></td>
-                                    <td>${{ number_format($item->total_revenue, 2) }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
+                        <div class="card-body">
+                            <div class="row">
 
-                        </table>
+                                <!-- Today -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-info">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Today's Transactions</span>
+                                            <span class="info-box-number">{{ $todayGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yesterday -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-warning">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Yesterday</span>
+                                            <span class="info-box-number">{{ $yesterdayGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last 7 Days -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-success">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last 7 Days</span>
+                                            <span class="info-box-number">{{ $last7DaysGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-danger">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last Month</span>
+                                            <span class="info-box-number">{{ $lastMonthGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-3">
+                                <!-- This Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-primary">
+                                        <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">This Month</span>
+                                            <span class="info-box-number">{{ $thisMonthGiftcards }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
-            </div>
-            {{-- For Category Wise --}}
-            <div class="col-lg-6 mt-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Campaign-wise Revenue</h3>
-                    </div>
+                <!-- ================================
+                            SERVICE SALES OVERVIEW
+                            ================================= -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card mt-4">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Service Sales Overview</h3>
+                            <a href="{{ url('admin/service-orders') }}" class="btn btn-primary btn-sm">See All</a>
+                        </div>
 
-                    <div class="card-body p-0">
-                        <table class="table table-hover m-0">
-                            <thead>
-                                <tr>
-                                    <th>Campaign</th>
-                                    <th>Revenue</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($campaignRevenue as $c)
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Today -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-info">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Today's Sales</span>
+                                            <span class="info-box-number">{{ $todayServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yesterday -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-warning">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-minus"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Yesterday</span>
+                                            <span class="info-box-number">{{ $yesterdayServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last 7 Days -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-success">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last 7 Days</span>
+                                            <span class="info-box-number">{{ $last7DaysServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-danger">
+                                        <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Last Month</span>
+                                            <span class="info-box-number">{{ $lastMonthServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-3">
+                                <!-- This Month -->
+                                <div class="col-md-4">
+                                    <div class="info-box bg-primary">
+                                        <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">This Month</span>
+                                            <span class="info-box-number">{{ $thisMonthServiceSales }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- ================================
+                            COMPARISON CHARTS ROW
+                        ================================= -->
+            <div class="row">
+
+                <!-- Giftcard Chart -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Gift Card Sales Comparison</h3>
+                            <a href="#" class="btn btn-primary btn-sm">View Report</a>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span
+                                        class="text-bold text-lg">${{ number_format($thisMonthGiftcardSales, 2) }}</span>
+                                    <span>Sales This Month</span>
+                                </p>
+
+                                <p class="ml-auto d-flex flex-column text-right">
+                                    <span class="{{ $giftcardSalesGrowth >= 0 ? 'text-success' : 'text-danger' }}">
+                                        <i class="fas fa-arrow-{{ $giftcardSalesGrowth >= 0 ? 'up' : 'down' }}"></i>
+                                        {{ number_format($giftcardSalesGrowth, 1) }}%
+                                    </span>
+                                    <span class="text-muted">vs Last Month</span>
+                                </p>
+                            </div>
+
+                            <div class="position-relative mb-4" style="height:280px;">
+                                <canvas id="giftcard-sales-comparison-chart"></canvas>
+                            </div>
+
+                            <div class="d-flex flex-row justify-content-end">
+                                <span class="mr-3"><i class="fas fa-square text-primary"></i>
+                                    {{ now()->year }}</span>
+                                <span><i class="fas fa-square text-secondary"></i> {{ now()->subYear()->year }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Chart -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Service Sales Comparison</h3>
+                            <a href="#" class="btn btn-primary btn-sm">View Report</a>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg">${{ number_format($thisMonthServiceSales, 2) }}</span>
+                                    <span>Sales This Month</span>
+                                </p>
+
+                                <p class="ml-auto d-flex flex-column text-right">
+                                    <span
+                                        class="{{ $thisMonthServiceSales >= $lastMonthServiceSales ? 'text-success' : 'text-danger' }}">
+                                        <i
+                                            class="fas fa-arrow-{{ $thisMonthServiceSales >= $lastMonthServiceSales ? 'up' : 'down' }}"></i>
+                                        {{ $lastMonthServiceSales > 0 ? number_format((($thisMonthServiceSales - $lastMonthServiceSales) / $lastMonthServiceSales) * 100, 1) : 100 }}%
+                                    </span>
+                                    <span class="text-muted">vs Last Month</span>
+                                </p>
+                            </div>
+
+                            <div class="position-relative mb-4" style="height:280px;">
+                                <canvas id="service-sales-comparison-chart"></canvas>
+                            </div>
+
+                            <div class="d-flex flex-row justify-content-end">
+                                <span class="mr-3"><i class="fas fa-square text-primary"></i>
+                                    {{ now()->year }}</span>
+                                <span><i class="fas fa-square text-secondary"></i> {{ now()->subYear()->year }}</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                {{-- For Most Sold Products --}}
+                <div class="col-lg-6 mt-4">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">Most Sold Products</h3>
+                        </div>
+
+                        <div class="card-body p-0">
+                            <table class="table table-striped m-0">
+                                <thead>
                                     <tr>
-                                        <td>{{ $c->cat_name ?? 'Uncategorized' }}</td>
-                                        <td>${{ number_format($c->total_revenue, 2) }}</td>
+                                        <th>Product</th>
+                                        <th>Category</th>
+                                        <th>Qty Sold</th>
+                                        <th>Revenue</th>
                                     </tr>
-                                @endforeach
+                                </thead>
 
-                                <tr class="bg-light font-weight-bold">
-                                    <td>Total Deals Revenue</td>
-                                    <td>${{ number_format($totalDealsRevenue, 2) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                <tbody>
+                                    @foreach ($topProducts as $item)
+                                        <tr>
+                                            <td>{{ $item->product_name }}</td>
+                                            <td>{{ $item->cat_name ?? 'N/A' }}</td>
+                                            <td><strong>{{ $item->total_qty }}</strong></td>
+                                            <td>${{ number_format($item->total_revenue, 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
-
                 </div>
-            </div>
-        </div>
-
-
-        <div class="row mt-4">
-            <!-- Giftcard Pie Chart -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header border-0 d-flex justify-content-between">
-                        <h3 class="card-title">Giftcard Order Status</h3>
-                    </div>
-
-                    <div class="card-body">
-                        <div style="height:300px;">
-                            <canvas id="giftcard-order-pie"></canvas>
+                {{-- For Category Wise --}}
+                <div class="col-lg-6 mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Campaign-wise Revenue</h3>
                         </div>
 
-                        <ul class="mt-3 list-group">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Total Orders</span>
-                                <strong>{{ $giftcardTotalOrders }}</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Completed</span>
-                                <strong>{{ $giftcardCompletedOrders }}</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Pending / In-progress</span>
-                                <strong>{{ $giftcardPendingOrders }}</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Cancelled / Refunded</span>
-                                <strong>{{ $giftcardCancelledOrders }}</strong>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                        <div class="card-body p-0">
+                            <table class="table table-hover m-0">
+                                <thead>
+                                    <tr>
+                                        <th>Campaign</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($campaignRevenue as $c)
+                                        <tr>
+                                            <td>{{ $c->cat_name ?? 'Uncategorized' }}</td>
+                                            <td>${{ number_format($c->total_revenue, 2) }}</td>
+                                        </tr>
+                                    @endforeach
 
-            <!-- Service Order Pie Chart -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header border-0 d-flex justify-content-between">
-                        <h3 class="card-title">Service Order Status</h3>
-                    </div>
-
-                    <div class="card-body">
-                        <div style="height:300px;">
-                            <canvas id="service-orders-pie"></canvas>
+                                    <tr class="bg-light font-weight-bold">
+                                        <td>Total Deals Revenue</td>
+                                        <td>${{ number_format($totalDealsRevenue, 2) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <ul class="mt-3 list-group">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Total Orders</span>
-                                <strong>{{ $serviceTotalOrders }}</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Completed</span>
-                                <strong>{{ $serviceCompletedOrders }}</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Pending / In-progress</span>
-                                <strong>{{ $servicePendingOrders }}</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Cancelled / Refunded</span>
-                                <strong>{{ $serviceCancelledOrders }}</strong>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-{{-- GIftCard Metrix --}}
-        <div class="row mt-4">
+
+
+            <div class="row mt-4">
+                <!-- Giftcard Pie Chart -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Giftcard Transactions Status</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <div style="height:300px;">
+                                <canvas id="giftcard-order-pie"></canvas>
+                            </div>
+
+                            <ul class="mt-3 list-group">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Total Orders</span>
+                                    <strong>{{ $giftcardTotalOrders }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Completed</span>
+                                    <strong>{{ $giftcardCompletedOrders }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Pending / In-progress</span>
+                                    <strong>{{ $giftcardPendingOrders }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Cancelled / Refunded</span>
+                                    <strong>{{ $giftcardCancelledOrders }}</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Order Pie Chart -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header border-0 d-flex justify-content-between">
+                            <h3 class="card-title">Service Transaction Status</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <div style="height:300px;">
+                                <canvas id="service-orders-pie"></canvas>
+                            </div>
+
+                            <ul class="mt-3 list-group">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Total Transactions</span>
+                                    <strong>{{ $TotalTransactions }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Completed</span>
+                                    <strong>{{ $transactioncompleted }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Pending / In-progress</span>
+                                    <strong>{{ $TransactionPending }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Cancelled / Refunded</span>
+                                    <strong>{{ $transactioncancelled }}</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card mt-4">
                 <div class="card-header">
-                    <h3 class="card-title">Giftcard Status Overview</h3>
+                    <h3 class="card-title">Last 12 Months Redemption Trend</h3>
                 </div>
 
                 <div class="card-body">
-                    <canvas id="giftcard-pie-chart" height="200"></canvas>
+                    <canvas id="giftcard-redemption-trend-chart" height="200"></canvas>
                 </div>
             </div>
 
+
+
+
         </div>
-        <div class="card mt-4">
-            <div class="card-header">
-                <h3 class="card-title">Last 12 Months Redemption Trend</h3>
-            </div>
-
-            <div class="card-body">
-                <canvas id="giftcard-redemption-trend-chart" height="200"></canvas>
-            </div>
-        </div>
-
-
-
-
     </div>
-</div>
-
 @endsection
 @push('script')
     <!-- OPTIONAL SCRIPTS -->
@@ -526,109 +742,95 @@
 
     {{-- PI Cahrt Script --}}
     <script>
-$(function () {
+        $(function() {
 
-    // -----------------------------
-    // Giftcard Order Pie Chart
-    // -----------------------------
-    new Chart(document.getElementById("giftcard-order-pie"), {
-        type: 'pie',
-        data: {
-            labels: ["Completed", "Pending", "Cancelled"],
-            datasets: [{
-                data: [
-                    {{ $giftcardCompletedOrders }},
-                    {{ $giftcardPendingOrders }},
-                    {{ $giftcardCancelledOrders }}
-                ],
-                backgroundColor: [
-                    "rgba(40, 167, 69, 0.8)",   // green
-                    "rgba(255, 193, 7, 0.8)",   // yellow
-                    "rgba(220, 53, 69, 0.8)"    // red
-                ],
-                borderColor: [
-                    "rgba(40, 167, 69, 1)",
-                    "rgba(255, 193, 7, 1)",
-                    "rgba(220, 53, 69, 1)"
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+            // -----------------------------
+            // Giftcard Order Pie Chart
+            // -----------------------------
+            new Chart(document.getElementById("giftcard-order-pie"), {
+                type: 'pie',
+                data: {
+                    labels: ["Completed", "Pending", "Cancelled"],
+                    datasets: [{
+                        data: [
+                            {{ $giftcardCompletedOrders }},
+                            {{ $giftcardPendingOrders }},
+                            {{ $giftcardCancelledOrders }}
+                        ],
+                        backgroundColor: [
+                            "rgba(40, 167, 69, 0.8)", // green
+                            "rgba(255, 193, 7, 0.8)", // yellow
+                            "rgba(220, 53, 69, 0.8)" // red
+                        ],
+                        borderColor: [
+                            "rgba(40, 167, 69, 1)",
+                            "rgba(255, 193, 7, 1)",
+                            "rgba(220, 53, 69, 1)"
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
 
 
-    // -----------------------------
-    // Service Order Pie Chart
-    // -----------------------------
-    new Chart(document.getElementById("service-orders-pie"), {
-        type: 'pie',
-        data: {
-            labels: ["Completed", "Pending", "Cancelled"],
-            datasets: [{
-                data: [
-                    {{ $serviceCompletedOrders }},
-                    {{ $servicePendingOrders }},
-                    {{ $serviceCancelledOrders }}
-                ],
-                backgroundColor: [
-                    "rgba(40, 167, 69, 0.8)",   // green
-                    "rgba(255, 193, 7, 0.8)",   // yellow
-                    "rgba(220, 53, 69, 0.8)"    // red
-                ],
-                borderColor: [
-                    "rgba(40, 167, 69, 1)",
-                    "rgba(255, 193, 7, 1)",
-                    "rgba(220, 53, 69, 1)"
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+            // -----------------------------
+            // Service Order Pie Chart
+            // -----------------------------
+            new Chart(document.getElementById("service-orders-pie"), {
+                type: 'pie',
+                data: {
+                    labels: ["Completed", "Pending", "Cancelled"],
+                    datasets: [{
+                        data: [
+                            {{ $TotalTransactions }},
+                            {{ $TransactionPending }},
+                            {{ $transactioncancelled }}
+                        ],
+                        backgroundColor: [
+                            "rgba(40, 167, 69, 0.8)", // green
+                            "rgba(255, 193, 7, 0.8)", // yellow
+                            "rgba(220, 53, 69, 0.8)" // red
+                        ],
+                        borderColor: [
+                            "rgba(40, 167, 69, 1)",
+                            "rgba(255, 193, 7, 1)",
+                            "rgba(220, 53, 69, 1)"
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
 
-});
-</script>
-
-{{-- For Giftcard Metrix --}}
-<script>
-    var gcPie = new Chart(document.getElementById('giftcard-pie-chart').getContext('2d'), {
-    type: "pie",
-    data: {
-        labels: ["Sold", "Redeemed", "Cancelled"],
-        datasets: [{
-            data: [
-                {{ $totalGiftcardsSold }},
-                {{ $totalGiftcardsRedeemed }},
-                {{ $totalGiftcardsCancelled }}
-            ],
-            backgroundColor: ["#007bff", "#28a745", "#dc3545"]
-        }]
-    }
-});
+        });
+    </script>
 
 
 
-new Chart(document.getElementById('giftcard-redemption-trend-chart'), {
-    type: "line",
-    data: {
-        labels: @json($trendMonths),
-        datasets: [{
-            label: "Redeemed",
-            data: @json($trendCount),
-            borderColor: "#28a745",
-            fill: false,
-            borderWidth: 2
-        }]
-    }
-});
-
-</script>
-
+    <script>
+        $(function() {
+            $("#datatable-buttons").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
 @endpush

@@ -50,7 +50,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td class="text-center">
                             @if($value['status'] != 0 && $value['total_amount'] != 0)
-                            @if(hasPermission('create_giftcard_redeem'))
+                            @if(hasPermission('edit_giftcard_redeem'))
                                 <a type="button" 
                                 class="btn btn-sm btn-outline-success me-1" 
                                 data-bs-toggle="modal" 
@@ -61,7 +61,7 @@
                                    {{-- <i class="fa fa-check"></i> --}}
                                 </a>
                             @endif
-                            @if(hasPermission('edit_giftcard_redeem'))
+                            @if(hasPermission('delete_giftcard_redeem'))
                                 <a type="button" 
                                 class="btn btn-sm btn-outline-danger me-1" 
                                 data-bs-toggle="modal" 

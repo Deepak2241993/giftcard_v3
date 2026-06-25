@@ -121,8 +121,9 @@
                                                         onclick="cardview({{ $value['id'] }},'{{ $value['transaction_id'] }}')">
                                                         View Card
                                                     </a>
+                                                   @if(hasPermission('view_giftcard_redeem'))
                                                       <a href="{{ route(RoutePrefix() . 'redeem-giftcard',['transaction_id'=> $value['transaction_id'],'user_id'=> $value['id']]) }}" class="btn btn-block btn-outline-success">Redeem Giftcard</a>
-
+                                                    @endif
                                                     @else
                                                     <a type="button"  class="btn btn-block btn-outline-danger">
                                                     Transaction Failed

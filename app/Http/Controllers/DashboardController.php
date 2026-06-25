@@ -27,10 +27,9 @@ use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
-    public function employeeDashboard()
-    {
-        $user = Auth::user();
-        // -----------------------------------------------------------------
+    public function employeeDashboard( GiftcardRedeem $redeem, User $user, GiftcardsNumbers $number, Giftsend $giftsend) {
+
+    // -----------------------------------------------------------------
     // COMMON DATES / YEAR VARIABLES
     // -----------------------------------------------------------------
     $now           = now();
@@ -305,12 +304,178 @@ class DashboardController extends Controller
     $trendMonths = collect(range(1,12))->map(fn($m) => date("M", mktime(0,0,0,$m,1)));
     $trendCount  = collect(range(1,12))->map(fn($m) => $redemptionTrend[$m] ?? 0);
 
-   
-        // --------------------------------------------------
-        // RETURN VIEW
-        // --------------------------------------------------
-        
-        return view('employee.dashboard', compact(
+
+
+
+ // Giftcard status For Dashboard
+ 
+// 🔹 Total Purchases (from giftsends - correct source)
+// ✅ Total successful orders count (optional)
+$totalPurchases = Giftsend::where('payment_status', 'succeeded')->count();
+
+
+// ✅ Total amount summary
+$summary = DB::table('giftcards_numbers as gn')
+    ->join('giftsends as gs', 'gs.id', '=', 'gn.user_id')
+    ->where('gs.payment_status', 'succeeded')
+    ->select(
+        DB::raw('SUM(CASE WHEN gn.amount > 0 THEN gn.amount ELSE 0 END) as total_purchase'),
+        DB::raw('SUM(CASE WHEN gn.amount < 0 THEN ABS(gn.amount) ELSE 0 END) as total_redeem')
+    )
+    ->first();
+
+
+// ✅ Giftcard wise aggregation (FIXED with join)
+$giftcardStatus = DB::table('giftcards_numbers as gn')
+    ->join('giftsends as gs', 'gs.id', '=', 'gn.user_id')
+    ->where('gs.payment_status', 'succeeded')
+    ->select(
+        'gn.giftnumber',
+        DB::raw('SUM(CASE WHEN gn.amount > 0 THEN gn.amount ELSE 0 END) as total_purchase'),
+        DB::raw('SUM(CASE WHEN gn.amount < 0 THEN ABS(gn.amount) ELSE 0 END) as total_redeem')
+    )
+    ->groupBy('gn.giftnumber')
+    ->get();
+
+
+// ✅ Counters
+$fullRedeemed = 0;
+$partialRedeemed = 0;
+$notUsed = 0;
+
+foreach ($giftcardStatus as $card) {
+
+    if ($card->total_redeem == 0) {
+        $notUsed++; // NEW
+        continue;
+    }
+
+    if ($card->total_purchase == $card->total_redeem) {
+        $fullRedeemed++;
+    } elseif ($card->total_redeem < $card->total_purchase) {
+        $partialRedeemed++;
+    }
+}
+
+
+// ✅ Final result
+$result = [
+    'total_orders' => $totalPurchases, // NEW
+    'total_giftcards' => count($giftcardStatus), // NEW
+
+    'total_purchase_amount' => $summary->total_purchase ?? 0,
+    'total_redeemed_amount' => $summary->total_redeem ?? 0,
+
+    'fully_redeemed_cards' => $fullRedeemed,
+    'partially_redeemed_cards' => $partialRedeemed,
+    'not_used_cards' => $notUsed, // NEW
+];
+
+$notRedeemed     = $result['not_used_cards'];
+$partialRedeemed = $result['partially_redeemed_cards'];
+$fullyRedeemed   = $result['fully_redeemed_cards'];
+$totalGiftcards  = $result['total_giftcards']; // (optional but recommended)
+
+// dd($result);
+
+
+// For Service Redeem Status for Dashboard
+$redeems = DB::table('service_redeems')
+    ->select(
+        'order_id',
+        'product_id',
+        DB::raw('SUM(number_of_session_use) as total_redeem')
+    )
+    ->groupBy('order_id', 'product_id');
+
+
+$services = DB::table('service_orders as so')
+    ->leftJoinSub($redeems, 'sr', function ($join) {
+        $join->on('so.order_id', '=', 'sr.order_id')
+             ->on('so.service_id', '=', 'sr.product_id');
+    })
+    ->select(
+        'so.order_id',
+        'so.service_id',
+        DB::raw('SUM(so.qty) as total_purchase'),
+        DB::raw('COALESCE(sr.total_redeem,0) as total_redeem')
+    )
+    ->where(function($q){
+        $q->where('so.is_deleted', 0)
+          ->orWhereNull('so.is_deleted');
+    })
+    ->groupBy('so.order_id', 'so.service_id', 'sr.total_redeem')
+    ->get();
+
+
+$totalPurchasedServices   = $services->count();
+$notRedeemedServices      = 0;
+$partialRedeemedServices  = 0;
+$fullyRedeemedServices    = 0;
+
+foreach ($services as $s) {
+
+    $purchase = (int) $s->total_purchase;
+    $redeem   = (int) $s->total_redeem;
+
+    if ($redeem == 0) {
+        $notRedeemedServices++;
+    } elseif ($purchase == $redeem) {
+        $fullyRedeemedServices++;
+    } else {
+        $partialRedeemedServices++;
+    }
+}
+
+
+$redeemSub = DB::table('service_redeems')
+    ->select(
+        'service_order_id',
+        DB::raw('SUM(IFNULL(number_of_session_use,0)) as used_sessions')
+    )
+    ->groupBy('service_order_id');
+$units = DB::table('service_orders as so')
+    ->join('service_units as su', 'su.id', '=', 'so.service_id')
+
+    // ✅ Join payment table
+    ->join('transaction_histories as th', 'th.order_id', '=', 'so.order_id')
+
+    // ✅ Redeem subquery
+    ->leftJoinSub($redeemSub, 'sr', function ($join) {
+        $join->on('sr.service_order_id', '=', 'so.id');
+    })
+
+    ->where('su.product_is_deleted', 0)
+
+    // ✅ Only paid transactions
+    ->where('th.payment_status', 'paid')
+
+    ->select(
+        'so.service_id',
+        'su.product_name',
+
+        DB::raw('COUNT(DISTINCT so.id) as total_sales'),
+
+        DB::raw('SUM(IFNULL(so.number_of_session,0)) as total_sessions'),
+
+        DB::raw('SUM(IFNULL(sr.used_sessions,0)) as used_sessions'),
+
+        DB::raw('
+            SUM(IFNULL(so.number_of_session,0)) 
+            - SUM(IFNULL(sr.used_sessions,0)) 
+            as remaining_sessions
+        '),
+
+        // ✅ Revenue only for paid
+        DB::raw('SUM(IFNULL(so.qty,0) * IFNULL(so.discounted_amount,0)) as total_revenue')
+    )
+    ->groupBy('so.service_id', 'su.product_name')
+    ->get();
+    // -----------------------------------------------------------------
+    // RETURN VIEW
+    // -----------------------------------------------------------------
+    return view('employee.dashboard', compact(
+
         // Basic counts
         'cancel_deals', 'TotalServiceSale', 'cardnumbers', 'alltransaction', 'user',
         'successTransaction', 'faildTransaction', 'processingTransaction', 'giftCoupon',
@@ -343,14 +508,18 @@ class DashboardController extends Controller
 
         // Campaign / deals revenue
         'campaignRevenue', 'totalDealsRevenue',
-        // Giftcard metrics
-            'totalGiftcardsSold','totalGiftcardsRedeemed','totalGiftcardsCancelled','redemptionRatio','soldValue','redeemedValue','trendMonths','trendCount',
-            //  For Giftcard Redeem Status
-            // 'notRedeemed',
-            // 'partialRedeemed',
-            // 'fullyRedeemed',
-        ));
-    }
+         'totalGiftcards',
+            'notRedeemed',
+            'partialRedeemed',
+            'fullyRedeemed',
+            // For Service Redeem Status
+            'totalPurchasedServices',
+            'notRedeemedServices',
+            'partialRedeemedServices',
+            'fullyRedeemedServices',
+            'units'
+    ));
+}
 
 
 
@@ -764,49 +933,6 @@ foreach ($services as $s) {
 }
 
 
-
-
-
-
-// For Units Sold vs Redeemed (Product-wise)
-// $redeemSub = DB::table('service_redeems')
-//     ->select(
-//         'service_order_id',
-//         DB::raw('SUM(IFNULL(number_of_session_use,0)) as used_sessions')
-//     )
-//     ->groupBy('service_order_id');
-
-// $units = DB::table('service_orders as so')
-//     ->join('service_units as su', 'su.id', '=', 'so.service_id')
-
-//     // ✅ FIX: use subquery instead of direct join
-//     ->leftJoinSub($redeemSub, 'sr', function ($join) {
-//         $join->on('sr.service_order_id', '=', 'so.id');
-//     })
-
-//     ->where('su.product_is_deleted', 0)
-
-//     ->select(
-//         'so.service_id',
-//         'su.product_name',
-
-//         DB::raw('COUNT(DISTINCT so.id) as total_sales'),
-
-//         DB::raw('SUM(IFNULL(so.number_of_session,0)) as total_sessions'),
-
-//         DB::raw('SUM(IFNULL(sr.used_sessions,0)) as used_sessions'),
-
-//         DB::raw('
-//             SUM(IFNULL(so.number_of_session,0)) 
-//             - SUM(IFNULL(sr.used_sessions,0)) 
-//             as remaining_sessions
-//         '),
-
-//         DB::raw('SUM(IFNULL(so.qty,0) * IFNULL(so.discounted_amount,0)) as total_revenue')
-//     )
-//     ->groupBy('so.service_id', 'su.product_name')
-//     ->get();
-
 $redeemSub = DB::table('service_redeems')
     ->select(
         'service_order_id',
@@ -899,6 +1025,19 @@ $units = DB::table('service_orders as so')
             'units'
     ));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // For Unit History of Patient Seprate Page

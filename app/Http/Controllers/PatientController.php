@@ -66,6 +66,7 @@ public function patientTableData(Request $request)
 
         ->addColumn('action', function ($row) {
             $prefix = RoutePrefix();
+            
             return '
                 <div class="btn-group mb-2">
             <a href="'.route($prefix.'patient.edit',$row->id).'" class="btn btn-outline-primary btn-sm" title="View Patient">
@@ -140,7 +141,7 @@ public function patientTableData(Request $request)
      */
     public function edit(Patient $patient, Request $request, TransactionHistory $transaction)
     {
-        // $patient = Patient::find($id);
+
         if(isset($_GET['patient_id']))
             {
                 $request->session()->put('internal_patient_id', $request->get('patient_id'));

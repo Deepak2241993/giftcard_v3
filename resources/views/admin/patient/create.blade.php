@@ -88,6 +88,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
+                
                 <!-- /.col -->
                 <div class="col-md-9">
                     <div class="card">
@@ -98,8 +99,8 @@
                                 <li class="nav-item"><a class="nav-link" href="#giftcards" data-toggle="tab">Giftcards Orders</a></li>
                                 {{-- <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services Orders</a></li> --}}
                                 <li class="nav-item"><a class="nav-link" href="#buysection" data-toggle="tab">Buy</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{route(RoutePrefix() .'giftcardredeemPatientList',['id'=>$patient->id])}}">Giftcard Redeem</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{route(RoutePrefix() .'service-redeem-patient-list',['id'=>$patient->id])}}">Service Redeem</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ roleRoute('giftcardredeemPatientList', 'employee.giftcardredeemPatientList', ['id' => $patient->id]) }}">Giftcard Redeem</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ roleRoute('service-redeem-patient-list', 'employee.service-redeem-patient-list', ['id' => $patient->id]) }}">Service Redeem</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">

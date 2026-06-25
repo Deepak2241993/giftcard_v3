@@ -35,8 +35,10 @@
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                 colspan="1" aria-sort="ascending" aria-label="#">#</th>
                             {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Order Number">Order Number</th> --}}
+                            @if(hasPermission('view_invoices'))
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                 colspan="1" aria-sort="ascending" aria-label="Invoice">Invoice</th>
+                            @endif
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                 colspan="1" aria-sort="ascending" aria-label="Redeem Action">Redeem Action</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
@@ -72,50 +74,56 @@
                                 {{ $value->order_id }}
                                
                             </td> --}}
+                             @if(hasPermission('view_invoices'))
                                 <td>
+                                @if (
+                                    ($value->payment_intent && $value->payment_status == 'paid') ||
+                                    ($value->payment_intent && $value->payment_status == 'success')
+                                )
+                                    <a class="btn btn-block btn-outline-success"
+                                        href="{{ roleRoute('service-invoice', 'employee.service-invoice', ['transaction_data' => $value->id]) }}">
+                                        {{ $value->order_id }}
+                                    </a>
 
-                                    @if (
-                                        !empty(
-                                            ($value->payment_intent && $value->payment_status == 'paid') ||
-                                                ($value->payment_intent && $value->payment_status == 'success')
-                                        ))
-                                        <a class="btn btn-block btn-outline-success"
-                                            href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
-                                            {{ $value->order_id }}
-                                        </a>
-                                    @elseif($value->payment_status == 'under_process')
-                                        <a class="btn btn-block btn-outline-primary"
-                                            href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
-                                            {{ $value->order_id }}
-                                        </a>
-                                    @else
-                                        <span class="text-danger">No Payment</span>
-                                    @endif
+                                @elseif($value->payment_status == 'under_process')
+                                    <a class="btn btn-block btn-outline-primary"
+                                        href="{{ roleRoute('service-invoice', 'employee.service-invoice', ['transaction_data' => $value->id]) }}">
+                                        {{ $value->order_id }}
+                                    </a>
+                                @else
+                                    <span class="text-danger">No Payment</span>
+                                @endif
                                 </td>
+                                @endif
                                 @if (!empty($value->payment_intent) && ($value->payment_status == 'paid' || $value->payment_status == 'success'))
                                     <td>
+                                        @if(hasPermission('view_service_redeem'))
                                         <a type="button" class="btn btn-sm btn-outline-success me-1"
                                             data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
                                             onclick="OrderView({{ $key }}, '{{ $value->order_id }}')"
                                             title="Redeem Service">
                                             <i class="fa fa-check-circle"></i>
                                         </a>
+                                        @endif
 
+                                        @if(hasPermission('view_service_redeem'))
                                         <a type="button" class="btn btn-sm btn-outline-danger me-1"
                                             data-bs-toggle="modal" data-bs-target="#redeemAction{{ $value->id }}"
                                             onclick="CancelView({{ $key }}, '{{ $value->order_id }}')"
                                             title="Cancel Order">
                                             <i class="fa fa-times-circle"></i>
                                         </a>
-
+                                        @endif
+                                        @if(hasPermission('view_service_redeem'))
                                         <a type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
                                             data-bs-target="#statement_view_{{ $value->id }}"
                                             onclick="StatementView({{ $key }}, '{{ $value->order_id }}')"
                                             title="View Statement">
                                             <i class="fa fa-file-text"></i>
                                         </a>
+                                        @endif
                                         @if($value->redeem_status == 'Partial Redeemed')
-                                            @if (Auth::user()->user_type == 1)
+                                            @if(hasPermission('view_service_redeem_rollback'))
                                                 <a type="button" class="btn btn-sm btn-outline-primary me-1"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#RedeemServiceRolBack{{ $value->id }}"
@@ -384,7 +392,7 @@
 }
         // Rollback Service Modal Open
         function ServiceRollback(id, order_id) {
-
+console.log('ServiceRollback Called', id, order_id);
             var $modal = $('#RollBackAction');
             $modal.find('#redeemed_error').hide().html('');
             $modal.find('#redeemed_success').hide().html('');
@@ -396,7 +404,7 @@
             }).modal('show');
 
             $.ajax({
-                url: '{{ route('redeemedservice') }}',
+                url: "{{ roleRoute('redeemedservice', 'employee.redeemedservice') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: {
@@ -430,12 +438,26 @@
                     );
 
                     var tbody = $('<tbody>');
+                        
+
+                    var canRollback = @json(hasPermission('edit_service_redeem_rollback'));
 
                     $.each(response.redeemedServices, function(index, element) {
 
-                        var serviceName = (element.service_type === 'product') ?
-                            element.product_name :
-                            element.unit_name;
+                        var serviceName = (element.service_type === 'product')
+                            ? element.product_name
+                            : element.unit_name;
+
+                        var actionButton = '';
+
+                        if (canRollback) {
+                            actionButton =
+                                '<button type="button" ' +
+                                'class="btn btn-sm btn-outline-danger" ' +
+                                'onclick="rollbackRedeemed(' + element.id + ', this)">' +
+                                'Rollback' +
+                                '</button>';
+                        }
 
                         tbody.append(
                             '<tr id="redeem_row_' + element.id + '">' +
@@ -448,13 +470,7 @@
                             'id="rollback_comment_' + element.id + '" ' +
                             'placeholder="Enter rollback reason"></textarea>' +
                             '</td>' +
-                            '<td>' +
-                            '<button type="button" ' +
-                            'class="btn btn-sm btn-outline-danger" ' +
-                            'onclick="rollbackRedeemed(' + element.id + ', this)">' +
-                            'Rollback' +
-                            '</button>' +
-                            '</td>' +
+                            '<td>' + actionButton + '</td>' +
                             '</tr>'
                         );
                     });
@@ -482,7 +498,7 @@
             $(btn).prop('disabled', true).text('Rolling...');
 
             $.ajax({
-                url: '{{ route('rollback-redeemed-service') }}',
+                url: "{{ roleRoute('rollback-redeemed-service', 'employee.rollback-redeemed-service') }}",
                 method: 'POST',
                 dataType: 'json',
                 data: {
@@ -552,7 +568,7 @@
 
             // AJAX request to fetch data
             $.ajax({
-                url: '{{ route('service-statement') }}',
+               url: "{{ roleRoute('service-statement', 'employee.service-statement') }}",
                 method: "post",
                 dataType: "json",
                 data: {
@@ -649,7 +665,7 @@
             $('.cancel').attr('id', 'cancel_view_' + id);
             $('#cancel_view_' + id).modal('show');
             $.ajax({
-                url: '{{ route('order-search') }}',
+                url: "{{ Route('order-search','employee.order-search') }}",
                 method: "post",
                 dataType: "json",
                 data: {
@@ -666,7 +682,7 @@
 
                         // Create form and table structure
                         var form = $('<form>', {
-                            action: '{{ route('do-cancel') }}',
+                            action: "{{ roleRoute('do-cancel','employee.do-cancel') }}",
                             method: 'POST'
                         });
                         var table = $('<table class="table table-bordered table-striped">');
@@ -686,9 +702,19 @@
 
                         // Append header to the table
                         table.append(thead);
-
+                        var canCancel = @json(hasPermission('delete_service_redeem'));
                         // Loop through the response result array
                         $.each(response.result, function(index, element) {
+                            var actionButton = '';
+
+                            if (canCancel) {
+                                actionButton =
+                                    '<button type="button" class="btn btn-block btn-outline-danger mt-2 submit-btn" ' +
+                                    isDisabled + '>' +
+                                    '<span class="spinner-border spinner-border-sm" style="display: none;"></span>' +
+                                    'Do Cancel' +
+                                    '</button>';
+                            }
                             // Determine if the row should be disabled
                             var isDisabled = element.remaining_sessions === 0 ? 'disabled' : '';
                             var rowClass = element.remaining_sessions === 0 ?
@@ -730,10 +756,7 @@
                             <textarea class="form-control" name="comments" ${isDisabled}></textarea>
                         </td>
                         <td>
-                            <button type="button"  class="btn btn-block btn-outline-danger mt-2 submit-btn" ${isDisabled}>
-                                <span class="spinner-border spinner-border-sm" style="display: none;"></span>
-                                Do Cancel
-                            </button>
+                            ${actionButton}
                         </td>`
 
                             );
@@ -843,104 +866,156 @@
 
         //  For Order View Code Start ********************************************************************
         function OrderView(id, order_id) {
-            $('#redeemed_error').html('');
-            $('#redeemed_success').html('');
-            $('.deepak').attr('id', 'redeemAction' + id);
-            $('#redeemAction' + id).modal('show');
 
-            $.ajax({
-                url: '{{ route('redeemcalculation') }}',
-                method: "post",
-                dataType: "json",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    order_id: order_id,
-                    user_token: '{{ Auth::user()->user_token }}',
-                },
-                success: function(response) {
-                    if (response.success) {
-                        var servicePurchases = response.servicePurchases;
-                        $('#giftcardsshow').empty();
+    $('#redeemed_error').html('');
+    $('#redeemed_success').html('');
 
-                        var form = $('<form>', {
-                            action: '{{ route('redeem-services') }}',
-                            method: 'POST'
-                        });
+    // Show Modal
+    $('.deepak').attr('id', 'redeemAction' + id);
+    $('#redeemAction' + id).modal('show');
 
-                        var table = $('<table class="table table-bordered table-striped">');
-                        var thead = $('<thead>').html(
-                            '<tr>' +
-                            '<th>#</th>' +
-                            '<th>Service Name</th>' +
-                            '<th>Total Sessions</th>' +
-                            '<th>Remaining Sessions</th>' +
-                            '<th>Session Usage</th>' +
-                            '<th>Message</th>' +
-                            '<th>Action</th>' +
-                            '</tr>'
-                        );
-                        table.append(thead);
-                        var tbody = $('<tbody>');
+    $.ajax({
+        url: "{{ roleRoute('redeemcalculation', 'employee.redeemcalculation') }}",
+        type: "POST",
+        dataType: "json",
+        data: {
+            _token: '{{ csrf_token() }}',
+            order_id: order_id,
+            user_token: '{{ Auth::user()->user_token }}'
+        },
 
-                        $.each(servicePurchases, function(index, element) {
-                            var isDisabled = element.remaining_sessions === 0 ? 'disabled' : '';
-                            var rowClass = element.remaining_sessions === 0 ? 'class="disabled-row"' :
-                                '';
+        success: function(response) {
 
-                            var row = $('<tr ' + rowClass + '>').html(
-                                `<td>${index + 1}</td>
-                        <td>
-                            ${element.service_type === 'product' ? element.product_name : ''}
-                            ${element.service_type === 'unit' ? element.unit_name : ''}
+            $('#giftcardsshow').empty();
+
+            if (!response.success) {
+                $('#giftcardsshow').html('<p>No services found.</p>');
+                return;
+            }
+
+            var servicePurchases = response.servicePurchases || [];
+
+            if (servicePurchases.length === 0) {
+                $('#giftcardsshow').html('<p>No services found.</p>');
+                return;
+            }
+
+            var form = $('<form>', {
+                action: "{{ roleRoute('redeem-services', 'employee.redeem-services') }}",
+                method: 'POST'
+            });
+
+            form.append(
+                '<input type="hidden" name="_token" value="{{ csrf_token() }}">'
+            );
+
+            var table = $('<table class="table table-bordered table-striped">');
+
+            table.append(
+                '<thead>' +
+                '<tr>' +
+                '<th>#</th>' +
+                '<th>Service Name</th>' +
+                '<th>Total Sessions</th>' +
+                '<th>Remaining Sessions</th>' +
+                '<th>Session Usage</th>' +
+                '<th>Message</th>' +
+                '<th>Action</th>' +
+                '</tr>' +
+                '</thead>'
+            );
+
+            var tbody = $('<tbody>');
+
+            $.each(servicePurchases, function(index, element) {
+
+                var remainingSessions = parseInt(element.remaining_sessions || 0);
+                var totalSessions = parseInt(element.number_of_session || 0);
+
+                var isDisabled = remainingSessions <= 0;
+
+                var serviceName = '-';
+
+                if (element.service_type === 'product') {
+                    serviceName = element.product_name || '-';
+                } else if (element.service_type === 'unit') {
+                    serviceName = element.unit_name || '-';
+                }
+
+                var row = $(`
+                    <tr class="${isDisabled ? 'disabled-row' : ''}">
+                        <td>${index + 1}</td>
+
+                        <td>${serviceName}</td>
+
+                        <td>${totalSessions}</td>
+
+                        <td id="row_${index + 1}">
+                            ${remainingSessions}
                         </td>
-                        <td>${element.number_of_session || 0}</td>
-                        <td id="row_${index + 1}">${element.remaining_sessions || 0}</td>
+
                         <td>
                             <input type="hidden" name="service_id[]" value="${element.service_id}">
                             <input type="hidden" name="order_id[]" value="${element.order_id}">
                             <input type="hidden" name="service_type[]" value="${element.service_type}">
                             <input type="hidden" name="service_order_id[]" value="${element.id}">
                             <input type="hidden" name="patient_login_id[]" value="${element.patient_login_id}">
-                            <input onkeyup="valueValidate(this, ${element.remaining_sessions})" 
-                                   onchange="valueValidate(this, ${element.remaining_sessions})" 
-                                   type="number" 
-                                   max="${element.remaining_sessions}" 
-                                   min="0" 
-                                   name="number_of_session_use[]" 
-                                   value="${element.remaining_sessions}" 
-                                   class="form-control" 
-                                   ${isDisabled}>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="number_of_session_use[]"
+                                value="${remainingSessions}"
+                                min="0"
+                                max="${remainingSessions}"
+                                onkeyup="valueValidate(this, ${remainingSessions})"
+                                onchange="valueValidate(this, ${remainingSessions})"
+                                ${isDisabled ? 'disabled' : ''}
+                            >
                         </td>
+
                         <td>
-                            <textarea class="form-control" name="comments[]" ${isDisabled ? 'disabled' : ''}>
-                                ${isDisabled ? 'All Redeemed' : 'Redeem'}
-                            </textarea>
+                            <textarea
+                                class="form-control"
+                                name="comments[]"
+                                ${isDisabled ? 'disabled' : ''}
+                            >${isDisabled ? 'All Redeemed' : 'Redeem'}</textarea>
                         </td>
+
                         <td>
-                            <button type="button" class="btn btn-block btn-outline-primary mt-2 submit-btn" 
-                                onclick="handleRedeemClick(this)" 
-                                ${isDisabled ? 'disabled' : ''}>
-                                <span class="spinner-border spinner-border-sm" style="display: none;"></span>
+                            @if(hasPermission('edit_service_redeem'))
+                            <button
+                                type="button"
+                                class="btn btn-block btn-outline-primary mt-2 submit-btn"
+                                onclick="handleRedeemClick(this)"
+                                ${isDisabled ? 'disabled' : ''}
+                            >
+                                <span class="spinner-border spinner-border-sm" style="display:none;"></span>
                                 Redeem
                             </button>
-                        </td>`
-                            );
+                        @endif
+                        </td>
+                    </tr>
+                `);
 
-                            tbody.append(row);
-                        });
-
-                        table.append(tbody);
-                        form.append(table);
-                        $('#giftcardsshow').append(form);
-                    } else {
-                        $('#giftcardsshow').html('<p>No services found.</p>');
-                    }
-                },
-                error: function() {
-                    $('#giftcardsshow').html('<p>An error occurred. Please try again later.</p>');
-                }
+                tbody.append(row);
             });
+
+            table.append(tbody);
+            form.append(table);
+
+            $('#giftcardsshow').append(form);
+        },
+
+        error: function(xhr) {
+            console.log(xhr);
+
+            $('#giftcardsshow').html(
+                '<p class="text-danger">An error occurred. Please try again later.</p>'
+            );
         }
+    });
+}
 
         function handleRedeemClick(button) {
             if (confirm('Are you sure you want to redeem this?')) {
@@ -971,7 +1046,7 @@
                 };
 
                 $.ajax({
-                    url: '{{ route('redeem-services') }}',
+                    url: "{{ roleRoute('redeem-services','employee.redeem-services') }}",
                     method: 'POST',
                     data: rowData,
                     success: function(response) {
