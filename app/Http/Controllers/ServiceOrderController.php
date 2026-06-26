@@ -121,7 +121,6 @@ class ServiceOrderController extends Controller
 public function ServiceRedeemPatientList(Request $request, TransactionHistory $transaction, $id)
 {
     $patient = Patient::findOrFail($id);
-
     $pemail = $patient->email;
     $phone = $patient->phone;
     $patient_login_id = $patient->patient_login_id;
