@@ -260,7 +260,7 @@
             if (!confirm('Delete this employee?')) return;
 
             $.ajax({
-                url: "{{ url(RoutePrefix() . '/employees') }}/" + id,
+                url: "{{ roleRoute('employees', 'employee.employees') }}/" + id,
                 method: "DELETE",
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
