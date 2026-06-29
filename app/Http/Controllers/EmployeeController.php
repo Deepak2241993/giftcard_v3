@@ -169,20 +169,22 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage (Soft Delete).
      */
-    public function destroy($id)
-    {
-        $employee = Employee::findOrFail($id);
+public function destroy($id)
+{
+    $employee = Employee::findOrFail($id);
 
-        $employee->update([
-            'is_deleted' => 1,
-            'updated_by' => auth()->id(),
-            'deleted_by' => now(),
-        ]);
+    $employee->update([
+        'is_deleted' => 1,
+        'status' => 0,
+        'updated_by' => auth()->id(),
+        'deleted_by' => auth()->id(),
+    ]);
 
-        return redirect()
-            ->route(RoutePrefix() . 'employees.index')
-            ->with('success', 'Employee deleted successfully.');
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Employee deleted successfully.'
+    ]);
+}
 
     public function trashed()
     {

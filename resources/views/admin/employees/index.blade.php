@@ -7,7 +7,7 @@
                 Create Employee
             </button>
         @endif
-        <div id="success-alert" class="alert alert-success d-none">
+        <div id="success-alert" class="alert alert-success d-none" role="alert">
             <span id="success-message"></span>
         </div>
 
@@ -257,20 +257,61 @@
 
         function deleteEmployee(id) {
 
-            if (!confirm('Delete this employee?')) return;
+    if (!confirm('Delete this employee?')) {
+        return;
+    }
 
-            $.ajax({
-                url: "{{ roleRoute('employees', 'employee.employees') }}/" + id,
-                method: "DELETE",
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function() {
-                    $('#datatable-buttons').DataTable().ajax.reload();
-                }
-            });
-        }
+    $.ajax({
+        url: "{{ roleRoute('employees.destroy', 'employee.employees.destroy', ':id') }}".replace(':id', id),
+        type: "DELETE",
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+   success: function (response) {
 
+    if (response.success) {
+
+        $('#success-message').text(response.message);
+
+        $('#success-alert')
+            .removeClass('d-none alert-danger')
+            .addClass('alert-success')
+            .show();
+
+        $('#datatable-buttons').DataTable().ajax.reload(null, false);
+
+        setTimeout(function () {
+            $('#success-alert')
+                .addClass('d-none')
+                .removeClass('alert-danger')
+                .hide();
+
+            $('#success-message').text('');
+        }, 3000);
+    }
+},
+      error: function (xhr) {
+
+    $('#success-message').text(
+        xhr.responseJSON?.message || 'Something went wrong.'
+    );
+
+    $('#success-alert')
+        .removeClass('d-none alert-success')
+        .addClass('alert-danger')
+        .show();
+
+    setTimeout(function () {
+        $('#success-alert')
+            .addClass('d-none')
+            .removeClass('alert-danger')
+            .hide();
+
+        $('#success-message').text('');
+    }, 3000);
+}
+    });
+}
         //  For Update Employee
 
 
