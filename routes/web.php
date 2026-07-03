@@ -14,6 +14,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,12 @@ Route::get('/email-suggestions', 'PatientController@emailSuggestions')->name('em
 Route::get('/name-suggestions', 'PatientController@nameSuggestions')->name('name-suggestions');
 Route::view('new_template','layouts.front_new');
 
+
+//Employee And Admin Password Reset
+Route::get('/employee-forgot-password',[ResetPasswordController::class,'ForgotPasswordView'])->name('employee-forgot-password');
+Route::post('/employee-password-reset',[ResetPasswordController::class,'ForgotPassword'])->name('employee-password-reset');
+Route::get('/employee-reset-password/{token}',[ResetPasswordController::class,'ResetPassword'])->name('EmployeeResetPasswordView');
+Route::post('/employee-reset-password',[ResetPasswordController::class,'ResetPasswordPost'])->name('EmployeeResetPassword');
 
 // Patient Login Form
 Route::get('/patient-login',[PatientAuthController::class,'PatientloginView'])->name('patient-login');

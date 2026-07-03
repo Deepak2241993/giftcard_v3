@@ -52,9 +52,9 @@ class EmailTemplateController extends Controller
     /* ==============================
      * EDIT TEMPLATE
      * ============================== */
-    public function edit(EmailTemplate $emailTemplate,$id)
+    public function edit(EmailTemplate $emailTemplate)
     {
-            $emailTemplate = EmailTemplate::findOrFail($id);
+            // $emailTemplate = EmailTemplate::findOrFail($id);
             $isEdit = true;
         return view('admin.email_template.create', compact('emailTemplate'));
     }
@@ -422,7 +422,7 @@ class EmailTemplateController extends Controller
         ];
     break;
 
-       case 14: // Gift Redeem Statement Mail
+    case 14: // Gift Redeem Statement Mail
         $maildata = [
 
     // ✅ Keep result as ARRAY (Blade uses $item['key'])
@@ -484,6 +484,13 @@ class EmailTemplateController extends Controller
         'updated_by' => '1',
     ],
 ];
+break;
+       case 15: //Forget Password Mail
+        $maildata = (object) [
+        "remember_token" => "76a4e01d673e1c6305fb93185ba8252ffc3ebfab681557a8968898025b623535",
+        "name" => 'Deepak',
+  ];
+    break;
 
 break;
     default:

@@ -6,70 +6,65 @@
     <div class="auth-page">
         <div class="container-fluid p-0">
             <div class="row g-0">
-                <div class="col-xxl-3 col-lg-4 col-md-5">
+                <div class="col-xxl-6 col-lg-4 col-md-5">
                     <div class="auth-full-page-content d-flex p-sm-5 p-4">
                         <div class="w-100">
                             <div class="d-flex flex-column h-100">
-                                <div class="mb-4 mb-md-5 text-center">
-                                    <a href="{{ url('/') }}" class="d-block auth-logo">
-                                        <img src="{{ URL::asset('assets/images/logo.png') }}" alt="" height="80"onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
-                                    </a>
-                                </div>
+                                
                                 <div class="auth-content my-auto">
-                                    <div class="text-center">
-                                        <h5 class="mb-0">Welcome Back !</h5>
-                                        <p class="text-muted mt-2">Sign in to continue to ForeverMedspa Giftcards.</p>
+                                    <div class="md-5 text-center">
+                                        <a href="{{ url('/') }}" class="d-block auth-logo">
+                                            <img src="{{ URL::asset('assets/images/logo.png') }}" alt=""
+                                                height="80"onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
+                                        </a>
                                     </div>
-                                    <form class="mt-4 pt-2" action="{{ route('login-post') }}" method="POST">
-                                        @csrf
-                                        <div class="form-floating form-floating-custom mb-4">
-                                            <input type="text" class="form-control @error('email') is-invalid @enderror"
-                                                value="{{ old('email', 'admin@themesdesign.com') }}" id="input-username"
-                                                placeholder="Enter User Name" name="email">
-                                            @error('email')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                            <label for="input-username">Username</label>
-                                            <div class="form-floating-icon">
-                                                <i data-feather="users"></i>
+                                    
+                                    <div class="card mt-4">
+                                        <div class="card-body" id="login_id">
+                                            <div class="text-center">
+                                                <h5 class="mb-0">Reset Password {{ session('status') }}</h5>
+                                                <p class="text-muted mt-2">Reset Password with Forever Medspa.</p>
                                             </div>
-                                        </div>
-
-                                        <div class="form-floating form-floating-custom mb-4 auth-pass-inputgroup">
-                                            <input type="password"
-                                                class="form-control pe-5 @error('password') is-invalid @enderror"
-                                                name="password" id="password-input" placeholder="Enter Password"
-                                                value="123456">
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                            <button type="button"  class="btn btn-block btn-link position-absolute h-100 end-0 top-0"
-                                                id="password-addon">
-                                                <i class="mdi mdi-eye-outline font-size-18 text-muted"></i>
-                                            </button>
-                                            <label for="input-password">Password</label>
-                                            <div class="form-floating-icon">
-                                                <i data-feather="lock"></i>
+                                            @if(session('error'))
+                                                <div class="alert alert-danger">
+                                                    {{ session('error') }}
+                                                </div>
+                                            @else
+                                            <div class="alert alert-success text-center my-4" role="alert">
+                                                Enter your Registered Email and instructions will be sent to you!
                                             </div>
+                                            @endif
+                                            @if (session('status'))
+                                                <div class="alert alert-success" role="alert">
+                                                    {{ session('status') }}
+                                                </div>
+                                            @endif
+                                            <form class="mt-4" action="{{route('employee-password-reset')}}" method="POST">
+                                            @csrf
+                                                <div class="form-floating form-floating-custom mb-4">
+                                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" id="input-email" placeholder="Enter Email">
+                                                    @error('email')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                    <label for="input-email">Email</label>
+                                                    <div class="form-floating-icon">
+                                                        <i data-feather="mail"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 mt-4">
+                                                    <button  class="btn btn-block btn-outline-primary w-100 waves-effect waves-light" type="submit">Request new password</button>
+                                                </div>
+                                            </form>
+            
+                                           
+                                            
                                         </div>
-
-
-                                        <div class="mb-3">
-                                            <button  class="btn btn-block btn-outline-primary w-100 waves-effect waves-light"
-                                                type="submit">Log In</button>
-                                        </div>
-                                        <a href="{{ route('employee-forgot-password') }}">Forgot Password</a>
-                                    </form>
-
-                                    <div class="mt-4 pt-2 text-center">
-
                                     </div>
 
-
+                                    {{--  for Sign Up Form --}}
+                                 
                                 </div>
                                 <div class="mt-4 mt-md-5 text-center">
                                     <p class="mb-0">©
@@ -86,7 +81,7 @@
                     <!-- end auth full page content -->
                 </div>
                 <!-- end col -->
-                <div class="col-xxl-9 col-lg-8 col-md-7">
+                <div class="col-xxl-6 col-lg-8 col-md-7">
                     <div class="auth-bg pt-md-5 p-4 d-flex">
                         <div class="bg-overlay"></div>
                         <ul class="bg-bubbles">
@@ -168,4 +163,15 @@
 @section('script')
     <script src="{{ URL::asset('assets/js/pages/pass-addon.init.js') }}"></script>
     <script src="{{ URL::asset('assets/js/pages/feather-icon.init.js') }}"></script>
+
 @endsection
+
+
+
+
+
+
+
+
+
+

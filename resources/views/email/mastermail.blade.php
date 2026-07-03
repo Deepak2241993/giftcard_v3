@@ -134,7 +134,7 @@
 
                                                 // Replace placeholders
                                                 $message = str_replace(
-                                                    ['[firstname] [lastname]', '[reciver_name]','[self_name]','[qty]','[price]','[sender_name]','[giftcard_holder_name]','[giftcard_number]','[full_name]','[user_name]','[password]'],
+                                                    ['[firstname] [lastname]', '[reciver_name]','[self_name]','[qty]','[price]','[sender_name]','[giftcard_holder_name]','[giftcard_number]','[full_name]','[user_name]','[password]','[name]'],
                                                     [
                                                         trim(($maildata->fname ?? '') . ' ' . ($maildata->lname ?? '')),
                                                         $maildata->recipient_name ?? '',
@@ -147,6 +147,7 @@
                                                         trim(($maildata->fname ?? '') . ' ' . ($maildata->lname ?? '')),
                                                          $maildata->user_name ?? '',
                                                         $maildata->password ?? '',
+                                                        $maildata->name ?? '',
                                                         
 
                                                     ],
@@ -216,6 +217,10 @@
                                                     @case(14)
                                                     @include('email.include.giftcardRedeemStatement')
                                                 @break
+                                                 @case(15)
+                                                    @include('email.include.employeeforgetpassword')
+                                                @break
+                                                
 
                                                 @default
                                                     {{-- intentionally empty --}}

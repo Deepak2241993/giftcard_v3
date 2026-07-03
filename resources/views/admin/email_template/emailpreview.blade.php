@@ -130,13 +130,13 @@
                                         style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
                                         <div
                                             style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                         
+                                       
                                             @php
                                                 $message = $template->message_email ?? '';
 
                                                 // Replace placeholders
                                                 $message = str_replace(
-                                                    ['[firstname] [lastname]', '[reciver_name]','[self_name]','[qty]','[price]','[sender_name]','[giftcard_holder_name]','[giftcard_number]','[full_name]','[user_name]','[password]'],
+                                                    ['[firstname] [lastname]', '[reciver_name]','[self_name]','[qty]','[price]','[sender_name]','[giftcard_holder_name]','[giftcard_number]','[full_name]','[user_name]','[password]','[name]'],
                                                     [
                                                         trim(($maildata->fname ?? '') . ' ' . ($maildata->lname ?? '')),
                                                         $maildata->recipient_name ?? '',
@@ -149,6 +149,7 @@
                                                         trim(($maildata->fname ?? '') . ' ' . ($maildata->lname ?? '')),
                                                         $maildata->user_name ?? '',
                                                         $maildata->password ?? '',
+                                                        $maildata->name ?? '',
                                                         
                                                     
                                                     ],
@@ -210,13 +211,14 @@
                                                     @case(12)
                                                     @include('email.include.logincredientials')
                                                 @break
-                                                 @break
                                                     @case(13)
                                                     @include('email.include.resendemail')
                                                 @break
-                                                @break
                                                 @case(14)
                                                     @include('email.include.giftcardRedeemStatement')
+                                                @break
+                                                  @case(15)
+                                                    @include('email.include.employeeforgetpassword')
                                                 @break
 
                                                 @default
