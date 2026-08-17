@@ -769,7 +769,7 @@
                                     },
                                     "gift_send_to": {
                                         "type": "integer",
-                                        "example": "deepakprasad224@gmail.com"
+                                        "example": "info@forevermedspanj.com"
                                     },
                                     "user_token": {
                                         "type": "string",

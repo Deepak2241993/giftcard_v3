@@ -962,7 +962,7 @@ public function gift_purchase(Request $request, Giftsend $giftsend, GiftCoupon $
  *             @OA\Schema(
  *                 @OA\Property(property="id", type="integer", example="62"),
  *                 @OA\Property(property="your_name", type="string", example="Deepak Prasad"),
- *                 @OA\Property(property="gift_send_to", type="integer", example="deepakprasad224@gmail.com"),
+ *                 @OA\Property(property="gift_send_to", type="integer", example="info@forevermedspanj.com"),
  *                 @OA\Property(property="user_token", type="string", example="FOREVER-MEDSPA"),
  *                 @OA\Property(property="payment_mode", type="string", example="PayPal"),
  *                 @OA\Property(property="transaction_id", type="string", example="TEST-18-03-2024"),

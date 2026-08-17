@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use ZipArchive;
+use Log;
 
 class BackupDatabase extends Command
 {
@@ -88,7 +89,7 @@ class BackupDatabase extends Command
      */
   protected function sendBackupEmail($file)
     {
-        $toEmail = 'deepakprasad224@gmail.com'; // Update as needed
+        $toEmail = 'info@forevermedspanj.com'; // Update as needed
 
         try {
             Mail::send([], [], function ($message) use ($toEmail, $file) {
@@ -104,7 +105,7 @@ class BackupDatabase extends Command
             $this->info('Backup email sent successfully.');
         } catch (\Exception $e) {
             $this->error('Failed to send backup email: ' . $e->getMessage());
-            \Log::error('Backup email failed: ' . $e->getMessage());
+            Log::error('Backup email failed: ' . $e->getMessage());
         }
     }
 }
