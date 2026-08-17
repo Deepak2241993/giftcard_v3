@@ -17,7 +17,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost/giftcard_v3/public/api/"
+            "url": "https://www.myforevermedspa.com/api/"
         }
     ],
     "paths": {
@@ -769,7 +769,7 @@
                                     },
                                     "gift_send_to": {
                                         "type": "integer",
-                                        "example": "info@forevermedspanj.com"
+                                        "example": "deepakprasad224@gmail.com"
                                     },
                                     "user_token": {
                                         "type": "string",
