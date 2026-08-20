@@ -195,13 +195,15 @@ if (empty($_SESSION['db_manager_login'])) {
 |--------------------------------------------------------------------------
 */
 
-$projectPath = dirname(__DIR__);
+$projectPath = dirname(__DIR__, 2);
 
-$envPath = $projectPath . '/.env';
+$envPath = $projectPath . DIRECTORY_SEPARATOR . '.env';
 
 if (!file_exists($envPath)) {
-
-    die('.env file not found.');
+    die(
+        'ENV file not found.<br>Looking at: ' .
+        htmlspecialchars($envPath)
+    );
 }
 
 
