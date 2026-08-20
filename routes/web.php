@@ -43,6 +43,7 @@ Route::post('services-search','ProductController@ServicesSearch')->name('Service
 Route::get('popular-service/{id}','ProductController@PopularService')->name('PopularService');
 Route::get('popular-deals','PopularOfferController@popularDeals')->name('popularDeals');
 Route::post('cart','PopularOfferController@Cart')->name('cart');
+Route::get('rname','PopularOfferController@rname')->name('rname');
 Route::get('cartview','PopularOfferController@Cartview')->name('cartview');
 Route::post('/cart/remove','PopularOfferController@CartRemove')->name('cartremove');
 Route::post('/update-cart', 'PopularOfferController@updateCart')->name('update-cart');

